@@ -481,7 +481,7 @@ function VotingQuiz({ parties }) {
       {shareMessage && <div className="rounded-xl border bg-slate-50 p-3 text-sm text-slate-500">{shareMessage}</div>}
 
       <div className="w-full border rounded-2xl p-6 text-center text-sm text-slate-500 bg-white">
-        <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="3333333333" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="13909587580" data-ad-format="auto" data-full-width-responsive="true"></ins>
       </div>
 
       {result && (
@@ -689,7 +689,7 @@ export default function ElectionPlatformComparator() {
           <section className="space-y-4"><VotingQuiz parties={sortedParties} /></section>
 
           <div className="w-full border rounded-2xl p-8 text-center text-sm text-slate-500 bg-white">
-            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="1111111111" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="13909587580" data-ad-format="auto" data-full-width-responsive="true"></ins>
           </div>
 
           <section className="space-y-4">
@@ -753,7 +753,7 @@ export default function ElectionPlatformComparator() {
           </section>
 
           <div className="w-full border rounded-2xl p-8 text-center text-sm text-slate-500 bg-white">
-            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="2222222222" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="13909587580" data-ad-format="auto" data-full-width-responsive="true"></ins>
           </div>
         </>
       ) : currentPage === "compare" ? (
