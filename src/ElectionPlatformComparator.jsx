@@ -1088,7 +1088,7 @@ const adPackages = [
 ];
 
 const siteStats = {
-  weeklyVisits: "~ 12 000",
+  weeklyVisits: "~ 12 001",
   monthlyVisits: "~ 40 000",
 };
 
