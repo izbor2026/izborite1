@@ -2,7 +2,6 @@ import { useMemo, useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 
@@ -577,13 +576,36 @@ function getPartyMethodLabel(party) {
 }
 
 function PartyPositionMap({ parties, onSelectParty }) {
+  const [mapView, setMapView] = useState("major");
+  const [typeFilter, setTypeFilter] = useState("all");
+
   const getX = (party) => ({ skeptic: 10, neutral: 50, pro: 90 }[party.profile.eu] ?? 50);
   const getY = (party) => ({ close: 10, neutral: 50, far: 90 }[party.profile.russia] ?? 50);
+
+  const majorPartyNames = new Set([
+    "ГЕРБ-СДС",
+    "БСП – ОБЕДИНЕНА ЛЕВИЦА",
+    "ПРОДЪЛЖАВАМЕ ПРОМЯНАТА – ДЕМОКРАТИЧНА БЪЛГАРИЯ",
+    "ДВИЖЕНИЕ ЗА ПРАВА И СВОБОДИ",
+    "АЛИАНС ЗА ПРАВА И СВОБОДИ",
+    "ВЪЗРАЖДАНЕ",
+    "ИМА ТАКЪВ НАРОД",
+    "СИНЯ БЪЛГАРИЯ",
+    "МОРАЛ ЕДИНСТВО ЧЕСТ",
+  ]);
+
+  const visibleParties = useMemo(() => {
+    return parties.filter((party) => {
+      const passesView = mapView === "all" || majorPartyNames.has(party.name);
+      const passesType = typeFilter === "all" || party.type === typeFilter;
+      return passesView && passesType;
+    });
+  }, [parties, mapView, typeFilter]);
 
   const positionedParties = useMemo(() => {
     const groups = new Map();
 
-    parties.forEach((party) => {
+    visibleParties.forEach((party) => {
       const x = getX(party);
       const y = getY(party);
       const key = `${x}-${y}`;
@@ -597,7 +619,7 @@ function PartyPositionMap({ parties, onSelectParty }) {
         return group.map((item) => ({ ...item, offsetX: 0, offsetY: 0, groupSize: 1 }));
       }
 
-      const radius = Math.min(14, 4 + group.length * 1.8);
+      const radius = Math.min(22, 8 + group.length * 2.4);
 
       return group.map((item, index) => {
         const angle = (Math.PI * 2 * index) / group.length;
@@ -612,21 +634,37 @@ function PartyPositionMap({ parties, onSelectParty }) {
         };
       });
     });
-  }, [parties]);
+  }, [visibleParties]);
 
   return (
     <div className="rounded-2xl border p-4 space-y-4">
-      <div>
-        <h2 className="text-2xl font-semibold">Карта на позициите на партиите</h2>
-        <p className="text-sm text-muted-foreground">
-          Хоризонтално: по-скептична към ЕС → по-проевропейска. Вертикално: по-близо до Русия → по-дистанцирана от Русия.
-        </p>
-        <p className="text-xs text-muted-foreground">
-          Когато няколко партии са на една и съща позиция, те се раздалечават визуално около общата точка, за да не се застъпват.
-        </p>
+      <div className="space-y-3">
+        <div>
+          <h2 className="text-2xl font-semibold">Карта на позициите на партиите</h2>
+          <p className="text-sm text-muted-foreground">
+            Хоризонтално: по-скептична към ЕС → по-проевропейска. Вертикално: по-близо до Русия → по-дистанцирана от Русия.
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Когато няколко партии са на една и съща позиция, те се раздалечават визуално около общата точка, за да не се застъпват.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-2 items-center">
+          <Button variant={mapView === "major" ? "default" : "outline"} onClick={() => setMapView("major")}>Само основни</Button>
+          <Button variant={mapView === "all" ? "default" : "outline"} onClick={() => setMapView("all")}>Покажи всички</Button>
+          <Button variant={typeFilter === "all" ? "default" : "outline"} onClick={() => setTypeFilter("all")}>Всички</Button>
+          <Button variant={typeFilter === "party" ? "default" : "outline"} onClick={() => setTypeFilter("party")}>Само партии</Button>
+          <Button variant={typeFilter === "coalition" ? "default" : "outline"} onClick={() => setTypeFilter("coalition")}>Само коалиции</Button>
+        </div>
+
+        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+          <Badge variant="outline">Видими: {visibleParties.length}</Badge>
+          <Badge variant="outline">Основни партии = по-четима карта</Badge>
+          <Badge variant="outline">Всички = пълна картина</Badge>
+        </div>
       </div>
 
-      <div className="relative h-[520px] rounded-2xl border bg-muted/30 overflow-hidden">
+      <div className="relative h-[560px] rounded-2xl border bg-muted/30 overflow-hidden">
         <div className="absolute inset-y-0 left-1/2 w-px bg-border" />
         <div className="absolute inset-x-0 top-1/2 h-px bg-border" />
         <div className="absolute left-4 top-4 text-xs text-muted-foreground">ЕС-скептични</div>
@@ -647,14 +685,18 @@ function PartyPositionMap({ parties, onSelectParty }) {
             title={groupSize > 1 ? `${party.name} · споделена позиция с още ${groupSize - 1} формации` : party.name}
             onClick={() => onSelectParty?.(party)}
           >
-            <div className="flex items-center gap-2 rounded-full border bg-background px-2 py-1 shadow-sm hover:shadow-md transition">
-              <div className={`h-7 w-7 rounded-full flex items-center justify-center text-[10px] font-bold ${party.logoClass}`}>
+            <div className="flex items-center gap-2 rounded-full border bg-background px-2 py-1 shadow-sm hover:shadow-md transition max-w-[180px]">
+              <div className={`h-7 w-7 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${party.logoClass}`}>
                 {party.logoText}
               </div>
-              <span className="hidden md:inline text-xs font-medium">{party.short}</span>
+              <span className="hidden md:inline text-xs font-medium truncate">{party.short}</span>
             </div>
           </button>
         ))}
+      </div>
+
+      <div className="rounded-xl border p-3 bg-background text-xs text-muted-foreground">
+        Съвет: започнете с „Само основни“, а после превключете на „Покажи всички“, ако искате пълната карта.
       </div>
     </div>
   );
@@ -914,7 +956,7 @@ function VotingQuiz({ parties }) {
       <div className="space-y-2">
         <h2 className="text-2xl font-semibold">Тест: За коя партия съвпадат вижданията ви?</h2>
         <p className="text-sm text-muted-foreground">
-          Използвай скалата от 1 до 5 за всяко твърдение. 1 означава „напълно не съм съгласен", 3 е неутрално, а 5 означава „напълно съм съгласен“.
+          Отговорете на всеки въпрос с една от трите опции: „Да“, „Не“ или „Не се интересувам“. По подразбиране е избрано „Не се интересувам“, за да пропуснете въпрос ако темата не е важна за вас.
         </p>
       </div>
 
@@ -925,18 +967,26 @@ function VotingQuiz({ parties }) {
           <div key={q.id} className="border rounded-xl p-4 space-y-4">
             <div className="font-medium">{q.text}</div>
             <div className="px-2">
-              <Slider
-                min={1}
-                max={5}
-                step={1}
-                value={[value]}
-                onValueChange={(vals) => handleAnswer(q.id, vals[0])}
-              />
-            </div>
-            <div className="flex items-center justify-between text-xs text-muted-foreground gap-3">
-              <span>1 · Не съм съгласен</span>
-              <span className="text-sm font-semibold text-foreground">{value}</span>
-              <span>5 · Напълно съм съгласен</span>
+              <div className="flex gap-2 flex-wrap">
+                <Button
+                  variant={value === 5 ? "default" : "outline"}
+                  onClick={() => handleAnswer(q.id, 5)}
+                >
+                  Да
+                </Button>
+                <Button
+                  variant={value === 3 ? "default" : "outline"}
+                  onClick={() => handleAnswer(q.id, 3)}
+                >
+                  Не се интересувам
+                </Button>
+                <Button
+                  variant={value === 1 ? "default" : "outline"}
+                  onClick={() => handleAnswer(q.id, 1)}
+                >
+                  Не
+                </Button>
+              </div>
             </div>
           </div>
         );
@@ -1111,19 +1161,19 @@ const adPackages = [
   {
     key: "basic",
     name: "Basic",
-    price: "250 Е / седмица",
+    price: "250 € / седмица",
     description: "Банер 970×90 на най-видимата позиция в началото на сайта.",
   },
   {
-    key: "premium",1200
+    key: "premium",
     name: "Premium",
-    price: "350 Е / седмица",
+    price: "350 € / седмица",
     description: "Банер + допълнително споменаване под теста като спонсор на седмицата.",
   },
   {
     key: "exclusive",
     name: "Exclusive",
-    price: "500 Е / седмица",
+    price: "500 € / седмица",
     description: "Единствен рекламен партньор за седмицата без други платени банери на сайта.",
   },
     {
