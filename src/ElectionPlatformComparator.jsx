@@ -153,24 +153,14 @@ const parties = [
     migration: "Подкрепа за по-строг контрол и практични мерки по границите.",
     taxes: "Запазване на стабилна данъчна рамка.",
     profile: { taxes: "medium", eu: "pro", russia: "neutral", state: "medium" }
-  }
-];
-
-const extraParties = [
-  "СЪПРОТИВА","НАРОДНА ПАРТИЯ ИСТИНАТА И САМО ИСТИНАТА","ВЕЛИЧИЕ","НАЦИОНАЛНО ДВИЖЕНИЕ НЕПОКОРНА БЪЛГАРИЯ",
-  "Партия на ЗЕЛЕНИТЕ","ПРЯКА ДЕМОКРАЦИЯ","БЪЛГАРИЯ МОЖЕ","НАЦИЯ","МОРАЛ ЕДИНСТВО ЧЕСТ","ГЛАС НАРОДЕН",
-  "ДВИЖЕНИЕ НА НЕПАРТИЙНИТЕ КАНДИДАТИ","МОЯ БЪЛГАРИЯ","ТРЕТИ МАРТ","СИНЯ БЪЛГАРИЯ","ПРОГРЕСИВНА БЪЛГАРИЯ",
-  "СИЯНИЕ","АНТИКОРУПЦИОНЕН БЛОК"
-];
-const extraColors = ["bg-rose-700 text-white","bg-orange-700 text-white","bg-violet-700 text-white","bg-pink-700 text-white","bg-lime-700 text-white","bg-sky-700 text-white","bg-blue-800 text-white","bg-gray-700 text-white","bg-red-800 text-white","bg-fuchsia-700 text-white","bg-stone-700 text-white","bg-green-700 text-white","bg-orange-600 text-white","bg-blue-600 text-white","bg-purple-700 text-white","bg-yellow-500 text-black","bg-emerald-800 text-white"];
-extraParties.forEach((name, i) => {
-  parties.push({
-    name,
-    short: name.slice(0, 10),
-    type: i < 11 ? "party" : "coalition",
-    logoText: name.split(" ").slice(0, 2).map(x => x[0]).join("").slice(0, 2),
-    logoClass: extraColors[i],
-    cikUrl: i < 11 ? "https://www.cik.bg/bg/ns19.04.2026/registers/per" : "https://www.cik.bg/bg/ns19.04.2026/registers/percoal",
+  },
+  {
+    name: "СЪПРОТИВА",
+    short: "СЪПР.",
+    type: "party",
+    logoText: "С",
+    logoClass: "bg-rose-700 text-white",
+    cikUrl: "https://www.cik.bg/bg/ns19.04.2026/registers/per",
     officialProgramUrl: null,
     officialWebsite: null,
     infoStatus: "limited",
@@ -184,8 +174,344 @@ extraParties.forEach((name, i) => {
     migration: "Няма публично достъпна ясна позиция по тази тема.",
     taxes: "Няма публично достъпна ясна позиция по тази тема.",
     profile: { taxes: "medium", eu: "neutral", russia: "neutral", state: "medium" }
-  });
-});
+  },
+  {
+    name: "НАРОДНА ПАРТИЯ ИСТИНАТА И САМО ИСТИНАТА",
+    short: "НПИСИ",
+    type: "party",
+    logoText: "НИ",
+    logoClass: "bg-orange-700 text-white",
+    cikUrl: "https://www.cik.bg/bg/ns19.04.2026/registers/per",
+    officialProgramUrl: null,
+    officialWebsite: null,
+    infoStatus: "limited",
+    economy: "Няма публично достъпна подробна предизборна програма или ясно формулирани позиции по тази тема към момента.",
+    healthcare: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    education: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    eu: "Няма публично достъпна ясна позиция по тази тема.",
+    russia: "Няма публично достъпна ясна позиция по тази тема.",
+    nato: "Няма публично достъпна ясна позиция по тази тема.",
+    energy: "Няма публично достъпна ясна позиция по тази тема.",
+    migration: "Няма публично достъпна ясна позиция по тази тема.",
+    taxes: "Няма публично достъпна ясна позиция по тази тема.",
+    profile: { taxes: "medium", eu: "neutral", russia: "neutral", state: "medium" }
+  },
+  {
+    name: "ВЕЛИЧИЕ",
+    short: "ВЕЛ.",
+    type: "party",
+    logoText: "ВЕ",
+    logoClass: "bg-violet-700 text-white",
+    cikUrl: "https://www.cik.bg/bg/ns19.04.2026/registers/per",
+    officialProgramUrl: null,
+    officialWebsite: null,
+    infoStatus: "limited",
+    economy: "Няма публично достъпна подробна предизборна програма или ясно формулирани позиции по тази тема към момента.",
+    healthcare: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    education: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    eu: "Няма публично достъпна ясна позиция по тази тема.",
+    russia: "Няма публично достъпна ясна позиция по тази тема.",
+    nato: "Няма публично достъпна ясна позиция по тази тема.",
+    energy: "Няма публично достъпна ясна позиция по тази тема.",
+    migration: "Няма публично достъпна ясна позиция по тази тема.",
+    taxes: "Няма публично достъпна ясна позиция по тази тема.",
+    profile: { taxes: "medium", eu: "neutral", russia: "neutral", state: "medium" }
+  },
+  {
+    name: "НАЦИОНАЛНО ДВИЖЕНИЕ НЕПОКОРНА БЪЛГАРИЯ",
+    short: "НДНБ",
+    type: "party",
+    logoText: "НБ",
+    logoClass: "bg-pink-700 text-white",
+    cikUrl: "https://www.cik.bg/bg/ns19.04.2026/registers/per",
+    officialProgramUrl: null,
+    officialWebsite: null,
+    infoStatus: "limited",
+    economy: "Няма публично достъпна подробна предизборна програма или ясно формулирани позиции по тази тема към момента.",
+    healthcare: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    education: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    eu: "Няма публично достъпна ясна позиция по тази тема.",
+    russia: "Няма публично достъпна ясна позиция по тази тема.",
+    nato: "Няма публично достъпна ясна позиция по тази тема.",
+    energy: "Няма публично достъпна ясна позиция по тази тема.",
+    migration: "Няма публично достъпна ясна позиция по тази тема.",
+    taxes: "Няма публично достъпна ясна позиция по тази тема.",
+    profile: { taxes: "medium", eu: "neutral", russia: "neutral", state: "medium" }
+  },
+  {
+    name: "Партия на ЗЕЛЕНИТЕ",
+    short: "ЗЕЛ.",
+    type: "party",
+    logoText: "З",
+    logoClass: "bg-lime-700 text-white",
+    cikUrl: "https://www.cik.bg/bg/ns19.04.2026/registers/per",
+    officialProgramUrl: null,
+    officialWebsite: null,
+    infoStatus: "limited",
+    economy: "Няма публично достъпна подробна предизборна програма или ясно формулирани позиции по тази тема към момента.",
+    healthcare: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    education: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    eu: "Няма достатъчно публична информация за конкретна позиция относно ЕС.",
+    russia: "Няма публично достъпна ясна позиция по тази тема.",
+    nato: "Няма публично достъпна ясна позиция по тази тема.",
+    energy: "Няма публично достъпна ясна позиция по тази тема.",
+    migration: "Няма публично достъпна ясна позиция по тази тема.",
+    taxes: "Няма публично достъпна ясна позиция по тази тема.",
+    profile: { taxes: "medium", eu: "pro", russia: "neutral", state: "medium" }
+  },
+  {
+    name: "ПРЯКА ДЕМОКРАЦИЯ",
+    short: "ПД",
+    type: "party",
+    logoText: "П",
+    logoClass: "bg-sky-700 text-white",
+    cikUrl: "https://www.cik.bg/bg/ns19.04.2026/registers/per",
+    officialProgramUrl: null,
+    officialWebsite: null,
+    infoStatus: "limited",
+    economy: "Няма публично достъпна подробна предизборна програма или ясно формулирани позиции по тази тема към момента.",
+    healthcare: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    education: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    eu: "Няма публично достъпна ясна позиция по тази тема.",
+    russia: "Няма публично достъпна ясна позиция по тази тема.",
+    nato: "Няма публично достъпна ясна позиция по тази тема.",
+    energy: "Няма публично достъпна ясна позиция по тази тема.",
+    migration: "Няма публично достъпна ясна позиция по тази тема.",
+    taxes: "Няма публично достъпна ясна позиция по тази тема.",
+    profile: { taxes: "medium", eu: "neutral", russia: "neutral", state: "medium" }
+  },
+  {
+    name: "БЪЛГАРИЯ МОЖЕ",
+    short: "БМ",
+    type: "party",
+    logoText: "БМ",
+    logoClass: "bg-blue-800 text-white",
+    cikUrl: "https://www.cik.bg/bg/ns19.04.2026/registers/per",
+    officialProgramUrl: null,
+    officialWebsite: null,
+    infoStatus: "limited",
+    economy: "Няма публично достъпна подробна предизборна програма или ясно формулирани позиции по тази тема към момента.",
+    healthcare: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    education: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    eu: "Няма публично достъпна ясна позиция по тази тема.",
+    russia: "Няма публично достъпна ясна позиция по тази тема.",
+    nato: "Няма публично достъпна ясна позиция по тази тема.",
+    energy: "Няма публично достъпна ясна позиция по тази тема.",
+    migration: "Няма публично достъпна ясна позиция по тази тема.",
+    taxes: "Няма публично достъпна ясна позиция по тази тема.",
+    profile: { taxes: "medium", eu: "neutral", russia: "neutral", state: "medium" }
+  },
+  {
+    name: "НАЦИЯ",
+    short: "НАЦ.",
+    type: "party",
+    logoText: "Н",
+    logoClass: "bg-gray-700 text-white",
+    cikUrl: "https://www.cik.bg/bg/ns19.04.2026/registers/per",
+    officialProgramUrl: null,
+    officialWebsite: null,
+    infoStatus: "limited",
+    economy: "Няма публично достъпна подробна предизборна програма или ясно формулирани позиции по тази тема към момента.",
+    healthcare: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    education: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    eu: "Няма публично достъпна ясна позиция по тази тема.",
+    russia: "Няма публично достъпна ясна позиция по тази тема.",
+    nato: "Няма публично достъпна ясна позиция по тази тема.",
+    energy: "Няма публично достъпна ясна позиция по тази тема.",
+    migration: "Няма публично достъпна ясна позиция по тази тема.",
+    taxes: "Няма публично достъпна ясна позиция по тази тема.",
+    profile: { taxes: "medium", eu: "neutral", russia: "neutral", state: "medium" }
+  },
+  {
+    name: "МОРАЛ ЕДИНСТВО ЧЕСТ",
+    short: "МЕЧ",
+    type: "party",
+    logoText: "М",
+    logoClass: "bg-red-800 text-white",
+    cikUrl: "https://www.cik.bg/bg/ns19.04.2026/registers/per",
+    officialProgramUrl: null,
+    officialWebsite: null,
+    infoStatus: "limited",
+    economy: "Няма публично достъпна подробна предизборна програма или ясно формулирани позиции по тази тема към момента.",
+    healthcare: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    education: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    eu: "Няма публично достъпна ясна позиция по тази тема.",
+    russia: "Няма публично достъпна ясна позиция по тази тема.",
+    nato: "Няма публично достъпна ясна позиция по тази тема.",
+    energy: "Няма публично достъпна ясна позиция по тази тема.",
+    migration: "Няма публично достъпна ясна позиция по тази тема.",
+    taxes: "Няма публично достъпна ясна позиция по тази тема.",
+    profile: { taxes: "medium", eu: "neutral", russia: "neutral", state: "medium" }
+  },
+  {
+    name: "ГЛАС НАРОДЕН",
+    short: "ГН",
+    type: "party",
+    logoText: "ГН",
+    logoClass: "bg-fuchsia-700 text-white",
+    cikUrl: "https://www.cik.bg/bg/ns19.04.2026/registers/per",
+    officialProgramUrl: null,
+    officialWebsite: null,
+    infoStatus: "limited",
+    economy: "Няма публично достъпна подробна предизборна програма или ясно формулирани позиции по тази тема към момента.",
+    healthcare: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    education: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    eu: "Няма публично достъпна ясна позиция по тази тема.",
+    russia: "Няма публично достъпна ясна позиция по тази тема.",
+    nato: "Няма публично достъпна ясна позиция по тази тема.",
+    energy: "Няма публично достъпна ясна позиция по тази тема.",
+    migration: "Няма публично достъпна ясна позиция по тази тема.",
+    taxes: "Няма публично достъпна ясна позиция по тази тема.",
+    profile: { taxes: "medium", eu: "neutral", russia: "neutral", state: "medium" }
+  },
+  {
+    name: "ДВИЖЕНИЕ НА НЕПАРТИЙНИТЕ КАНДИДАТИ",
+    short: "ДНК",
+    type: "party",
+    logoText: "ДН",
+    logoClass: "bg-stone-700 text-white",
+    cikUrl: "https://www.cik.bg/bg/ns19.04.2026/registers/per",
+    officialProgramUrl: null,
+    officialWebsite: null,
+    infoStatus: "limited",
+    economy: "Няма публично достъпна подробна предизборна програма или ясно формулирани позиции по тази тема към момента.",
+    healthcare: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    education: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    eu: "Няма публично достъпна ясна позиция по тази тема.",
+    russia: "Няма публично достъпна ясна позиция по тази тема.",
+    nato: "Няма публично достъпна ясна позиция по тази тема.",
+    energy: "Няма публично достъпна ясна позиция по тази тема.",
+    migration: "Няма публично достъпна ясна позиция по тази тема.",
+    taxes: "Няма публично достъпна ясна позиция по тази тема.",
+    profile: { taxes: "medium", eu: "neutral", russia: "neutral", state: "medium" }
+  },
+  {
+    name: "МОЯ БЪЛГАРИЯ",
+    short: "МБ",
+    type: "coalition",
+    logoText: "МБ",
+    logoClass: "bg-green-700 text-white",
+    cikUrl: "https://www.cik.bg/bg/ns19.04.2026/registers/percoal",
+    officialProgramUrl: null,
+    officialWebsite: null,
+    infoStatus: "limited",
+    economy: "Няма публично достъпна подробна предизборна програма или ясно формулирани позиции по тази тема към момента.",
+    healthcare: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    education: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    eu: "Няма публично достъпна ясна позиция по тази тема.",
+    russia: "Няма публично достъпна ясна позиция по тази тема.",
+    nato: "Няма публично достъпна ясна позиция по тази тема.",
+    energy: "Няма публично достъпна ясна позиция по тази тема.",
+    migration: "Няма публично достъпна ясна позиция по тази тема.",
+    taxes: "Няма публично достъпна ясна позиция по тази тема.",
+    profile: { taxes: "medium", eu: "neutral", russia: "neutral", state: "medium" }
+  },
+  {
+    name: "ТРЕТИ МАРТ",
+    short: "3 МАРТ",
+    type: "coalition",
+    logoText: "3М",
+    logoClass: "bg-orange-600 text-white",
+    cikUrl: "https://www.cik.bg/bg/ns19.04.2026/registers/percoal",
+    officialProgramUrl: null,
+    officialWebsite: null,
+    infoStatus: "limited",
+    economy: "Няма публично достъпна подробна предизборна програма или ясно формулирани позиции по тази тема към момента.",
+    healthcare: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    education: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    eu: "Няма достатъчно публична информация за конкретна позиция относно ЕС.",
+    russia: "Няма публично достъпна ясна позиция по тази тема.",
+    nato: "Няма публично достъпна ясна позиция по тази тема.",
+    energy: "Няма публично достъпна ясна позиция по тази тема.",
+    migration: "Няма публично достъпна ясна позиция по тази тема.",
+    taxes: "Няма публично достъпна ясна позиция по тази тема.",
+    profile: { taxes: "medium", eu: "skeptic", russia: "neutral", state: "medium" }
+  },
+  {
+    name: "СИНЯ БЪЛГАРИЯ",
+    short: "СБ",
+    type: "coalition",
+    logoText: "СБ",
+    logoClass: "bg-blue-600 text-white",
+    cikUrl: "https://www.cik.bg/bg/ns19.04.2026/registers/percoal",
+    officialProgramUrl: null,
+    officialWebsite: null,
+    infoStatus: "limited",
+    economy: "Няма публично достъпна подробна предизборна програма или ясно формулирани позиции по тази тема към момента.",
+    healthcare: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    education: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    eu: "Няма достатъчно публична информация за конкретна позиция относно ЕС.",
+    russia: "Няма достатъчно публична информация за ясна позиция относно отношенията с Русия.",
+    nato: "Няма достатъчно публична информация за конкретна позиция по тази тема.",
+    energy: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    migration: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    taxes: "Няма публично достъпна ясна позиция по тази тема.",
+    profile: { taxes: "low", eu: "pro", russia: "far", state: "low" }
+  },
+  {
+    name: "ПРОГРЕСИВНА БЪЛГАРИЯ",
+    short: "ПБ",
+    type: "coalition",
+    logoText: "ПБ",
+    logoClass: "bg-purple-700 text-white",
+    cikUrl: "https://www.cik.bg/bg/ns19.04.2026/registers/percoal",
+    officialProgramUrl: null,
+    officialWebsite: null,
+    infoStatus: "limited",
+    economy: "Няма публично достъпна подробна предизборна програма или ясно формулирани позиции по тази тема към момента.",
+    healthcare: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    education: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    eu: "Няма публично достъпна ясна позиция по тази тема.",
+    russia: "Няма публично достъпна ясна позиция по тази тема.",
+    nato: "Няма публично достъпна ясна позиция по тази тема.",
+    energy: "Няма публично достъпна ясна позиция по тази тема.",
+    migration: "Няма публично достъпна ясна позиция по тази тема.",
+    taxes: "Няма публично достъпна ясна позиция по тази тема.",
+    profile: { taxes: "medium", eu: "pro", russia: "neutral", state: "high" }
+  },
+  {
+    name: "СИЯНИЕ",
+    short: "СИЯ",
+    type: "coalition",
+    logoText: "СИ",
+    logoClass: "bg-yellow-500 text-black",
+    cikUrl: "https://www.cik.bg/bg/ns19.04.2026/registers/percoal",
+    officialProgramUrl: null,
+    officialWebsite: null,
+    infoStatus: "limited",
+    economy: "Няма публично достъпна подробна предизборна програма или ясно формулирани позиции по тази тема към момента.",
+    healthcare: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    education: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    eu: "Няма публично достъпна ясна позиция по тази тема.",
+    russia: "Няма публично достъпна ясна позиция по тази тема.",
+    nato: "Няма публично достъпна ясна позиция по тази тема.",
+    energy: "Няма публично достъпна ясна позиция по тази тема.",
+    migration: "Няма публично достъпна ясна позиция по тази тема.",
+    taxes: "Няма публично достъпна ясна позиция по тази тема.",
+    profile: { taxes: "medium", eu: "pro", russia: "neutral", state: "medium" }
+  },
+  {
+    name: "АНТИКОРУПЦИОНЕН БЛОК",
+    short: "АКБ",
+    type: "coalition",
+    logoText: "АК",
+    logoClass: "bg-emerald-800 text-white",
+    cikUrl: "https://www.cik.bg/bg/ns19.04.2026/registers/percoal",
+    officialProgramUrl: null,
+    officialWebsite: null,
+    infoStatus: "limited",
+    economy: "Няма публично достъпна подробна предизборна програма или ясно формулирани позиции по тази тема към момента.",
+    healthcare: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    education: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    eu: "Няма достатъчно публична информация за конкретна позиция относно ЕС.",
+    russia: "Няма достатъчно публична информация за ясна позиция относно отношенията с Русия.",
+    nato: "Няма достатъчно публична информация за конкретна позиция по тази тема.",
+    energy: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    migration: "Няма достатъчно публична информация за конкретни политики по тази тема.",
+    taxes: "Няма публично достъпна ясна позиция по тази тема.",
+    profile: { taxes: "medium", eu: "pro", russia: "far", state: "medium" }
+  }
+];
 
 const topics = [
   { key: "economy", label: "Икономика" },
@@ -256,7 +582,7 @@ function PartyPositionMap({ parties, onSelectParty }) {
             title={party.name}
             onClick={() => onSelectParty?.(party)}
           >
-            <div className="flex items-center gap-2 rounded-full border bg-white px-2 py-1 shadow-sm">
+            <div className="flex items-center gap-2 rounded-full border bg-background px-2 py-1 shadow-sm">
               <div className={`h-7 w-7 rounded-full flex items-center justify-center text-[10px] font-bold ${party.logoClass}`}>
                 {party.logoText}
               </div>
@@ -273,7 +599,7 @@ function CompareTable({ selectedTopic, parties }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full border rounded-2xl overflow-hidden">
-        <thead className="bg-slate-100">
+        <thead className="bg-muted">
           <tr>
             <th className="text-left p-3">Партия</th>
             <th className="text-left p-3">Позиция</th>
@@ -314,7 +640,7 @@ function PartyCards({ search, selectedPartyName, onSelectParty, parties }) {
           onClick={() => onSelectParty?.(party)}
           className="text-left"
         >
-          <Card className={`rounded-2xl shadow transition hover:shadow-md ${selectedPartyName === party.name ? "ring-2 ring-blue-600" : ""}`}>
+          <Card className={`rounded-2xl shadow transition hover:shadow-md ${selectedPartyName === party.name ? "ring-2 ring-primary" : ""}`}>
             <CardHeader>
               <div className="flex items-center gap-3">
                 <div className={`h-12 w-12 rounded-full flex items-center justify-center text-sm font-bold ${party.logoClass}`}>
@@ -325,20 +651,51 @@ function PartyCards({ search, selectedPartyName, onSelectParty, parties }) {
                     <CardTitle>{party.name}</CardTitle>
                     {party.infoStatus === "limited" && <Badge variant="outline">Ограничена публична информация</Badge>}
                   </div>
-                  <div className="text-xs text-slate-500">{party.short}</div>
+                  <div className="text-xs text-muted-foreground">{party.short}</div>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
-              <div><strong>Икономика:</strong><p>{party.economy}</p></div>
-              <div><strong>Здравеопазване:</strong><p>{party.healthcare}</p></div>
-              <div><strong>Образование:</strong><p>{party.education}</p></div>
-              <div><strong>Мнение за ЕС:</strong><p>{party.eu}</p></div>
-              <div><strong>Връзки с Русия:</strong><p>{party.russia}</p></div>
-              <div><strong>НАТО:</strong><p>{party.nato}</p></div>
-              <div><strong>Енергетика:</strong><p>{party.energy}</p></div>
-              <div><strong>Миграция:</strong><p>{party.migration}</p></div>
-              <div><strong>Данъци:</strong><p>{party.taxes}</p></div>
+              <div>
+                <strong>Икономика:</strong>
+                <p>{party.economy}</p>
+              </div>
+              <div>
+                <strong>Здравеопазване:</strong>
+                <p>{party.healthcare}</p>
+              </div>
+              <div>
+                <strong>Образование:</strong>
+                <p>{party.education}</p>
+              </div>
+              <div>
+                <strong>Мнение за ЕС:</strong>
+                <p>{party.eu}</p>
+              </div>
+              <div>
+                <strong>Връзки с Русия:</strong>
+                <p>{party.russia}</p>
+              </div>
+              <div>
+                <strong>НАТО:</strong>
+                <p>{party.nato}</p>
+              </div>
+              <div>
+                <strong>Енергетика:</strong>
+                <p>{party.energy}</p>
+              </div>
+              <div>
+                <strong>Миграция:</strong>
+                <p>{party.migration}</p>
+              </div>
+              <div>
+                <strong>Данъци:</strong>
+                <p>{party.taxes}</p>
+              </div>
+              <div className="flex flex-wrap gap-2 pt-2 text-xs text-primary underline underline-offset-4">
+                <span>Покажи контакти и детайли</span>
+                {party.officialProgramUrl && <span>Официална програма</span>}
+              </div>
             </CardContent>
           </Card>
         </button>
@@ -359,7 +716,10 @@ function VotingQuiz({ parties }) {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
   };
 
-  const getMatchPoints = (answer, ideal) => 4 - Math.abs(answer - ideal);
+  const getMatchPoints = (answer, ideal) => {
+    const distance = Math.abs(answer - ideal);
+    return 4 - distance;
+  };
 
   const buildPartyInsight = (party) => {
     const details = questions.map((question) => {
@@ -368,24 +728,50 @@ function VotingQuiz({ parties }) {
       const distance = Math.abs(answer - ideal);
       const points = getMatchPoints(answer, ideal);
 
-      const partyPosition = ideal >= 4
-        ? `позицията на партията е „подкрепя ${question.agreementLabel}“`
-        : ideal <= 2
-        ? `позицията на партията е „по-скоро е против ${question.agreementLabel}“`
-        : `позицията на партията е по-умерена по темата „${question.agreementLabel}“`;
+      return {
+        id: question.id,
+        text: question.text,
+        dimension: question.dimension,
+        answer,
+        ideal,
+        distance,
+        points,
+        isStrongMatch: distance <= 1,
+        explanation: (() => {
+          const partyPosition = ideal >= 4
+            ? `позицията на партията е „подкрепя ${question.agreementLabel}“`
+            : ideal <= 2
+            ? `позицията на партията е „по-скоро е против ${question.agreementLabel}“`
+            : `позицията на партията е по-умерена по темата „${question.agreementLabel}“`;
 
-      let explanation = `Имате сериозно разминаване с ${party.name}. По този въпрос ${partyPosition}, а вашият отговор е ${answer}/5.`;
-      if (distance <= 1) explanation = `Вашият отговор е много близо до позицията на ${party.name}. По този въпрос ${partyPosition}.`;
-      else if (distance === 2) explanation = `${party.name} е частично близо до вашата позиция. По този въпрос ${partyPosition}, докато вашият отговор е ${answer}/5.`;
+          if (distance <= 1) {
+            return `Вашият отговор е много близо до позицията на ${party.name}. По този въпрос ${partyPosition}.`;
+          }
 
-      return { id: question.id, text: question.text, answer, ideal, distance, points, explanation, isStrongMatch: distance <= 1 };
+          if (distance === 2) {
+            return `${party.name} е частично близо до вашата позиция. По този въпрос ${partyPosition}, докато вашият отговор е ${answer}/5.`;
+          }
+
+          return `Имате сериозно разминаване с ${party.name}. По този въпрос ${partyPosition}, а вашият отговор е ${answer}/5.`;
+        })(),
+      };
     });
+
+    const strongestMatches = details
+      .filter((item) => item.isStrongMatch)
+      .sort((a, b) => a.distance - b.distance || b.points - a.points)
+      .slice(0, 3);
+
+    const biggestDifferences = details
+      .filter((item) => item.distance >= 2)
+      .sort((a, b) => b.distance - a.distance || a.points - b.points)
+      .slice(0, 3);
 
     const avgDistance = details.reduce((sum, item) => sum + item.distance, 0) / details.length;
 
     return {
-      strongestMatches: details.filter((item) => item.isStrongMatch).sort((a, b) => a.distance - b.distance || b.points - a.points).slice(0, 3),
-      biggestDifferences: details.filter((item) => item.distance >= 2).sort((a, b) => b.distance - a.distance || a.points - b.points).slice(0, 3),
+      strongestMatches,
+      biggestDifferences,
       details,
       summary:
         avgDistance <= 1.2
@@ -398,6 +784,7 @@ function VotingQuiz({ parties }) {
 
   const calculate = () => {
     const maxScore = questions.length * 4;
+
     const ranking = parties
       .map((party) => {
         let score = 0;
@@ -410,10 +797,12 @@ function VotingQuiz({ parties }) {
           totalDistance += Math.abs(answer - ideal);
         });
 
+        const percent = Math.round((score / maxScore) * 100);
+
         return {
           ...party,
           score,
-          percent: Math.round((score / maxScore) * 100),
+          percent,
           totalDistance,
           insight: buildPartyInsight(party),
         };
@@ -427,15 +816,22 @@ function VotingQuiz({ parties }) {
 
   const shareResult = async () => {
     if (!result?.best) return;
+
     const text = `Моят най-близък политически профил е ${result.best.name} (${result.best.percent}% съвпадение) в теста за сравнение на партиите.`;
+
     try {
       if (navigator.share) {
-        await navigator.share({ title: "Моят резултат от теста за партиите", text, url: window.location.href });
+        await navigator.share({
+          title: "Моят резултат от теста за партиите",
+          text,
+          url: window.location.href,
+        });
         setShareMessage("Резултатът беше споделен успешно.");
-      } else {
-        await navigator.clipboard.writeText(`${text} ${window.location.href}`);
-        setShareMessage("Линкът и резултатът са копирани в clipboard.");
+        return;
       }
+
+      await navigator.clipboard.writeText(`${text} ${window.location.href}`);
+      setShareMessage("Линкът и резултатът са копирани в clipboard.");
     } catch {
       setShareMessage("Не успяхме да споделим резултата. Опитайте отново.");
     }
@@ -445,22 +841,29 @@ function VotingQuiz({ parties }) {
     <div className="space-y-6">
       <div className="space-y-2">
         <h2 className="text-2xl font-semibold">Тест: За коя партия съвпадат вижданията ви?</h2>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-muted-foreground">
           Използвай скалата от 1 до 5 за всяко твърдение. 1 означава „напълно не съм съгласен", 3 е неутрално, а 5 означава „напълно съм съгласен“.
         </p>
       </div>
 
       {questions.map((q) => {
         const value = answers[q.id] ?? 3;
+
         return (
-          <div key={q.id} className="border rounded-xl p-4 space-y-4 bg-white">
+          <div key={q.id} className="border rounded-xl p-4 space-y-4">
             <div className="font-medium">{q.text}</div>
             <div className="px-2">
-              <Slider min={1} max={5} step={1} value={[value]} onValueChange={(vals) => handleAnswer(q.id, vals[0])} />
+              <Slider
+                min={1}
+                max={5}
+                step={1}
+                value={[value]}
+                onValueChange={(vals) => handleAnswer(q.id, vals[0])}
+              />
             </div>
-            <div className="flex items-center justify-between text-xs text-slate-500 gap-3">
+            <div className="flex items-center justify-between text-xs text-muted-foreground gap-3">
               <span>1 · Не съм съгласен</span>
-              <span className="text-sm font-semibold text-slate-900">{value}</span>
+              <span className="text-sm font-semibold text-foreground">{value}</span>
               <span>5 · Напълно съм съгласен</span>
             </div>
           </div>
@@ -469,47 +872,69 @@ function VotingQuiz({ parties }) {
 
       <div className="flex gap-3 flex-wrap">
         <Button onClick={calculate}>Виж резултат</Button>
-        <Button variant="secondary" onClick={shareResult} disabled={!result?.best}>Сподели резултата</Button>
-        <Button variant="outline" onClick={() => {
-          setAnswers(Object.fromEntries(questions.map((q) => [q.id, 3])));
-          setResult(null);
-          setSelectedInsightParty(null);
-          setShareMessage("");
-        }}>Нулирай теста</Button>
+        <Button variant="secondary" onClick={shareResult} disabled={!result?.best}>
+          Сподели резултата
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => {
+            setAnswers(Object.fromEntries(questions.map((q) => [q.id, 3])));
+            setResult(null);
+            setSelectedInsightParty(null);
+            setShareMessage("");
+          }}
+        >
+          Нулирай теста
+        </Button>
       </div>
 
-      {shareMessage && <div className="rounded-xl border bg-slate-50 p-3 text-sm text-slate-500">{shareMessage}</div>}
+      {shareMessage && (
+        <div className="rounded-xl border bg-muted/50 p-3 text-sm text-muted-foreground">
+          {shareMessage}
+        </div>
+      )}
 
-      <div className="w-full border rounded-2xl p-6 text-center text-sm text-slate-500 bg-white">
-        <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="13909587580" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <div className="w-full border rounded-2xl p-6 text-center text-sm text-muted-foreground">
+        <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="3333333333" data-ad-format="auto" data-full-width-responsive="true"></ins>
       </div>
 
       {result && (
         <div className="space-y-4">
-          <div className="p-6 border rounded-2xl bg-slate-50">
+          <div className="p-6 border rounded-2xl bg-muted">
             <strong>Най-близката партия до вашите виждания:</strong>
-            <div className="mt-4 flex items-center gap-3 rounded-xl border bg-white p-4">
-              <div className={`h-12 w-12 rounded-full flex items-center justify-center text-sm font-bold ${result.best.logoClass}`}>{result.best.logoText}</div>
+            <div className="mt-4 flex items-center gap-3 rounded-xl border bg-background p-4">
+              <div className={`h-12 w-12 rounded-full flex items-center justify-center text-sm font-bold ${result.best.logoClass}`}>
+                {result.best.logoText}
+              </div>
               <div>
                 <div className="text-2xl font-bold">{result.best.name}</div>
-                <div className="text-sm text-slate-500">{result.best.percent}% съвпадение · {result.best.score} точки</div>
+                <div className="text-sm text-muted-foreground">
+                  {result.best.percent}% съвпадение · {result.best.score} точки
+                </div>
               </div>
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             {result.ranking.map((party) => (
-              <button key={party.name} type="button" onClick={() => setSelectedInsightParty(party)} className={`border rounded-2xl p-4 flex items-center justify-between gap-4 text-left transition hover:shadow-sm bg-white ${selectedInsightParty?.name === party.name ? "ring-2 ring-blue-600" : ""}`}>
+              <button
+                key={party.name}
+                type="button"
+                onClick={() => setSelectedInsightParty(party)}
+                className={`border rounded-2xl p-4 flex items-center justify-between gap-4 text-left transition hover:shadow-sm ${selectedInsightParty?.name === party.name ? "ring-2 ring-primary" : ""}`}
+              >
                 <div className="flex items-center gap-3">
-                  <div className={`h-10 w-10 rounded-full flex items-center justify-center text-xs font-bold ${party.logoClass}`}>{party.logoText}</div>
+                  <div className={`h-10 w-10 rounded-full flex items-center justify-center text-xs font-bold ${party.logoClass}`}>
+                    {party.logoText}
+                  </div>
                   <div>
                     <div className="font-semibold">{party.name}</div>
-                    <div className="text-xs text-slate-500">{party.score} точки</div>
+                    <div className="text-xs text-muted-foreground">{party.score} точки</div>
                   </div>
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold">{party.percent}%</div>
-                  <div className="text-xs text-slate-500">съвпадение</div>
+                  <div className="text-xs text-muted-foreground">съвпадение</div>
                 </div>
               </button>
             ))}
@@ -519,43 +944,59 @@ function VotingQuiz({ parties }) {
             <Card className="rounded-2xl border shadow-sm">
               <CardHeader>
                 <div className="flex items-center gap-3">
-                  <div className={`h-12 w-12 rounded-full flex items-center justify-center text-sm font-bold ${selectedInsightParty.logoClass}`}>{selectedInsightParty.logoText}</div>
+                  <div className={`h-12 w-12 rounded-full flex items-center justify-center text-sm font-bold ${selectedInsightParty.logoClass}`}>
+                    {selectedInsightParty.logoText}
+                  </div>
                   <div>
                     <CardTitle>Защо {selectedInsightParty.name} е на тази позиция</CardTitle>
-                    <div className="text-sm text-slate-500">{selectedInsightParty.percent}% съвпадение · {selectedInsightParty.score} точки</div>
+                    <div className="text-sm text-muted-foreground">
+                      {selectedInsightParty.percent}% съвпадение · {selectedInsightParty.score} точки
+                    </div>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-6 text-sm">
-                <p className="text-slate-500">{selectedInsightParty.insight.summary}</p>
+                <p className="text-muted-foreground">{selectedInsightParty.insight.summary}</p>
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-3">
                     <h3 className="font-semibold">Къде съвпадате най-много</h3>
                     {selectedInsightParty.insight.strongestMatches.length > 0 ? (
                       selectedInsightParty.insight.strongestMatches.map((item) => (
-                        <div key={item.id} className="rounded-xl border p-3 space-y-2 bg-white">
+                        <div key={item.id} className="rounded-xl border p-3 space-y-2">
                           <Badge variant="secondary">Силно съвпадение</Badge>
                           <div className="font-medium">{item.text}</div>
-                          <div className="text-slate-500">{item.explanation}</div>
-                          <div className="text-xs text-slate-500">Ваш отговор: {item.answer}/5 · Профил на партията: {item.ideal}/5 · {item.points} точки</div>
+                          <div className="text-muted-foreground">{item.explanation}</div>
+                          <div className="text-xs text-muted-foreground">
+                            Ваш отговор: {item.answer}/5 · Профил на партията: {item.ideal}/5 · {item.points} точки
+                          </div>
                         </div>
                       ))
-                    ) : <div className="rounded-xl border p-3 text-slate-500 bg-white">Няма изразени силни съвпадения по текущите отговори.</div>}
+                    ) : (
+                      <div className="rounded-xl border p-3 text-muted-foreground">
+                        Няма изразени силни съвпадения по текущите отговори.
+                      </div>
+                    )}
                   </div>
 
                   <div className="space-y-3">
                     <h3 className="font-semibold">Къде се различавате</h3>
                     {selectedInsightParty.insight.biggestDifferences.length > 0 ? (
                       selectedInsightParty.insight.biggestDifferences.map((item) => (
-                        <div key={item.id} className="rounded-xl border p-3 space-y-2 bg-white">
+                        <div key={item.id} className="rounded-xl border p-3 space-y-2">
                           <Badge variant="outline">Разминаване</Badge>
                           <div className="font-medium">{item.text}</div>
-                          <div className="text-slate-500">{item.explanation}</div>
-                          <div className="text-xs text-slate-500">Ваш отговор: {item.answer}/5 · Профил на партията: {item.ideal}/5 · {item.points} точки</div>
+                          <div className="text-muted-foreground">{item.explanation}</div>
+                          <div className="text-xs text-muted-foreground">
+                            Ваш отговор: {item.answer}/5 · Профил на партията: {item.ideal}/5 · {item.points} точки
+                          </div>
                         </div>
                       ))
-                    ) : <div className="rounded-xl border p-3 text-slate-500 bg-white">Няма големи разминавания по текущите отговори.</div>}
+                    ) : (
+                      <div className="rounded-xl border p-3 text-muted-foreground">
+                        Няма големи разминавания по текущите отговори.
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -563,12 +1004,12 @@ function VotingQuiz({ parties }) {
                   <h3 className="font-semibold">Подробности по всички въпроси</h3>
                   <div className="space-y-2">
                     {selectedInsightParty.insight.details.map((item) => (
-                      <div key={item.id} className="rounded-xl border p-3 flex flex-col gap-2 md:flex-row md:items-start md:justify-between bg-white">
+                      <div key={item.id} className="rounded-xl border p-3 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                         <div className="space-y-1">
                           <div className="font-medium">{item.text}</div>
-                          <div className="text-xs text-slate-500">{item.explanation}</div>
+                          <div className="text-xs text-muted-foreground">{item.explanation}</div>
                         </div>
-                        <div className="text-xs text-slate-500 md:text-right whitespace-nowrap">
+                        <div className="text-xs text-muted-foreground md:text-right whitespace-nowrap">
                           Ваш: {item.answer}/5<br />
                           Партия: {item.ideal}/5<br />
                           Точки: {item.points}/4
@@ -588,23 +1029,19 @@ function VotingQuiz({ parties }) {
 
 export default function ElectionPlatformComparator() {
   useEffect(() => {
-    if (!document.querySelector('script[data-ga="true"]')) {
-      const gaScript = document.createElement("script");
-      gaScript.async = true;
-      gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-R51QVD3221";
-      gaScript.setAttribute("data-ga", "true");
-      document.head.appendChild(gaScript);
+    const gaScript = document.createElement("script");
+    gaScript.async = true;
+    gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-R51QVD3221";
+    document.head.appendChild(gaScript);
 
-      const gaConfig = document.createElement("script");
-      gaConfig.setAttribute("data-ga", "true");
-      gaConfig.innerHTML = `
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);} 
-        gtag('js', new Date());
-        gtag('config', 'G-R51QVD3221');
-      `;
-      document.head.appendChild(gaConfig);
-    }
+    const gaConfig = document.createElement("script");
+    gaConfig.innerHTML = `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);} 
+      gtag('js', new Date());
+      gtag('config', 'G-R51QVD3221');
+    `;
+    document.head.appendChild(gaConfig);
 
     document.title = "Сравни партиите в България | Тест за коя партия съм";
 
@@ -636,7 +1073,10 @@ export default function ElectionPlatformComparator() {
   const [selectedParty, setSelectedParty] = useState(null);
   const [currentPage, setCurrentPage] = useState("home");
 
-  const sortedParties = useMemo(() => [...parties].sort((a, b) => a.name.localeCompare(b.name, "bg")), []);
+  const sortedParties = useMemo(
+    () => [...parties].sort((a, b) => a.name.localeCompare(b.name, "bg")),
+    []
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -650,6 +1090,7 @@ export default function ElectionPlatformComparator() {
         });
       } catch {}
     }, 250);
+
     return () => clearTimeout(timer);
   }, [currentPage]);
 
@@ -659,7 +1100,9 @@ export default function ElectionPlatformComparator() {
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="space-y-2">
             <h1 className="text-4xl font-bold">Сравни предизборните програми</h1>
-            <p className="text-slate-500 max-w-2xl">Независим инструмент за сравнение на политическите платформи.</p>
+            <p className="text-muted-foreground max-w-2xl">
+              Независим инструмент за сравнение на политическите платформи.
+            </p>
           </div>
 
           <div className="flex gap-2 flex-wrap">
@@ -669,98 +1112,80 @@ export default function ElectionPlatformComparator() {
           </div>
         </div>
 
-        {(currentPage === "home" || currentPage === "compare") && (
-          <div className="flex gap-4 flex-wrap">
-            <Input placeholder="Търси партия..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-sm" />
-            {currentPage === "compare" && (
-              <Select onValueChange={setTopic} defaultValue="economy">
-                <SelectTrigger className="w-56"><SelectValue placeholder="Избери тема" /></SelectTrigger>
-                <SelectContent>
-                  {topics.map((t) => <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>)}
-                </SelectContent>
-              </Select>
-            )}
+        
+              className="max-w-sm"
+            />
+
+            <Select onValueChange={setTopic} defaultValue="economy">
+              <SelectTrigger className="w-56">
+                <SelectValue placeholder="Избери тема" />
+              </SelectTrigger>
+              <SelectContent>
+                {topics.map((t) => (
+                  <SelectItem key={t.key} value={t.key}>
+                    {t.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         )}
       </header>
 
+      {/* Top Ad Banner */}
+      <div className="w-full border rounded-2xl p-6 text-center text-sm text-muted-foreground">
+        <ins className="adsbygoogle"
+          style={{ display: "block" }}
+          data-ad-client="ca-pub-2974245059167035"
+          data-ad-slot="4444444444"
+          data-ad-format="auto"
+          data-full-width-responsive="true">
+        </ins>
+      </div>
+
       {currentPage === "home" ? (
         <>
-          <section className="space-y-4"><VotingQuiz parties={sortedParties} /></section>
-
-          <div className="w-full border rounded-2xl p-8 text-center text-sm text-slate-500 bg-white">
-            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="13909587580" data-ad-format="auto" data-full-width-responsive="true"></ins>
-          </div>
-
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold">Всички партии</h2>
-            <PartyCards search={search} selectedPartyName={selectedParty?.name} onSelectParty={setSelectedParty} parties={sortedParties} />
-
-            {selectedParty && (
-              <Card className="rounded-2xl border shadow-sm">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className={`h-12 w-12 rounded-full flex items-center justify-center text-sm font-bold ${selectedParty.logoClass}`}>{selectedParty.logoText}</div>
-                    <div>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <CardTitle>{selectedParty.name}</CardTitle>
-                        {selectedParty.infoStatus === "limited" && <Badge variant="outline">Ограничена публична информация</Badge>}
-                      </div>
-                      <div className="text-sm text-slate-500">{selectedParty.type === "coalition" ? "Коалиция" : "Партия"}</div>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-6 text-sm">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <h3 className="font-semibold">Контакти и източници</h3>
-                      <div className="rounded-xl border p-4 space-y-2 bg-white">
-                        <div><strong>Официален регистър в ЦИК:</strong>{" "}
-                          <a href={selectedParty.cikUrl} target="_blank" rel="noreferrer" className="text-blue-600 underline underline-offset-4">отвори регистрацията</a>
-                        </div>
-                        <div><strong>Официална програма:</strong>{" "}
-                          {selectedParty.officialProgramUrl ? (
-                            <a href={selectedParty.officialProgramUrl} target="_blank" rel="noreferrer" className="text-blue-600 underline underline-offset-4">отвори програмата</a>
-                          ) : <span className="text-slate-500">няма добавен официален линк към момента</span>}
-                        </div>
-                        <div><strong>Официален сайт:</strong>{" "}
-                          {selectedParty.officialWebsite ? (
-                            <a href={selectedParty.officialWebsite} target="_blank" rel="noreferrer" className="text-blue-600 underline underline-offset-4">отвори сайта</a>
-                          ) : <span className="text-slate-500">няма добавен официален сайт към момента</span>}
-                        </div>
-                        <div className="text-slate-500">За част от формациите пълните контакти и официалните линкове още не са въведени ръчно в сайта. До тогава може да се ползва официалният регистър на ЦИК.</div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <h3 className="font-semibold">Кратък профил</h3>
-                      <div className="rounded-xl border p-4 space-y-2 bg-white">
-                        <div><strong>Икономика:</strong> {selectedParty.economy}</div>
-                        <div><strong>Здравеопазване:</strong> {selectedParty.healthcare}</div>
-                        <div><strong>Образование:</strong> {selectedParty.education}</div>
-                        <div><strong>ЕС:</strong> {selectedParty.eu}</div>
-                        <div><strong>Русия:</strong> {selectedParty.russia}</div>
-                        <div><strong>НАТО:</strong> {selectedParty.nato}</div>
-                        <div><strong>Енергетика:</strong> {selectedParty.energy}</div>
-                        <div><strong>Миграция:</strong> {selectedParty.migration}</div>
-                        <div><strong>Данъци:</strong> {selectedParty.taxes}</div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+            <VotingQuiz parties={sortedParties} />
           </section>
 
-          <div className="w-full border rounded-2xl p-8 text-center text-sm text-slate-500 bg-white">
-            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="13909587580" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          <div className="w-full border rounded-2xl p-8 text-center text-sm text-muted-foreground">
+            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="1111111111" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          </div>
+
+          
+
+          <div className="w-full border rounded-2xl p-8 text-center text-sm text-muted-foreground">
+            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="2222222222" data-ad-format="auto" data-full-width-responsive="true"></ins>
           </div>
         </>
       ) : currentPage === "compare" ? (
         <section className="space-y-6">
+          <div className="flex gap-4 flex-wrap">
+            <Input
+              placeholder="Търси партия..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="max-w-sm"
+            />
+
+            <Select onValueChange={setTopic} defaultValue="economy">
+              <SelectTrigger className="w-56">
+                <SelectValue placeholder="Избери тема" />
+              </SelectTrigger>
+              <SelectContent>
+                {topics.map((t) => (
+                  <SelectItem key={t.key} value={t.key}>
+                    {t.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           <div>
             <h2 className="text-2xl font-semibold">Сравнение на програмите</h2>
-            <CompareTable selectedTopic={topic} parties={sortedParties.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))} />
+            <CompareTable selectedTopic={topic} parties={sortedParties} />
           </div>
         </section>
       ) : (
@@ -769,7 +1194,7 @@ export default function ElectionPlatformComparator() {
         </section>
       )}
 
-      <footer className="text-center text-xs text-slate-500 pt-10 space-y-2">
+      <footer className="text-center text-xs text-muted-foreground pt-10 space-y-2">
         <div>Независим проект за сравнение на предизборни програми.</div>
         <div className="flex justify-center gap-4 flex-wrap">
           <span>About</span>
