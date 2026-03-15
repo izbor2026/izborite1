@@ -1302,7 +1302,7 @@ export default function ElectionPlatformComparator() {
         <section className="space-y-4 max-w-3xl">
           <h2 className="text-2xl font-semibold">Contact</h2>
           <p>За предложения и корекции:</p>
-          <p className="font-semibold">contact@izbor2026.com</p>
+          <p className="font-semibold">contact@izborite.info</p>
         </section>
       )}
 
