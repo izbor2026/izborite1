@@ -1386,7 +1386,7 @@ export default function ElectionPlatformComparator() {
         <section className="space-y-4 max-w-3xl">
           <h2 className="text-2xl font-semibold">Contact</h2>
           <p>За предложения, корекции и официални отговори от партии:</p>
-          <p className="font-semibold">contact@izbor2026.com</p>
+          <p className="font-semibold">contact@izborite.info</p>
         </section>
       ) : (
         <section className="space-y-6 max-w-4xl">
@@ -1411,10 +1411,9 @@ export default function ElectionPlatformComparator() {
           </div>
 
           <div className="rounded-2xl border p-5 bg-muted/30 space-y-2">
-            <div><strong>Ориентировъчен трафик:</strong> {siteStats.weeklyVisits} посещения седмично</div>
-            <div><strong>Формат:</strong> 970×90 или сходен leaderboard банер</div>
+                        <div><strong>Формат:</strong> 970×90 или сходен leaderboard банер</div>
             <div><strong>Позиция:</strong> най-горе на сайта, преди теста</div>
-            <div><strong>Контакт:</strong> contact@izbor2026.com</div>
+            <div><strong>Контакт:</strong> contact@izborite.info</div>
           </div>
         </section>
       )}
