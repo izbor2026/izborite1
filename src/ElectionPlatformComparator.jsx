@@ -1218,10 +1218,6 @@ export default function ElectionPlatformComparator() {
           Банер позиция на началната страница – вижда се от всички посетители преди теста.
         </div>
 
-        <div className="text-sm text-muted-foreground">
-          Очаквана аудитория: <span className="font-semibold text-foreground">{siteStats.weeklyVisits}</span> посещения седмично ·
-          <span className="font-semibold text-foreground"> {siteStats.monthlyVisits}</span> посещения месечно
-        </div>
 
         <div className="grid md:grid-cols-3 gap-4 text-sm">
           {adPackages.map((pkg) => (
