@@ -1112,7 +1112,12 @@ export default function ElectionPlatformComparator() {
           </div>
         </div>
 
-        
+        {currentPage === "compare" && (
+          <div className="flex gap-4 flex-wrap">
+            <Input
+              placeholder="Търси партия..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               className="max-w-sm"
             />
 
@@ -1185,7 +1190,88 @@ export default function ElectionPlatformComparator() {
 
           <div>
             <h2 className="text-2xl font-semibold">Сравнение на програмите</h2>
-            <CompareTable selectedTopic={topic} parties={sortedParties} />
+            <CompareTable selectedTopic={topic} parties={sortedParties.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))} />
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold">Информация за партиите</h2>
+            <PartyCards
+              search={search}
+              selectedPartyName={selectedParty?.name}
+              onSelectParty={setSelectedParty}
+              parties={sortedParties.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))}
+            />
+
+            {selectedParty && (
+              <Card className="rounded-2xl border shadow-sm">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className={`h-12 w-12 rounded-full flex items-center justify-center text-sm font-bold ${selectedParty.logoClass}`}>
+                      {selectedParty.logoText}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <CardTitle>{selectedParty.name}</CardTitle>
+                        {selectedParty.infoStatus === "limited" && <Badge variant="outline">Ограничена публична информация</Badge>}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {selectedParty.type === "coalition" ? "Коалиция" : "Партия"}
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-6 text-sm">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <h3 className="font-semibold">Контакти и източници</h3>
+                      <div className="rounded-xl border p-4 space-y-2">
+                        <div>
+                          <strong>Официален регистър в ЦИК:</strong>{" "}
+                          <a href={selectedParty.cikUrl} target="_blank" rel="noreferrer" className="text-primary underline underline-offset-4">
+                            отвори регистрацията
+                          </a>
+                        </div>
+                        <div>
+                          <strong>Официална програма:</strong>{" "}
+                          {selectedParty.officialProgramUrl ? (
+                            <a href={selectedParty.officialProgramUrl} target="_blank" rel="noreferrer" className="text-primary underline underline-offset-4">
+                              отвори програмата
+                            </a>
+                          ) : (
+                            <span className="text-muted-foreground">няма добавен официален линк към момента</span>
+                          )}
+                        </div>
+                        <div>
+                          <strong>Официален сайт:</strong>{" "}
+                          {selectedParty.officialWebsite ? (
+                            <a href={selectedParty.officialWebsite} target="_blank" rel="noreferrer" className="text-primary underline underline-offset-4">
+                              отвори сайта
+                            </a>
+                          ) : (
+                            <span className="text-muted-foreground">няма добавен официален сайт към момента</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <h3 className="font-semibold">Кратък профил</h3>
+                      <div className="rounded-xl border p-4 space-y-2">
+                        <div><strong>Икономика:</strong> {selectedParty.economy}</div>
+                        <div><strong>Здравеопазване:</strong> {selectedParty.healthcare}</div>
+                        <div><strong>Образование:</strong> {selectedParty.education}</div>
+                        <div><strong>ЕС:</strong> {selectedParty.eu}</div>
+                        <div><strong>Русия:</strong> {selectedParty.russia}</div>
+                        <div><strong>НАТО:</strong> {selectedParty.nato}</div>
+                        <div><strong>Енергетика:</strong> {selectedParty.energy}</div>
+                        <div><strong>Миграция:</strong> {selectedParty.migration}</div>
+                        <div><strong>Данъци:</strong> {selectedParty.taxes}</div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </section>
       ) : (
