@@ -825,9 +825,24 @@ function VotingQuiz({ parties }) {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
   };
 
+  const normalizeAnswer = (value) => (value >= 4 ? 1 : value <= 2 ? -1 : 0);
+
+  const getAnswerLabel = (value) => {
+    const normalized = normalizeAnswer(value);
+    if (normalized === 1) return "Да";
+    if (normalized === -1) return "Не";
+    return "Не се интересувам";
+  };
+
   const getMatchPoints = (answer, ideal) => {
-    const distance = Math.abs(answer - ideal);
-    return 4 - distance;
+    const normalizedAnswer = normalizeAnswer(answer);
+    const normalizedIdeal = normalizeAnswer(ideal);
+
+    if (normalizedAnswer === 0 || normalizedIdeal === 0) {
+      return 1;
+    }
+
+    return normalizedAnswer === normalizedIdeal ? 2 : 0;
   };
 
   const buildPartyInsight = (party) => {
@@ -835,7 +850,9 @@ function VotingQuiz({ parties }) {
       const answer = answers[question.id] ?? 3;
       const partyAnswerMeta = getPartyAnswerForQuestion(party, question);
       const ideal = partyAnswerMeta.value
-      const distance = Math.abs(answer - ideal);
+      const normalizedAnswer = normalizeAnswer(answer);
+      const normalizedIdeal = normalizeAnswer(ideal);
+      const distance = normalizedAnswer === normalizedIdeal ? 0 : normalizedAnswer === 0 || normalizedIdeal === 0 ? 1 : 2
       const points = getMatchPoints(answer, ideal);
 
       return {
@@ -856,15 +873,15 @@ function VotingQuiz({ parties }) {
             ? `позицията на партията е „по-скоро е против ${question.agreementLabel}“`
             : `позицията на партията е по-умерена по темата „${question.agreementLabel}“`;
 
-          if (distance <= 1) {
-            return `Вашият отговор е много близо до позицията на ${party.name}. По този въпрос ${partyPosition}.`;
+          if (distance === 0) {
+            return `Вашият отговор съвпада с позицията на ${party.name}. По този въпрос ${partyPosition}.`;
           }
 
-          if (distance === 2) {
-            return `${party.name} е частично близо до вашата позиция. По този въпрос ${partyPosition}, докато вашият отговор е ${answer}/5.`;
+          if (distance === 1) {
+            return `${party.name} е частично близо до вашата позиция. По този въпрос ${partyPosition}, докато вашият отговор е „${getAnswerLabel(answer)}“.`;
           }
 
-          return `Имате сериозно разминаване с ${party.name}. По този въпрос ${partyPosition}, а вашият отговор е ${answer}/5.`;
+          return `Имате разминаване с ${party.name}. По този въпрос ${partyPosition}, а вашият отговор е „${getAnswerLabel(answer)}“.`;
         })(),
       };
     });
@@ -895,7 +912,7 @@ function VotingQuiz({ parties }) {
   };
 
   const calculate = () => {
-    const maxScore = questions.length * 4;
+    const maxScore = questions.length * 2;
 
     const ranking = parties
       .map((party) => {
@@ -1031,7 +1048,7 @@ function VotingQuiz({ parties }) {
               <div>
                 <div className="text-2xl font-bold">{result.best.name}</div>
                 <div className="text-sm text-muted-foreground">
-                  {result.best.percent}% съвпадение · {result.best.score} точки
+                  {result.best.percent}% съвпадение · {result.best.score} от {questions.length * 2} точки
                 </div>
               </div>
             </div>
@@ -1051,7 +1068,7 @@ function VotingQuiz({ parties }) {
                   </div>
                   <div>
                     <div className="font-semibold">{party.name}</div>
-                    <div className="text-xs text-muted-foreground">{party.score} точки</div>
+                    <div className="text-xs text-muted-foreground">{party.score} от {questions.length * 2} точки</div>
                     <div className="text-[11px] text-muted-foreground">{party.matchMethod}</div>
                   </div>
                 </div>
@@ -1073,7 +1090,7 @@ function VotingQuiz({ parties }) {
                   <div>
                     <CardTitle>Защо {selectedInsightParty.name} е на тази позиция</CardTitle>
                     <div className="text-sm text-muted-foreground">
-                      {selectedInsightParty.percent}% съвпадение · {selectedInsightParty.score} точки
+                      {selectedInsightParty.percent}% съвпадение · {selectedInsightParty.score} от {questions.length * 2} точки
                     </div>
                   </div>
                 </div>
@@ -1096,7 +1113,7 @@ function VotingQuiz({ parties }) {
                           <div className="font-medium">{item.text}</div>
                           <div className="text-muted-foreground">{item.explanation}</div>
                           <div className="text-xs text-muted-foreground">
-                            Ваш отговор: {item.answer}/5 · Отговор на партията: {item.ideal}/5 · {item.points} точки
+                            Ваш отговор: {getAnswerLabel(item.answer)} · Отговор на партията: {getAnswerLabel(item.ideal)} · {item.points} от 2 точки
                           </div>
                           <div className="text-[11px] text-muted-foreground">{item.sourceLabel}</div>
                         </div>
@@ -1117,7 +1134,7 @@ function VotingQuiz({ parties }) {
                           <div className="font-medium">{item.text}</div>
                           <div className="text-muted-foreground">{item.explanation}</div>
                           <div className="text-xs text-muted-foreground">
-                            Ваш отговор: {item.answer}/5 · Отговор на партията: {item.ideal}/5 · {item.points} точки
+                            Ваш отговор: {getAnswerLabel(item.answer)} · Отговор на партията: {getAnswerLabel(item.ideal)} · {item.points} от 2 точки
                           </div>
                           <div className="text-[11px] text-muted-foreground">{item.sourceLabel}</div>
                         </div>
@@ -1140,9 +1157,9 @@ function VotingQuiz({ parties }) {
                           <div className="text-xs text-muted-foreground">{item.explanation}</div>
                         </div>
                         <div className="text-xs text-muted-foreground md:text-right whitespace-nowrap">
-                          Ваш: {item.answer}/5<br />
-                          Партия/позиция: {item.ideal}/5<br />
-                          Точки: {item.points}/4
+                          Ваш: {getAnswerLabel(item.answer)}<br />
+                          Партия/позиция: {getAnswerLabel(item.ideal)}<br />
+                          Точки: {item.points}/2
                         </div>
                       </div>
                     ))}
