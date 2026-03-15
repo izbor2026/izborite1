@@ -552,6 +552,30 @@ const questions = [
   { id: 25, text: "Държавата трябва да регулира по-строго големите компании и монополите.", dimension: "state", agreementLabel: "по-строга регулация на големите компании", getIdealValue: (p) => ({ high: 5, medium: 3, low: 1 }[p.profile.state] ?? 3) }
 ];
 
+function getPartyAnswerForQuestion(party, question) {
+  const officialValue = party.officialQuizAnswers?.[question.id];
+
+  if (typeof officialValue === "number") {
+    return {
+      value: officialValue,
+      source: "official",
+      sourceLabel: "Официален отговор от партията",
+    };
+  }
+
+  return {
+    value: question.getIdealValue(party),
+    source: "ai",
+    sourceLabel: "Оценка на база публични данни и AI ресърч",
+  };
+}
+
+function getPartyMethodLabel(party) {
+  return party.officialQuizAnswers
+    ? "Има официално попълнен въпросник"
+    : "Резултатът е изчислен по публични данни и AI ресърч";
+}
+
 function PartyPositionMap({ parties, onSelectParty }) {
   const getX = (party) => ({ skeptic: 10, neutral: 50, pro: 90 }[party.profile.eu] ?? 50);
   const getY = (party) => ({ close: 10, neutral: 50, far: 90 }[party.profile.russia] ?? 50);
@@ -649,9 +673,11 @@ function PartyCards({ search, selectedPartyName, onSelectParty, parties }) {
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 flex-wrap">
                     <CardTitle>{party.name}</CardTitle>
+                    {party.officialQuizAnswers && <Badge variant="secondary">Официален въпросник</Badge>}
                     {party.infoStatus === "limited" && <Badge variant="outline">Ограничена публична информация</Badge>}
                   </div>
                   <div className="text-xs text-muted-foreground">{party.short}</div>
+                  <div className="text-[11px] text-muted-foreground">{getPartyMethodLabel(party)}</div>
                 </div>
               </div>
             </CardHeader>
@@ -724,7 +750,8 @@ function VotingQuiz({ parties }) {
   const buildPartyInsight = (party) => {
     const details = questions.map((question) => {
       const answer = answers[question.id] ?? 3;
-      const ideal = question.getIdealValue(party);
+      const partyAnswerMeta = getPartyAnswerForQuestion(party, question);
+      const ideal = partyAnswerMeta.value
       const distance = Math.abs(answer - ideal);
       const points = getMatchPoints(answer, ideal);
 
@@ -736,6 +763,8 @@ function VotingQuiz({ parties }) {
         ideal,
         distance,
         points,
+        source: partyAnswerMeta.source,
+        sourceLabel: partyAnswerMeta.sourceLabel,
         isStrongMatch: distance <= 1,
         explanation: (() => {
           const partyPosition = ideal >= 4
@@ -792,7 +821,8 @@ function VotingQuiz({ parties }) {
 
         questions.forEach((question) => {
           const answer = answers[question.id] ?? 3;
-          const ideal = question.getIdealValue(party);
+          const partyAnswerMeta = getPartyAnswerForQuestion(party, question);
+      const ideal = partyAnswerMeta.value
           score += getMatchPoints(answer, ideal);
           totalDistance += Math.abs(answer - ideal);
         });
@@ -805,6 +835,7 @@ function VotingQuiz({ parties }) {
           percent,
           totalDistance,
           insight: buildPartyInsight(party),
+          matchMethod: getPartyMethodLabel(party),
         };
       })
       .sort((a, b) => b.score - a.score || a.totalDistance - b.totalDistance || b.percent - a.percent);
@@ -930,6 +961,7 @@ function VotingQuiz({ parties }) {
                   <div>
                     <div className="font-semibold">{party.name}</div>
                     <div className="text-xs text-muted-foreground">{party.score} точки</div>
+                    <div className="text-[11px] text-muted-foreground">{party.matchMethod}</div>
                   </div>
                 </div>
                 <div className="text-right">
@@ -956,7 +988,12 @@ function VotingQuiz({ parties }) {
                 </div>
               </CardHeader>
               <CardContent className="space-y-6 text-sm">
-                <p className="text-muted-foreground">{selectedInsightParty.insight.summary}</p>
+                <div className="space-y-2">
+                  <Badge variant={selectedInsightParty.officialQuizAnswers ? "secondary" : "outline"}>
+                    {selectedInsightParty.matchMethod}
+                  </Badge>
+                  <p className="text-muted-foreground">{selectedInsightParty.insight.summary}</p>
+                </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-3">
@@ -968,8 +1005,9 @@ function VotingQuiz({ parties }) {
                           <div className="font-medium">{item.text}</div>
                           <div className="text-muted-foreground">{item.explanation}</div>
                           <div className="text-xs text-muted-foreground">
-                            Ваш отговор: {item.answer}/5 · Профил на партията: {item.ideal}/5 · {item.points} точки
+                            Ваш отговор: {item.answer}/5 · Отговор на партията: {item.ideal}/5 · {item.points} точки
                           </div>
+                          <div className="text-[11px] text-muted-foreground">{item.sourceLabel}</div>
                         </div>
                       ))
                     ) : (
@@ -988,8 +1026,9 @@ function VotingQuiz({ parties }) {
                           <div className="font-medium">{item.text}</div>
                           <div className="text-muted-foreground">{item.explanation}</div>
                           <div className="text-xs text-muted-foreground">
-                            Ваш отговор: {item.answer}/5 · Профил на партията: {item.ideal}/5 · {item.points} точки
+                            Ваш отговор: {item.answer}/5 · Отговор на партията: {item.ideal}/5 · {item.points} точки
                           </div>
+                          <div className="text-[11px] text-muted-foreground">{item.sourceLabel}</div>
                         </div>
                       ))
                     ) : (
@@ -1011,7 +1050,7 @@ function VotingQuiz({ parties }) {
                         </div>
                         <div className="text-xs text-muted-foreground md:text-right whitespace-nowrap">
                           Ваш: {item.answer}/5<br />
-                          Партия: {item.ideal}/5<br />
+                          Партия/позиция: {item.ideal}/5<br />
                           Точки: {item.points}/4
                         </div>
                       </div>
@@ -1233,6 +1272,8 @@ export default function ElectionPlatformComparator() {
                     <div className="space-y-3">
                       <h3 className="font-semibold">Контакти и източници</h3>
                       <div className="rounded-xl border p-4 space-y-2">
+              {selectedParty.officialQuizAnswers && <Badge variant="secondary">Използвани са официални отговори на партията за теста</Badge>}
+              {!selectedParty.officialQuizAnswers && <Badge variant="outline">Позициите за теста са изведени от публични данни и AI ресърч</Badge>}
                         <div>
                           <strong>Официален регистър в ЦИК:</strong>{" "}
                           <a href={selectedParty.cikUrl} target="_blank" rel="noreferrer" className="text-primary underline underline-offset-4">
