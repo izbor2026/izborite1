@@ -580,12 +580,49 @@ function PartyPositionMap({ parties, onSelectParty }) {
   const getX = (party) => ({ skeptic: 10, neutral: 50, pro: 90 }[party.profile.eu] ?? 50);
   const getY = (party) => ({ close: 10, neutral: 50, far: 90 }[party.profile.russia] ?? 50);
 
+  const positionedParties = useMemo(() => {
+    const groups = new Map();
+
+    parties.forEach((party) => {
+      const x = getX(party);
+      const y = getY(party);
+      const key = `${x}-${y}`;
+
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push({ party, x, y });
+    });
+
+    return Array.from(groups.values()).flatMap((group) => {
+      if (group.length === 1) {
+        return group.map((item) => ({ ...item, offsetX: 0, offsetY: 0, groupSize: 1 }));
+      }
+
+      const radius = Math.min(14, 4 + group.length * 1.8);
+
+      return group.map((item, index) => {
+        const angle = (Math.PI * 2 * index) / group.length;
+        const offsetX = Math.cos(angle) * radius;
+        const offsetY = Math.sin(angle) * radius;
+
+        return {
+          ...item,
+          offsetX,
+          offsetY,
+          groupSize: group.length,
+        };
+      });
+    });
+  }, [parties]);
+
   return (
     <div className="rounded-2xl border p-4 space-y-4">
       <div>
         <h2 className="text-2xl font-semibold">Карта на позициите на партиите</h2>
         <p className="text-sm text-muted-foreground">
           Хоризонтално: по-скептична към ЕС → по-проевропейска. Вертикално: по-близо до Русия → по-дистанцирана от Русия.
+        </p>
+        <p className="text-xs text-muted-foreground">
+          Когато няколко партии са на една и съща позиция, те се раздалечават визуално около общата точка, за да не се застъпват.
         </p>
       </div>
 
@@ -597,16 +634,20 @@ function PartyPositionMap({ parties, onSelectParty }) {
         <div className="absolute left-4 bottom-4 text-xs text-muted-foreground">По-близо до Русия</div>
         <div className="absolute right-4 bottom-4 text-xs text-muted-foreground">По-далеч от Русия</div>
 
-        {parties.map((party) => (
+        {positionedParties.map(({ party, x, y, offsetX, offsetY, groupSize }) => (
           <button
             key={party.name}
             type="button"
             className="absolute -translate-x-1/2 -translate-y-1/2"
-            style={{ left: `${getX(party)}%`, top: `${100 - getY(party)}%` }}
-            title={party.name}
+            style={{
+              left: `calc(${x}% + ${offsetX}px)`,
+              top: `calc(${100 - y}% + ${offsetY}px)`,
+              zIndex: groupSize > 1 ? 20 : 10,
+            }}
+            title={groupSize > 1 ? `${party.name} · споделена позиция с още ${groupSize - 1} формации` : party.name}
             onClick={() => onSelectParty?.(party)}
           >
-            <div className="flex items-center gap-2 rounded-full border bg-background px-2 py-1 shadow-sm">
+            <div className="flex items-center gap-2 rounded-full border bg-background px-2 py-1 shadow-sm hover:shadow-md transition">
               <div className={`h-7 w-7 rounded-full flex items-center justify-center text-[10px] font-bold ${party.logoClass}`}>
                 {party.logoText}
               </div>
@@ -1070,31 +1111,25 @@ const adPackages = [
   {
     key: "basic",
     name: "Basic",
-    price: "250 E / седмица",
+    price: "400 лв / седмица",
     description: "Банер 970×90 на най-видимата позиция в началото на сайта.",
   },
   {
     key: "premium",
     name: "Premium",
-    price: "350 E / седмица",
+    price: "600 лв / седмица",
     description: "Банер + допълнително споменаване под теста като спонсор на седмицата.",
   },
   {
     key: "exclusive",
     name: "Exclusive",
-    price: "500 E / седмица",
+    price: "1000 лв / седмица",
     description: "Единствен рекламен партньор за седмицата без други платени банери на сайта.",
-  },
-    {
-    key: "vip",
-    name: "VIP",
-    price: "по договаряне",
-    description: "Реклама с други размери, продължителност и местоположение.",
   },
 ];
 
 const siteStats = {
-  weeklyVisits: "~ 12 001",
+  weeklyVisits: "~ 12 000",
   monthlyVisits: "~ 40 000",
 };
 
@@ -1224,6 +1259,10 @@ export default function ElectionPlatformComparator() {
           Банер позиция на началната страница – вижда се от всички посетители преди теста.
         </div>
 
+        <div className="text-sm text-muted-foreground">
+          Очаквана аудитория: <span className="font-semibold text-foreground">{siteStats.weeklyVisits}</span> посещения седмично ·
+          <span className="font-semibold text-foreground"> {siteStats.monthlyVisits}</span> посещения месечно
+        </div>
 
         <div className="grid md:grid-cols-3 gap-4 text-sm">
           {adPackages.map((pkg) => (
@@ -1413,7 +1452,8 @@ export default function ElectionPlatformComparator() {
           </div>
 
           <div className="rounded-2xl border p-5 bg-muted/30 space-y-2">
-                        <div><strong>Формат:</strong> 970×90 или сходен leaderboard банер</div>
+            <div><strong>Ориентировъчен трафик:</strong> {siteStats.weeklyVisits} посещения седмично</div>
+            <div><strong>Формат:</strong> 970×90 или сходен leaderboard банер</div>
             <div><strong>Позиция:</strong> най-горе на сайта, преди теста</div>
             <div><strong>Контакт:</strong> contact@izborite.info</div>
           </div>
