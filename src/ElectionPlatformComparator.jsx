@@ -1066,6 +1066,32 @@ function VotingQuiz({ parties }) {
   );
 }
 
+const adPackages = [
+  {
+    key: "basic",
+    name: "Basic",
+    price: "400 лв / седмица",
+    description: "Банер 970×90 на най-видимата позиция в началото на сайта.",
+  },
+  {
+    key: "premium",
+    name: "Premium",
+    price: "600 лв / седмица",
+    description: "Банер + допълнително споменаване под теста като спонсор на седмицата.",
+  },
+  {
+    key: "exclusive",
+    name: "Exclusive",
+    price: "1000 лв / седмица",
+    description: "Единствен рекламен партньор за седмицата без други платени банери на сайта.",
+  },
+];
+
+const siteStats = {
+  weeklyVisits: "~ 12 000",
+  monthlyVisits: "~ 40 000",
+};
+
 export default function ElectionPlatformComparator() {
   useEffect(() => {
     const gaScript = document.createElement("script");
@@ -1156,6 +1182,7 @@ export default function ElectionPlatformComparator() {
             <Button variant={currentPage === "about" ? "default" : "outline"} onClick={() => setCurrentPage("about")}>About</Button>
             <Button variant={currentPage === "privacy" ? "default" : "outline"} onClick={() => setCurrentPage("privacy")}>Privacy</Button>
             <Button variant={currentPage === "contact" ? "default" : "outline"} onClick={() => setCurrentPage("contact")}>Contact</Button>
+            <Button variant={currentPage === "advertise" ? "default" : "outline"} onClick={() => setCurrentPage("advertise")}>Реклама</Button>
           </div>
         </div>
 
@@ -1184,15 +1211,31 @@ export default function ElectionPlatformComparator() {
         )}
       </header>
 
-      {/* Top Ad Banner */}
-      <div className="w-full border rounded-2xl p-6 text-center text-sm text-muted-foreground">
-        <ins className="adsbygoogle"
-          style={{ display: "block" }}
-          data-ad-client="ca-pub-2974245059167035"
-          data-ad-slot="4444444444"
-          data-ad-format="auto"
-          data-full-width-responsive="true">
-        </ins>
+      {/* Top Banner – advertising space for rent */}
+      <div className="w-full border rounded-2xl p-8 text-center bg-amber-50 space-y-4">
+        <div className="text-lg font-semibold">Рекламно пространство</div>
+        <div className="text-sm text-muted-foreground">
+          Банер позиция на началната страница – вижда се от всички посетители преди теста.
+        </div>
+
+        <div className="text-sm text-muted-foreground">
+          Очаквана аудитория: <span className="font-semibold text-foreground">{siteStats.weeklyVisits}</span> посещения седмично ·
+          <span className="font-semibold text-foreground"> {siteStats.monthlyVisits}</span> посещения месечно
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-4 text-sm">
+          {adPackages.map((pkg) => (
+            <div key={pkg.key} className="border rounded-xl p-4 bg-white">
+              <div className="font-semibold">{pkg.name}</div>
+              <div className="text-2xl font-bold mt-1">{pkg.price}</div>
+              <div className="text-muted-foreground mt-1">{pkg.description}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-sm">
+          Запитвания: <span className="font-semibold">contact@izborite.info</span>
+        </div>
       </div>
 
       {currentPage === "home" ? (
@@ -1339,11 +1382,40 @@ export default function ElectionPlatformComparator() {
           <p>Сайтът използва Google Analytics за статистика и Google AdSense за реклами.</p>
           <p>Не събираме лични данни като име или имейл.</p>
         </section>
-      ) : (
+      ) : currentPage === "contact" ? (
         <section className="space-y-4 max-w-3xl">
           <h2 className="text-2xl font-semibold">Contact</h2>
-          <p>За предложения и корекции:</p>
-          <p className="font-semibold">contact@izborite.info</p>
+          <p>За предложения, корекции и официални отговори от партии:</p>
+          <p className="font-semibold">contact@izbor2026.com</p>
+        </section>
+      ) : (
+        <section className="space-y-6 max-w-4xl">
+          <h2 className="text-2xl font-semibold">Реклама в сайта</h2>
+          <p className="text-muted-foreground">
+            Сайтът е насочен към хора, които активно търсят информация за изборите, сравняват партии и попълват теста.
+            Това прави рекламната позиция подходяща за политически, обществени и информационни кампании.
+          </p>
+
+          <div className="grid md:grid-cols-3 gap-4 text-sm">
+            {adPackages.map((pkg) => (
+              <Card key={pkg.key} className="rounded-2xl">
+                <CardHeader>
+                  <CardTitle>{pkg.name}</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="text-2xl font-bold">{pkg.price}</div>
+                  <p className="text-muted-foreground">{pkg.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="rounded-2xl border p-5 bg-muted/30 space-y-2">
+            <div><strong>Ориентировъчен трафик:</strong> {siteStats.weeklyVisits} посещения седмично</div>
+            <div><strong>Формат:</strong> 970×90 или сходен leaderboard банер</div>
+            <div><strong>Позиция:</strong> най-горе на сайта, преди теста</div>
+            <div><strong>Контакт:</strong> contact@izbor2026.com</div>
+          </div>
         </section>
       )}
 
@@ -1353,6 +1425,7 @@ export default function ElectionPlatformComparator() {
           <button onClick={() => setCurrentPage("about")} className="underline">About</button>
           <button onClick={() => setCurrentPage("privacy")} className="underline">Privacy Policy</button>
           <button onClick={() => setCurrentPage("contact")} className="underline">Contact</button>
+          <button onClick={() => setCurrentPage("advertise")} className="underline">Реклама</button>
         </div>
       </footer>
     </div>
