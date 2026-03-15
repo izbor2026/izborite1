@@ -1111,20 +1111,26 @@ const adPackages = [
   {
     key: "basic",
     name: "Basic",
-    price: "400 лв / седмица",
+    price: "250 Е / седмица",
     description: "Банер 970×90 на най-видимата позиция в началото на сайта.",
   },
   {
-    key: "premium",
+    key: "premium",1200
     name: "Premium",
-    price: "600 лв / седмица",
+    price: "350 Е / седмица",
     description: "Банер + допълнително споменаване под теста като спонсор на седмицата.",
   },
   {
     key: "exclusive",
     name: "Exclusive",
-    price: "1000 лв / седмица",
+    price: "500 Е / седмица",
     description: "Единствен рекламен партньор за седмицата без други платени банери на сайта.",
+  },
+    {
+    key: "vip",
+    name: "VIP",
+    price: "по договаряне",
+    description: "Различен размер на банера, времетраене или локация",
   },
 ];
 
@@ -1259,10 +1265,7 @@ export default function ElectionPlatformComparator() {
           Банер позиция на началната страница – вижда се от всички посетители преди теста.
         </div>
 
-        <div className="text-sm text-muted-foreground">
-          Очаквана аудитория: <span className="font-semibold text-foreground">{siteStats.weeklyVisits}</span> посещения седмично ·
-          <span className="font-semibold text-foreground"> {siteStats.monthlyVisits}</span> посещения месечно
-        </div>
+      
 
         <div className="grid md:grid-cols-3 gap-4 text-sm">
           {adPackages.map((pkg) => (
