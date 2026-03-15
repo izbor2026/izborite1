@@ -895,7 +895,7 @@ function VotingQuiz({ parties }) {
       )}
 
       <div className="w-full border rounded-2xl p-6 text-center text-sm text-muted-foreground">
-        <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="13909587580" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="3333333333" data-ad-format="auto" data-full-width-responsive="true"></ins>
       </div>
 
       {result && (
@@ -1109,6 +1109,9 @@ export default function ElectionPlatformComparator() {
             <Button variant={currentPage === "home" ? "default" : "outline"} onClick={() => setCurrentPage("home")}>Тест</Button>
             <Button variant={currentPage === "compare" ? "default" : "outline"} onClick={() => setCurrentPage("compare")}>Сравнение на партии</Button>
             <Button variant={currentPage === "map" ? "default" : "outline"} onClick={() => setCurrentPage("map")}>Карта ЕС и Русия</Button>
+            <Button variant={currentPage === "about" ? "default" : "outline"} onClick={() => setCurrentPage("about")}>About</Button>
+            <Button variant={currentPage === "privacy" ? "default" : "outline"} onClick={() => setCurrentPage("privacy")}>Privacy</Button>
+            <Button variant={currentPage === "contact" ? "default" : "outline"} onClick={() => setCurrentPage("contact")}>Contact</Button>
           </div>
         </div>
 
@@ -1142,7 +1145,7 @@ export default function ElectionPlatformComparator() {
         <ins className="adsbygoogle"
           style={{ display: "block" }}
           data-ad-client="ca-pub-2974245059167035"
-          data-ad-slot="13909587580"
+          data-ad-slot="4444444444"
           data-ad-format="auto"
           data-full-width-responsive="true">
         </ins>
@@ -1155,13 +1158,13 @@ export default function ElectionPlatformComparator() {
           </section>
 
           <div className="w-full border rounded-2xl p-8 text-center text-sm text-muted-foreground">
-            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="13909587580" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="1111111111" data-ad-format="auto" data-full-width-responsive="true"></ins>
           </div>
 
           
 
           <div className="w-full border rounded-2xl p-8 text-center text-sm text-muted-foreground">
-            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="13909587580" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="2222222222" data-ad-format="auto" data-full-width-responsive="true"></ins>
           </div>
         </>
       ) : currentPage === "compare" ? (
@@ -1274,18 +1277,36 @@ export default function ElectionPlatformComparator() {
             )}
           </div>
         </section>
-      ) : (
+      ) : currentPage === "map" ? (
         <section className="space-y-4">
           <PartyPositionMap parties={sortedParties} onSelectParty={setSelectedParty} />
+        </section>
+      ) : currentPage === "about" ? (
+        <section className="space-y-4 max-w-3xl">
+          <h2 className="text-2xl font-semibold">About</h2>
+          <p>Този сайт е независим инструмент за сравнение на предизборните програми на партиите в България.</p>
+          <p>Целта е да помогне на избирателите да сравнят позиции по ключови теми като икономика, ЕС, Русия и данъци.</p>
+        </section>
+      ) : currentPage === "privacy" ? (
+        <section className="space-y-4 max-w-3xl">
+          <h2 className="text-2xl font-semibold">Privacy Policy</h2>
+          <p>Сайтът използва Google Analytics за статистика и Google AdSense за реклами.</p>
+          <p>Не събираме лични данни като име или имейл.</p>
+        </section>
+      ) : (
+        <section className="space-y-4 max-w-3xl">
+          <h2 className="text-2xl font-semibold">Contact</h2>
+          <p>За предложения и корекции:</p>
+          <p className="font-semibold">contact@izbor2026.com</p>
         </section>
       )}
 
       <footer className="text-center text-xs text-muted-foreground pt-10 space-y-2">
         <div>Независим проект за сравнение на предизборни програми.</div>
         <div className="flex justify-center gap-4 flex-wrap">
-          <span>About</span>
-          <span>Privacy Policy</span>
-          <span>Contact</span>
+          <button onClick={() => setCurrentPage("about")} className="underline">About</button>
+          <button onClick={() => setCurrentPage("privacy")} className="underline">Privacy Policy</button>
+          <button onClick={() => setCurrentPage("contact")} className="underline">Contact</button>
         </div>
       </footer>
     </div>
