@@ -1056,7 +1056,7 @@ export default function ElectionPlatformComparator() {
     };
 
     ensureMeta("description", "Тест за коя партия съм, сравнение на предизборни програми и позиции на партиите в България.");
-    ensureMeta("keywords", "за коя партия да гласувам, тест за партия, сравнение на партии, избори България");
+    ensureMeta("keywords", "за коя партия да гласувам тест, тест за коя партия съм, сравнение на партии България, избори България партии позиции");
 
     if (!document.querySelector('script[data-adsense="true"]')) {
       const adsScript = document.createElement("script");
@@ -1103,6 +1103,11 @@ export default function ElectionPlatformComparator() {
             <p className="text-muted-foreground max-w-2xl">
               Независим инструмент за сравнение на политическите платформи.
             </p>
+            <div className="text-sm text-muted-foreground max-w-2xl">
+              <strong>Тест: За коя партия да гласувам?</strong> Отговорете на въпросите по‑долу и вижте коя
+              политическа програма е най‑близо до вашите виждания. Сайтът сравнява позиции на партиите по
+              ключови теми като икономика, данъци, ЕС, Русия, социална политика и сигурност.
+            </div>
           </div>
 
           <div className="flex gap-2 flex-wrap">
