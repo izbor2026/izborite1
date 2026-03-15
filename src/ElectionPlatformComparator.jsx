@@ -895,7 +895,7 @@ function VotingQuiz({ parties }) {
       )}
 
       <div className="w-full border rounded-2xl p-6 text-center text-sm text-muted-foreground">
-        <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="3333333333" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="13909587580" data-ad-format="auto" data-full-width-responsive="true"></ins>
       </div>
 
       {result && (
@@ -1142,7 +1142,7 @@ export default function ElectionPlatformComparator() {
         <ins className="adsbygoogle"
           style={{ display: "block" }}
           data-ad-client="ca-pub-2974245059167035"
-          data-ad-slot="4444444444"
+          data-ad-slot="13909587580"
           data-ad-format="auto"
           data-full-width-responsive="true">
         </ins>
@@ -1155,13 +1155,13 @@ export default function ElectionPlatformComparator() {
           </section>
 
           <div className="w-full border rounded-2xl p-8 text-center text-sm text-muted-foreground">
-            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="1111111111" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="13909587580" data-ad-format="auto" data-full-width-responsive="true"></ins>
           </div>
 
           
 
           <div className="w-full border rounded-2xl p-8 text-center text-sm text-muted-foreground">
-            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="2222222222" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="13909587580" data-ad-format="auto" data-full-width-responsive="true"></ins>
           </div>
         </>
       ) : currentPage === "compare" ? (
