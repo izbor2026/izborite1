@@ -1278,7 +1278,7 @@ export default function ElectionPlatformComparator() {
     `;
     document.head.appendChild(gaConfig);
 
-    document.title = "Сравни партиите в България | Тест за коя партия съм";
+    document.title = "Тест: За коя партия да гласувам? | Сравнение на партии в България";
 
     const ensureMeta = (name, content) => {
       let meta = document.querySelector(`meta[name="${name}"]`);
@@ -1290,8 +1290,46 @@ export default function ElectionPlatformComparator() {
       meta.setAttribute("content", content);
     };
 
-    ensureMeta("description", "Тест за коя партия съм, сравнение на предизборни програми и позиции на партиите в България.");
-    ensureMeta("keywords", "за коя партия да гласувам тест, тест за коя партия съм, сравнение на партии България, избори България партии позиции");
+    ensureMeta("description", "Тест: за коя партия да гласувам? Попълнете теста и вижте коя партия в България е най-близо до вашите виждания. Сравнение на партии, програми и позиции за изборите.");
+    ensureMeta("keywords", "за коя партия да гласувам тест, тест за коя партия съм, сравнение на партии България, избори България партии позиции, политически тест България");
+
+    const ensureProperty = (property, content) => {
+      let meta = document.querySelector(`meta[property="${property}"]`);
+      if (!meta) {
+        meta = document.createElement("meta");
+        meta.setAttribute("property", property);
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute("content", content);
+    };
+
+    ensureProperty("og:title", "Тест: За коя партия да гласувам? | Сравнение на партии");
+    ensureProperty("og:description", "Попълнете теста и вижте коя партия е най-близо до вашите виждания. Сравнение на политическите програми в България.");
+    ensureProperty("og:type", "website");
+    ensureProperty("og:url", "https://www.izborite.info");
+
+    const canonical = document.querySelector("link[rel='canonical']") || document.createElement("link");
+    canonical.setAttribute("rel", "canonical");
+    canonical.setAttribute("href", "https://www.izborite.info");
+    document.head.appendChild(canonical);
+
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Izborite.info",
+      "url": "https://www.izborite.info",
+      "description": "Тест за сравнение на политическите партии и техните програми в България.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.izborite.info/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    };
+
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.text = JSON.stringify(schema);
+    document.head.appendChild(script);
 
     if (!document.querySelector('script[data-adsense="true"]')) {
       const adsScript = document.createElement("script");
