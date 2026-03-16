@@ -1,5 +1,6 @@
 
 import { useMemo, useState, useEffect } from "react";
+import { createClient } from "@supabase/supabase-js";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -1203,6 +1204,68 @@ const siteStats = {
   monthlyVisits: "~ 40 000",
 };
 
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
+
+function NewsSection({ news, isLoading, compact = false }) {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-2xl font-semibold">Последни новини</h2>
+        <Badge variant="outline">Supabase CMS</Badge>
+      </div>
+
+      {!supabase && (
+        <div className="rounded-2xl border p-4 text-sm text-muted-foreground bg-muted/30">
+          За да активирате новините, добавете <strong>VITE_SUPABASE_URL</strong> и <strong>VITE_SUPABASE_ANON_KEY</strong>
+          във Vercel Environment Variables.
+        </div>
+      )}
+
+      {isLoading ? (
+        <div className="rounded-2xl border p-4 text-sm text-muted-foreground">Зареждане на новини...</div>
+      ) : news.length === 0 ? (
+        <div className="rounded-2xl border p-4 text-sm text-muted-foreground">
+          Все още няма публикувани новини. Добавете първата новина в Supabase таблицата <strong>news</strong>.
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {news.map((item) => (
+            <Card key={item.id} className="rounded-2xl">
+              <CardContent className="p-4 space-y-2">
+                <div className="flex items-center justify-between gap-3 flex-wrap text-xs text-muted-foreground">
+                  <span>{item.source_name || "Източник"}</span>
+                  <span>{item.published_at ? new Date(item.published_at).toLocaleDateString("bg-BG") : ""}</span>
+                </div>
+                <div className="font-semibold leading-snug">{item.title}</div>
+                {item.summary && <p className="text-sm text-muted-foreground">{item.summary}</p>}
+                <div className="flex gap-3 flex-wrap text-sm">
+                  {item.source_url && (
+                    <a href={item.source_url} target="_blank" rel="noreferrer" className="text-primary underline underline-offset-4">
+                      Прочети източника
+                    </a>
+                  )}
+                  {item.party_name && <Badge variant="secondary">{item.party_name}</Badge>}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {!compact && (
+        <div className="rounded-2xl border p-4 bg-muted/30 text-sm text-muted-foreground space-y-2">
+          <p><strong>Как да добавяте новини без GitHub:</strong></p>
+          <p>1. Отворете Supabase Dashboard → Table Editor → news</p>
+          <p>2. Добавете ред с title, summary, source_name, source_url, published_at и is_published=true</p>
+          <p>3. Новината ще се появи автоматично в сайта след refresh</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function ElectionPlatformComparator() {
   useEffect(() => {
     const gaScript = document.createElement("script");
@@ -1248,6 +1311,8 @@ export default function ElectionPlatformComparator() {
   const [topic, setTopic] = useState("economy");
   const [selectedParty, setSelectedParty] = useState(null);
   const [currentPage, setCurrentPage] = useState("home");
+  const [news, setNews] = useState([]);
+  const [newsLoading, setNewsLoading] = useState(false);
 
   const sortedParties = useMemo(
     () => [...parties].sort((a, b) => a.name.localeCompare(b.name, "bg")),
@@ -1269,6 +1334,36 @@ export default function ElectionPlatformComparator() {
 
     return () => clearTimeout(timer);
   }, [currentPage]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadNews = async () => {
+      if (!supabase) return;
+      setNewsLoading(true);
+
+      const { data, error } = await supabase
+        .from("news")
+        .select("id,title,summary,source_name,source_url,published_at,party_name,is_published")
+        .eq("is_published", true)
+        .order("published_at", { ascending: false })
+        .limit(8);
+
+      if (!isMounted) return;
+
+      if (!error && data) {
+        setNews(data);
+      }
+
+      setNewsLoading(false);
+    };
+
+    loadNews();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-10">
@@ -1305,6 +1400,8 @@ export default function ElectionPlatformComparator() {
             <Button variant={currentPage === "contact" ? "default" : "outline"} onClick={() => setCurrentPage("contact")}>Contact</Button>
             <Button variant={currentPage === "advertise" ? "default" : "outline"} onClick={() => setCurrentPage("advertise")}>Реклама</Button>
             <Button variant={currentPage === "methodology" ? "default" : "outline"} onClick={() => setCurrentPage("methodology")}>Методология</Button>
+            <Button variant={currentPage === "terms" ? "default" : "outline"} onClick={() => setCurrentPage("terms")}>Terms</Button>
+            <Button variant={currentPage === "news" ? "default" : "outline"} onClick={() => setCurrentPage("news")}>Новини</Button>
           </div>
         </div>
 
@@ -1359,10 +1456,38 @@ export default function ElectionPlatformComparator() {
 
       {currentPage === "home" ? (
         <>
-          <section className="space-y-4">
-            <VotingQuiz parties={sortedParties} />
+          <section className="grid xl:grid-cols-[minmax(0,1fr)_380px] gap-8 items-start">
+            <div className="space-y-6">
+              <VotingQuiz parties={sortedParties} />
+
+              <div className="rounded-2xl border p-5 bg-muted/30 text-sm text-muted-foreground space-y-3 max-w-3xl">
+                <h3 className="font-semibold text-foreground">Как работи тестът</h3>
+                <p>
+                  Тестът сравнява вашите отговори с позициите на политическите партии по ключови
+                  теми като икономика, данъци, социална политика, Европейски съюз, Русия,
+                  сигурност, енергетика и миграция.
+                </p>
+                <p>
+                  Резултатът показва коя политическа програма е най-близка до вашите възгледи.
+                  Съвпадението се изчислява на база десет въпроса и публично достъпна
+                  информация за позициите на партиите.
+                </p>
+                <p>
+                  Когато дадена партия е предоставила официални отговори по въпросника,
+                  те се използват директно в изчислението.
+                </p>
+              </div>
+            </div>
+
+            <aside className="space-y-4">
+              <NewsSection news={news.slice(0, 5)} isLoading={newsLoading} compact />
+            </aside>
           </section>
         </>
+      ) : currentPage === "news" ? (
+        <section className="space-y-6 max-w-4xl">
+          <NewsSection news={news} isLoading={newsLoading} />
+        </section>
       ) : currentPage === "compare" ? (
         <section className="space-y-6">
           <div className="flex gap-4 flex-wrap">
@@ -1534,6 +1659,23 @@ export default function ElectionPlatformComparator() {
             </p>
           </div>
         </section>
+      ) : currentPage === "terms" ? (
+        <section className="space-y-4 max-w-3xl">
+          <h2 className="text-2xl font-semibold">Terms of Service</h2>
+          <p className="text-muted-foreground">
+            Този сайт предоставя информационен инструмент за сравнение на политически
+            позиции и предизборни програми на партиите в България.
+          </p>
+          <p className="text-muted-foreground">
+            Информацията е събрана от публични източници като официални сайтове,
+            програмни документи, публични изявления и регистри на институции.
+          </p>
+          <p className="text-muted-foreground">
+            Сайтът не представлява и не подкрепя политическа партия или
+            кандидат. Целта му е да подпомогне избирателите да направят
+            по-информиран избор.
+          </p>
+        </section>
       ) : currentPage === "contact" ? (
         <section className="space-y-4 max-w-3xl">
           <h2 className="text-2xl font-semibold">Contact</h2>
@@ -1579,6 +1721,8 @@ export default function ElectionPlatformComparator() {
           <button onClick={() => setCurrentPage("contact")} className="underline">Contact</button>
           <button onClick={() => setCurrentPage("advertise")} className="underline">Реклама</button>
           <button onClick={() => setCurrentPage("methodology")} className="underline">Методология</button>
+          <button onClick={() => setCurrentPage("terms")} className="underline">Terms</button>
+          <button onClick={() => setCurrentPage("news")} className="underline">Новини</button>
         </div>
       </footer>
     </div>
