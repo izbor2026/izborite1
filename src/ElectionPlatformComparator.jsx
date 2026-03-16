@@ -1,3 +1,4 @@
+
 import { useMemo, useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -1033,10 +1034,6 @@ function VotingQuiz({ parties }) {
         </div>
       )}
 
-      <div className="w-full border rounded-2xl p-6 text-center text-sm text-muted-foreground">
-        <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="3333333333" data-ad-format="auto" data-full-width-responsive="true"></ins>
-      </div>
-
       {result && (
         <div className="space-y-4">
           <div className="p-6 border rounded-2xl bg-muted">
@@ -1282,10 +1279,20 @@ export default function ElectionPlatformComparator() {
             <p className="text-muted-foreground max-w-2xl">
               Независим инструмент за сравнение на политическите платформи.
             </p>
-            <div className="text-sm text-muted-foreground max-w-2xl">
-              <strong>Тест: За коя партия да гласувам?</strong> Отговорете на въпросите по‑долу и вижте коя
-              политическа програма е най‑близо до вашите виждания. Сайтът сравнява позиции на партиите по
-              ключови теми като икономика, данъци, ЕС, Русия, социална политика и сигурност.
+            <div className="text-sm text-muted-foreground max-w-3xl space-y-3">
+              <p>
+                <strong>Тест: За коя партия да гласувам?</strong> Отговорете на въпросите по‑долу и вижте коя
+                политическа програма е най‑близо до вашите виждания.
+              </p>
+              <p>
+                Сайтът сравнява позициите на партиите по ключови теми като икономика, данъци, социална политика,
+                ЕС, Русия, сигурност, енергетика и миграция. Данните са базирани на публично достъпна информация,
+                а когато дадена партия е изпратила официални отговори по въпросника, те се отбелязват изрично.
+              </p>
+              <p>
+                Целта на проекта е да помогне на избирателите да направят по‑информиран избор чрез ясно,
+                структурирано и неутрално сравнение на политическите програми.
+              </p>
             </div>
           </div>
 
@@ -1297,6 +1304,7 @@ export default function ElectionPlatformComparator() {
             <Button variant={currentPage === "privacy" ? "default" : "outline"} onClick={() => setCurrentPage("privacy")}>Privacy</Button>
             <Button variant={currentPage === "contact" ? "default" : "outline"} onClick={() => setCurrentPage("contact")}>Contact</Button>
             <Button variant={currentPage === "advertise" ? "default" : "outline"} onClick={() => setCurrentPage("advertise")}>Реклама</Button>
+            <Button variant={currentPage === "methodology" ? "default" : "outline"} onClick={() => setCurrentPage("methodology")}>Методология</Button>
           </div>
         </div>
 
@@ -1354,16 +1362,6 @@ export default function ElectionPlatformComparator() {
           <section className="space-y-4">
             <VotingQuiz parties={sortedParties} />
           </section>
-
-          <div className="w-full border rounded-2xl p-8 text-center text-sm text-muted-foreground">
-            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="1111111111" data-ad-format="auto" data-full-width-responsive="true"></ins>
-          </div>
-
-          
-
-          <div className="w-full border rounded-2xl p-8 text-center text-sm text-muted-foreground">
-            <ins className="adsbygoogle" style={{ display: "block" }} data-ad-client="ca-pub-2974245059167035" data-ad-slot="2222222222" data-ad-format="auto" data-full-width-responsive="true"></ins>
-          </div>
         </>
       ) : currentPage === "compare" ? (
         <section className="space-y-6">
@@ -1493,6 +1491,49 @@ export default function ElectionPlatformComparator() {
           <p>Сайтът използва Google Analytics за статистика и Google AdSense за реклами.</p>
           <p>Не събираме лични данни като име или имейл.</p>
         </section>
+      ) : currentPage === "methodology" ? (
+        <section className="space-y-4 max-w-4xl">
+          <h2 className="text-2xl font-semibold">Методология</h2>
+          <p className="text-muted-foreground">
+            Тестът сравнява вашите отговори с позициите на партиите по десет ключови въпроса. За всеки въпрос
+            могат да се използват два източника: официален отговор от партията или оценка на база публични данни
+            и AI ресърч, когато официален отговор не е предоставен.
+          </p>
+          <div className="grid md:grid-cols-2 gap-4">
+            <Card className="rounded-2xl">
+              <CardHeader>
+                <CardTitle>Източници на позициите</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm text-muted-foreground">
+                <p>• Официални сайтове и програми на партиите</p>
+                <p>• Публични изявления и програмни документи</p>
+                <p>• Регистър на ЦИК</p>
+                <p>• Официално попълнен въпросник от партия, когато е наличен</p>
+              </CardContent>
+            </Card>
+            <Card className="rounded-2xl">
+              <CardHeader>
+                <CardTitle>Как се изчислява резултатът</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm text-muted-foreground">
+                <p>• Да / Да и Не / Не носят пълно съвпадение</p>
+                <p>• „Не се интересувам“ дава частично съвпадение</p>
+                <p>• Противоположните отговори водят до разминаване</p>
+                <p>• Крайният процент показва близостта между вашите виждания и профила на партията</p>
+              </CardContent>
+            </Card>
+          </div>
+          <div className="rounded-2xl border p-5 bg-muted/30 text-sm text-muted-foreground space-y-2">
+            <p>
+              Сайтът не подкрепя и не представлява политическа партия. Целта му е да представя сравнение в
+              максимално неутрална и прозрачна форма.
+            </p>
+            <p>
+              Ако партия желае да изпрати официални отговори по въпросника, може да го направи на:
+              <span className="font-semibold text-foreground"> contact@izborite.info</span>
+            </p>
+          </div>
+        </section>
       ) : currentPage === "contact" ? (
         <section className="space-y-4 max-w-3xl">
           <h2 className="text-2xl font-semibold">Contact</h2>
@@ -1537,6 +1578,7 @@ export default function ElectionPlatformComparator() {
           <button onClick={() => setCurrentPage("privacy")} className="underline">Privacy Policy</button>
           <button onClick={() => setCurrentPage("contact")} className="underline">Contact</button>
           <button onClick={() => setCurrentPage("advertise")} className="underline">Реклама</button>
+          <button onClick={() => setCurrentPage("methodology")} className="underline">Методология</button>
         </div>
       </footer>
     </div>
