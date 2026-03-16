@@ -1292,6 +1292,8 @@ export default function ElectionPlatformComparator() {
 
     ensureMeta("description", "Тест: за коя партия да гласувам? Попълнете теста и вижте коя партия в България е най-близо до вашите виждания. Сравнение на партии, програми и позиции за изборите.");
     ensureMeta("keywords", "за коя партия да гласувам тест, тест за коя партия съм, сравнение на партии България, избори България партии позиции, политически тест България");
+    ensureMeta("robots", "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1");
+    ensureMeta("author", "Izborite.info");
 
     const ensureProperty = (property, content) => {
       let meta = document.querySelector(`meta[property="${property}"]`);
@@ -1307,24 +1309,68 @@ export default function ElectionPlatformComparator() {
     ensureProperty("og:description", "Попълнете теста и вижте коя партия е най-близо до вашите виждания. Сравнение на политическите програми в България.");
     ensureProperty("og:type", "website");
     ensureProperty("og:url", "https://www.izborite.info");
+    ensureProperty("og:site_name", "Izborite.info");
+    ensureProperty("og:locale", "bg_BG");
+    ensureProperty("twitter:card", "summary_large_image");
+    ensureProperty("twitter:title", "Тест: За коя партия да гласувам? | Сравнение на партии");
+    ensureProperty("twitter:description", "Попълнете теста и вижте коя партия е най-близо до вашите виждания.");
 
     const canonical = document.querySelector("link[rel='canonical']") || document.createElement("link");
     canonical.setAttribute("rel", "canonical");
     canonical.setAttribute("href", "https://www.izborite.info");
     document.head.appendChild(canonical);
 
-    const schema = {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Izborite.info",
-      "url": "https://www.izborite.info",
-      "description": "Тест за сравнение на политическите партии и техните програми в България.",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://www.izborite.info/?q={search_term_string}",
-        "query-input": "required name=search_term_string"
+    const schema = [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Izborite.info",
+        "url": "https://www.izborite.info",
+        "description": "Тест за сравнение на политическите партии и техните програми в България.",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://www.izborite.info/?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Izborite.info",
+        "url": "https://www.izborite.info",
+        "email": "contact@izborite.info"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Как работи тестът за партиите?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Тестът сравнява вашите отговори с позициите на партиите по ключови теми като икономика, данъци, ЕС, Русия, сигурност и социална политика."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "На каква база са определени позициите на партиите?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Позициите са изведени от публични източници, а когато партия изпрати официален въпросник, той се използва с приоритет."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Сайтът подкрепя ли политическа партия?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Не. Сайтът е независим и има за цел да подпомага информирания избор чрез сравнение на политически програми."
+            }
+          }
+        ]
       }
-    };
+    ];
 
     const script = document.createElement("script");
     script.type = "application/ld+json";
@@ -1429,12 +1475,12 @@ export default function ElectionPlatformComparator() {
             <Button variant={currentPage === "home" ? "default" : "outline"} onClick={() => setCurrentPage("home")}>Тест</Button>
             <Button variant={currentPage === "compare" ? "default" : "outline"} onClick={() => setCurrentPage("compare")}>Сравнение на партии</Button>
             <Button variant={currentPage === "map" ? "default" : "outline"} onClick={() => setCurrentPage("map")}>Карта ЕС и Русия</Button>
-            <Button variant={currentPage === "about" ? "default" : "outline"} onClick={() => setCurrentPage("about")}>About</Button>
-            <Button variant={currentPage === "privacy" ? "default" : "outline"} onClick={() => setCurrentPage("privacy")}>Privacy</Button>
-            <Button variant={currentPage === "contact" ? "default" : "outline"} onClick={() => setCurrentPage("contact")}>Contact</Button>
+            <Button variant={currentPage === "about" ? "default" : "outline"} onClick={() => setCurrentPage("about")}>За сайта</Button>
+            <Button variant={currentPage === "privacy" ? "default" : "outline"} onClick={() => setCurrentPage("privacy")}>Поверителност</Button>
+            <Button variant={currentPage === "contact" ? "default" : "outline"} onClick={() => setCurrentPage("contact")}>Контакт</Button>
             <Button variant={currentPage === "advertise" ? "default" : "outline"} onClick={() => setCurrentPage("advertise")}>Реклама</Button>
             <Button variant={currentPage === "methodology" ? "default" : "outline"} onClick={() => setCurrentPage("methodology")}>Методология</Button>
-            <Button variant={currentPage === "terms" ? "default" : "outline"} onClick={() => setCurrentPage("terms")}>Terms</Button>
+            <Button variant={currentPage === "terms" ? "default" : "outline"} onClick={() => setCurrentPage("terms")}>Условия</Button>
             <Button variant={currentPage === "news" ? "default" : "outline"} onClick={() => setCurrentPage("news")}>Новини</Button>
           </div>
         </div>
@@ -1510,6 +1556,33 @@ export default function ElectionPlatformComparator() {
                   Когато дадена партия е предоставила официални отговори по въпросника,
                   те се използват директно в изчислението.
                 </p>
+              </div>
+
+              <div className="rounded-2xl border p-5 bg-background space-y-4 max-w-4xl">
+                <h3 className="font-semibold text-foreground text-xl">Често задавани въпроси</h3>
+                <div className="space-y-3 text-sm text-muted-foreground">
+                  <div>
+                    <div className="font-medium text-foreground">Как да разбера за коя партия да гласувам?</div>
+                    <p>
+                      Попълнете теста и вижте коя партия е най-близо до вашите възгледи по основни теми като данъци,
+                      ЕС, Русия, социална политика, сигурност и енергетика.
+                    </p>
+                  </div>
+                  <div>
+                    <div className="font-medium text-foreground">Тестът официален ли е?</div>
+                    <p>
+                      Не. Това е независим инструмент за сравнение. Когато партия изпрати официални отговори,
+                      това се отбелязва изрично в резултатите.
+                    </p>
+                  </div>
+                  <div>
+                    <div className="font-medium text-foreground">Как се определят позициите на партиите?</div>
+                    <p>
+                      Използват се публични програми, изявления, регистърът на ЦИК и официални въпросници,
+                      когато са налични.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -1640,13 +1713,13 @@ export default function ElectionPlatformComparator() {
         </section>
       ) : currentPage === "about" ? (
         <section className="space-y-4 max-w-3xl">
-          <h2 className="text-2xl font-semibold">About</h2>
+          <h2 className="text-2xl font-semibold">За сайта</h2>
           <p>Този сайт е независим инструмент за сравнение на предизборните програми на партиите в България.</p>
           <p>Целта е да помогне на избирателите да сравнят позиции по ключови теми като икономика, ЕС, Русия и данъци.</p>
         </section>
       ) : currentPage === "privacy" ? (
         <section className="space-y-4 max-w-3xl">
-          <h2 className="text-2xl font-semibold">Privacy Policy</h2>
+          <h2 className="text-2xl font-semibold">Политика за поверителност</h2>
           <p>Сайтът използва Google Analytics за статистика и Google AdSense за реклами.</p>
           <p>Не събираме лични данни като име или имейл.</p>
         </section>
@@ -1695,7 +1768,7 @@ export default function ElectionPlatformComparator() {
         </section>
       ) : currentPage === "terms" ? (
         <section className="space-y-4 max-w-3xl">
-          <h2 className="text-2xl font-semibold">Terms of Service</h2>
+          <h2 className="text-2xl font-semibold">Условия за ползване</h2>
           <p className="text-muted-foreground">
             Този сайт предоставя информационен инструмент за сравнение на политически позиции и предизборни програми на партиите в България.
           </p>
@@ -1711,7 +1784,7 @@ export default function ElectionPlatformComparator() {
         </section>
       ) : currentPage === "contact" ? (
         <section className="space-y-4 max-w-3xl">
-          <h2 className="text-2xl font-semibold">Contact</h2>
+          <h2 className="text-2xl font-semibold">Контакт</h2>
           <p>За предложения, корекции и официални отговори от партии:</p>
           <p className="font-semibold">contact@izborite.info</p>
         </section>
@@ -1738,7 +1811,7 @@ export default function ElectionPlatformComparator() {
           </div>
 
           <div className="rounded-2xl border p-5 bg-muted/30 space-y-2">
-            <div><strong>Ориентировъчен трафик:</strong> {siteStats.weeklyVisits} посещения седмично</div>
+            
             <div><strong>Формат:</strong> 970×90 или сходен leaderboard банер</div>
             <div><strong>Позиция:</strong> най-горе на сайта, преди теста</div>
             <div><strong>Контакт:</strong> contact@izborite.info</div>
@@ -1749,12 +1822,12 @@ export default function ElectionPlatformComparator() {
       <footer className="text-center text-xs text-muted-foreground pt-10 space-y-2">
         <div>Независим проект за сравнение на предизборни програми.</div>
         <div className="flex justify-center gap-4 flex-wrap">
-          <button onClick={() => setCurrentPage("about")} className="underline">About</button>
-          <button onClick={() => setCurrentPage("privacy")} className="underline">Privacy Policy</button>
-          <button onClick={() => setCurrentPage("contact")} className="underline">Contact</button>
+          <button onClick={() => setCurrentPage("about")} className="underline">За сайта</button>
+          <button onClick={() => setCurrentPage("privacy")} className="underline">Поверителност</button>
+          <button onClick={() => setCurrentPage("contact")} className="underline">Контакт</button>
           <button onClick={() => setCurrentPage("advertise")} className="underline">Реклама</button>
           <button onClick={() => setCurrentPage("methodology")} className="underline">Методология</button>
-          <button onClick={() => setCurrentPage("terms")} className="underline">Terms</button>
+          <button onClick={() => setCurrentPage("terms")} className="underline">Условия</button>
           <button onClick={() => setCurrentPage("news")} className="underline">Новини</button>
         </div>
       </footer>
