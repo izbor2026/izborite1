@@ -851,10 +851,10 @@ function VotingQuiz({ parties }) {
     const details = questions.map((question) => {
       const answer = answers[question.id] ?? 3;
       const partyAnswerMeta = getPartyAnswerForQuestion(party, question);
-      const ideal = partyAnswerMeta.value
+      const ideal = partyAnswerMeta.value;
       const normalizedAnswer = normalizeAnswer(answer);
       const normalizedIdeal = normalizeAnswer(ideal);
-      const distance = normalizedAnswer === normalizedIdeal ? 0 : normalizedAnswer === 0 || normalizedIdeal === 0 ? 1 : 2
+      const distance = normalizedAnswer === normalizedIdeal ? 0 : normalizedAnswer === 0 || normalizedIdeal === 0 ? 1 : 2;
       const points = getMatchPoints(answer, ideal);
 
       return {
@@ -924,9 +924,12 @@ function VotingQuiz({ parties }) {
         questions.forEach((question) => {
           const answer = answers[question.id] ?? 3;
           const partyAnswerMeta = getPartyAnswerForQuestion(party, question);
-      const ideal = partyAnswerMeta.value
+          const ideal = partyAnswerMeta.value;
+          const normalizedAnswer = normalizeAnswer(answer);
+          const normalizedIdeal = normalizeAnswer(ideal);
+
           score += getMatchPoints(answer, ideal);
-          totalDistance += Math.abs(answer - ideal);
+          totalDistance += Math.abs(normalizedAnswer - normalizedIdeal);
         });
 
         const percent = Math.round((score / maxScore) * 100);
@@ -1254,14 +1257,7 @@ function NewsSection({ news, isLoading, compact = false }) {
         </div>
       )}
 
-      {!compact && (
-        <div className="rounded-2xl border p-4 bg-muted/30 text-sm text-muted-foreground space-y-2">
-          <p><strong>Как да добавяте новини без GitHub:</strong></p>
-          <p>1. Отворете Supabase Dashboard → Table Editor → news</p>
-          <p>2. Добавете ред с title, summary, source_name, source_url, published_at и is_published=true</p>
-          <p>3. Новината ще се появи автоматично в сайта след refresh</p>
-        </div>
-      )}
+      
     </div>
   );
 }
@@ -1439,7 +1435,7 @@ export default function ElectionPlatformComparator() {
 
       
 
-        <div className="grid md:grid-cols-3 gap-4 text-sm">
+        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4 text-sm">
           {adPackages.map((pkg) => (
             <div key={pkg.key} className="border rounded-xl p-4 bg-white">
               <div className="font-semibold">{pkg.name}</div>
@@ -1663,8 +1659,7 @@ export default function ElectionPlatformComparator() {
         <section className="space-y-4 max-w-3xl">
           <h2 className="text-2xl font-semibold">Terms of Service</h2>
           <p className="text-muted-foreground">
-            Този сайт предоставя информационен инструмент за сравнение на политически
-            позиции и предизборни програми на партиите в България.
+            Този сайт предоставя информационен инструмент за сравнение на политически позиции и предизборни програми на партиите в България.
           </p>
           <p className="text-muted-foreground">
             Информацията е събрана от публични източници като официални сайтове,
@@ -1690,7 +1685,7 @@ export default function ElectionPlatformComparator() {
             Това прави рекламната позиция подходяща за политически, обществени и информационни кампании.
           </p>
 
-          <div className="grid md:grid-cols-3 gap-4 text-sm">
+          <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4 text-sm">
             {adPackages.map((pkg) => (
               <Card key={pkg.key} className="rounded-2xl">
                 <CardHeader>
