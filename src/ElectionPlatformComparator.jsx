@@ -527,30 +527,76 @@ const topics = [
 ];
 
 const questions = [
-  { id: 1, text: "Данъците в България трябва да бъдат намалени.", dimension: "taxes", agreementLabel: "намаляване на данъците", getIdealValue: (p) => ({ low: 5, medium: 3, high: 1 }[p.profile.taxes] ?? 3) },
-  { id: 2, text: "Осигурителните вноски трябва да бъдат намалени, за да се стимулира бизнесът и заетостта.", dimension: "taxes", agreementLabel: "намаляване на осигуровките", getIdealValue: (p) => ({ low: 5, medium: 3, high: 2 }[p.profile.taxes] ?? 3) },
-  { id: 3, text: "Трябва да се въведе прогресивен данък (по-богатите да плащат по-висок процент).", dimension: "taxes", agreementLabel: "прогресивно облагане", getIdealValue: (p) => ({ high: 5, medium: 3, low: 1 }[p.profile.taxes] ?? 3) },
-  { id: 5, text: "Държавата трябва да има по-голяма роля в икономиката чрез регулации и държавни предприятия.", dimension: "state", agreementLabel: "силна роля на държавата", getIdealValue: (p) => ({ high: 5, medium: 3, low: 1 }[p.profile.state] ?? 3) },
-  { id: 6, text: "Минималната работна заплата трябва да се увеличава по-бързо.", dimension: "state", agreementLabel: "по-висока минимална заплата", getIdealValue: (p) => ({ high: 5, medium: 3, low: 2 }[p.profile.state] ?? 3) },
-  { id: 7, text: "Пенсиите трябва да се увеличат значително, дори ако това увеличи разходите на бюджета.", dimension: "state", agreementLabel: "по-високи пенсии", getIdealValue: (p) => ({ high: 5, medium: 3, low: 1 }[p.profile.state] ?? 3) },
-  { id: 8, text: "Таванът на максималната пенсия трябва да бъде премахнат.", dimension: "state", agreementLabel: "премахване на тавана на пенсиите", getIdealValue: () => 3 },
-  { id: 9, text: "Социалните помощи трябва да се увеличат за хората с ниски доходи.", dimension: "state", agreementLabel: "повече социални помощи", getIdealValue: (p) => ({ high: 5, medium: 3, low: 1 }[p.profile.state] ?? 3) },
-  { id: 10, text: "Държавата трябва да дава повече финансови стимули за раждаемост и семейства с деца.", dimension: "state", agreementLabel: "стимули за семейства", getIdealValue: (p) => ({ high: 5, medium: 3, low: 2 }[p.profile.state] ?? 3) },
-  { id: 11, text: "Трябва да има по-строги мерки и контрол срещу корупцията в институциите.", dimension: "governance", agreementLabel: "силна антикорупционна политика", getIdealValue: () => 4 },
-  { id: 12, text: "Трябва да се намали броят на държавните служители и администрацията.", dimension: "state", agreementLabel: "по-малка администрация", getIdealValue: (p) => ({ low: 5, medium: 3, high: 1 }[p.profile.state] ?? 3) },
-  { id: 13, text: "Референдумите трябва да се използват по-често за важни политически решения.", dimension: "governance", agreementLabel: "повече референдуми", getIdealValue: () => 3 },
-  { id: 14, text: "Президентът трябва да има повече правомощия.", dimension: "governance", agreementLabel: "по-силен президент", getIdealValue: () => 3 },
-  { id: 15, text: "България трябва да бъде силно интегрирана в Европейския съюз.", dimension: "eu", agreementLabel: "силна интеграция в ЕС", getIdealValue: (p) => ({ pro: 5, neutral: 3, skeptic: 1 }[p.profile.eu] ?? 3) },
-  { id: 16, text: "България трябва да следва общата политика на ЕС дори когато не е напълно изгодна за страната.", dimension: "eu", agreementLabel: "следване на политиката на ЕС", getIdealValue: (p) => ({ pro: 5, neutral: 3, skeptic: 1 }[p.profile.eu] ?? 3) },
-  { id: 17, text: "България трябва да поддържа по-близки политически и икономически отношения с Русия.", dimension: "russia", agreementLabel: "по-близки отношения с Русия", getIdealValue: (p) => ({ close: 5, neutral: 3, far: 1 }[p.profile.russia] ?? 3) },
-  { id: 18, text: "Членството в НАТО е важно за сигурността на България.", dimension: "security", agreementLabel: "подкрепа за НАТО", getIdealValue: () => 4 },
-  { id: 19, text: "България трябва да инвестира повече в ядрена енергетика.", dimension: "energy", agreementLabel: "ядрена енергетика", getIdealValue: () => 3 },
-  { id: 20, text: "Зелените политики (намаляване на въглеродните емисии) трябва да бъдат приоритет.", dimension: "energy", agreementLabel: "зелени политики", getIdealValue: () => 3 },
-  { id: 21, text: "Разходите за армия и отбрана трябва да се увеличат.", dimension: "security", agreementLabel: "по-високи разходи за отбрана", getIdealValue: () => 3 },
-  { id: 22, text: "Миграционната политика трябва да бъде по-строга.", dimension: "security", agreementLabel: "по-строга миграционна политика", getIdealValue: () => 3 },
-  { id: 23, text: "Държавата трябва да инвестира повече в образование и здравеопазване, дори ако това увеличи данъците.", dimension: "state", agreementLabel: "повече публични инвестиции", getIdealValue: (p) => ({ high: 5, medium: 3, low: 1 }[p.profile.state] ?? 3) },
-  { id: 24, text: "Частният сектор трябва да има по-голяма роля в здравеопазването.", dimension: "state", agreementLabel: "повече частен сектор в здравеопазването", getIdealValue: (p) => ({ low: 5, medium: 3, high: 1 }[p.profile.state] ?? 3) },
-  { id: 25, text: "Държавата трябва да регулира по-строго големите компании и монополите.", dimension: "state", agreementLabel: "по-строга регулация на големите компании", getIdealValue: (p) => ({ high: 5, medium: 3, low: 1 }[p.profile.state] ?? 3) }
+  {
+    id: 1,
+    text: "Данъците в България трябва да бъдат намалени.",
+    dimension: "taxes",
+    agreementLabel: "намаляване на данъците",
+    getIdealValue: (p) => ({ low: 5, medium: 3, high: 1 }[p.profile.taxes] ?? 3),
+  },
+  {
+    id: 2,
+    text: "Трябва да се въведе прогресивен данък (по-богатите да плащат по-висок процент).",
+    dimension: "taxes",
+    agreementLabel: "прогресивно облагане",
+    getIdealValue: (p) => ({ high: 5, medium: 3, low: 1 }[p.profile.taxes] ?? 3),
+  },
+  {
+    id: 3,
+    text: "Държавата трябва да има по-голяма роля в икономиката.",
+    dimension: "state",
+    agreementLabel: "силна роля на държавата в икономиката",
+    getIdealValue: (p) => ({ high: 5, medium: 3, low: 1 }[p.profile.state] ?? 3),
+  },
+  {
+    id: 4,
+    text: "Социалните помощи за хора с ниски доходи трябва да се увеличат.",
+    dimension: "state",
+    agreementLabel: "повече социални помощи",
+    getIdealValue: (p) => ({ high: 5, medium: 3, low: 1 }[p.profile.state] ?? 3),
+  },
+  {
+    id: 5,
+    text: "България трябва да бъде силно интегрирана в Европейския съюз.",
+    dimension: "eu",
+    agreementLabel: "силна интеграция в ЕС",
+    getIdealValue: (p) => ({ pro: 5, neutral: 3, skeptic: 1 }[p.profile.eu] ?? 3),
+  },
+  {
+    id: 6,
+    text: "България трябва да поддържа по-близки политически и икономически отношения с Русия.",
+    dimension: "russia",
+    agreementLabel: "по-близки отношения с Русия",
+    getIdealValue: (p) => ({ close: 5, neutral: 3, far: 1 }[p.profile.russia] ?? 3),
+  },
+  {
+    id: 7,
+    text: "Членството в НАТО е важно за сигурността на България.",
+    dimension: "security",
+    agreementLabel: "подкрепа за НАТО",
+    getIdealValue: () => 5,
+  },
+  {
+    id: 8,
+    text: "Миграционната политика трябва да бъде по-строга.",
+    dimension: "security",
+    agreementLabel: "по-строга миграционна политика",
+    getIdealValue: () => 5,
+  },
+  {
+    id: 9,
+    text: "България трябва да инвестира повече в ядрена енергетика.",
+    dimension: "energy",
+    agreementLabel: "ядрена енергетика",
+    getIdealValue: () => 5,
+  },
+  {
+    id: 10,
+    text: "Трябва да има по-строги мерки срещу корупцията в институциите.",
+    dimension: "governance",
+    agreementLabel: "силна антикорупционна политика",
+    getIdealValue: () => 5,
+  },
 ];
 
 function getPartyAnswerForQuestion(party, question) {
@@ -823,6 +869,33 @@ function VotingQuiz({ parties }) {
   const [selectedInsightParty, setSelectedInsightParty] = useState(null);
   const [shareMessage, setShareMessage] = useState("");
 
+  const answeredCount = Object.values(answers).filter((value) => value !== 3).length;
+  const progressPercent = Math.round((answeredCount / questions.length) * 100);
+
+  const buildPoliticalProfile = () => {
+    const avgFor = (dimension) => {
+      const values = questions
+        .filter((question) => question.dimension === dimension)
+        .map((question) => normalizeAnswer(answers[question.id] ?? 3))
+        .filter((value) => value !== 0);
+
+      if (values.length === 0) return 0;
+      return values.reduce((sum, value) => sum + value, 0) / values.length;
+    };
+
+    const taxesAvg = avgFor("taxes");
+    const stateAvg = avgFor("state");
+    const euAvg = avgFor("eu");
+    const russiaAvg = avgFor("russia");
+
+    return {
+      economy: taxesAvg > 0.2 ? "по-скоро ниски данъци" : taxesAvg < -0.2 ? "по-скоро по-високо облагане" : "умерен данъчен профил",
+      state: stateAvg > 0.2 ? "по-силна социална държава" : stateAvg < -0.2 ? "по-ограничена роля на държавата" : "умерен държавен профил",
+      eu: euAvg > 0.2 ? "проевропейски" : euAvg < -0.2 ? "по-скептичен към ЕС" : "умерен към ЕС",
+      russia: russiaAvg > 0.2 ? "по-отворен към по-близки отношения с Русия" : russiaAvg < -0.2 ? "по-дистанциран от Русия" : "умерен по темата Русия",
+    };
+  };
+
   const handleAnswer = (questionId, value) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
   };
@@ -975,11 +1048,24 @@ function VotingQuiz({ parties }) {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-2">
-        <h2 className="text-2xl font-semibold">Тест: За коя партия съвпадат вижданията ви?</h2>
-        <p className="text-sm text-muted-foreground">
-          Отговорете на всеки въпрос с една от трите опции: „Да“, „Не“ или „Не се интересувам“. По подразбиране е избрано „Не се интересувам“, за да пропуснете въпрос ако темата не е важна за вас.
-        </p>
+      <div className="space-y-3">
+        <div className="space-y-2">
+          <h2 className="text-2xl font-semibold">Тест: За коя партия съвпадат вижданията ви?</h2>
+          <p className="text-sm text-muted-foreground">
+            Отговорете на всеки въпрос с една от трите опции: „Да“, „Не“ или „Не се интересувам“. По подразбиране е избрано „Не се интересувам“, за да пропуснете въпрос ако темата не е важна за вас.
+          </p>
+        </div>
+
+        <div className="rounded-2xl border p-4 bg-muted/30 space-y-2">
+          <div className="flex items-center justify-between gap-3 text-sm">
+            <span className="font-medium">Напредък</span>
+            <span className="text-muted-foreground">{answeredCount} от {questions.length} въпроса</span>
+          </div>
+          <div className="h-3 w-full rounded-full bg-muted overflow-hidden">
+            <div className="h-full bg-primary transition-all" style={{ width: `${progressPercent}%` }} />
+          </div>
+          <div className="text-xs text-muted-foreground">{progressPercent}% попълнен тест</div>
+        </div>
       </div>
 
       {questions.map((q) => {
@@ -1040,6 +1126,15 @@ function VotingQuiz({ parties }) {
 
       {result && (
         <div className="space-y-4">
+          <div className="rounded-2xl border p-5 bg-background space-y-3">
+            <h3 className="text-lg font-semibold">Вашият политически профил</h3>
+            <div className="grid md:grid-cols-2 gap-3 text-sm">
+              <div className="rounded-xl border p-3"><strong>Икономика:</strong> {buildPoliticalProfile().economy}</div>
+              <div className="rounded-xl border p-3"><strong>Държава:</strong> {buildPoliticalProfile().state}</div>
+              <div className="rounded-xl border p-3"><strong>ЕС:</strong> {buildPoliticalProfile().eu}</div>
+              <div className="rounded-xl border p-3"><strong>Русия:</strong> {buildPoliticalProfile().russia}</div>
+            </div>
+          </div>
           <div className="p-6 border rounded-2xl bg-muted">
             <strong>Най-близката партия до вашите виждания:</strong>
             <div className="mt-4 flex items-center gap-3 rounded-xl border bg-background p-4">
