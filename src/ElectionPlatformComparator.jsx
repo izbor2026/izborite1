@@ -1521,8 +1521,7 @@ export default function ElectionPlatformComparator() {
         .from("news")
         .select("id,title,summary,source_name,source_url,published_at,party_name,is_published")
         .eq("is_published", true)
-        .order("published_at", { ascending: false })
-        .limit(8);
+        .order("published_at", { ascending: false });
 
       if (!isMounted) return;
 
