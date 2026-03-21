@@ -1583,7 +1583,7 @@ export default function ElectionPlatformComparator() {
   const [search, setSearch] = useState("");
   const [topic, setTopic] = useState("economy");
   const [selectedParty, setSelectedParty] = useState(null);
-const [selectedBlog, setSelectedBlog] = useState(null);	
+const [selectedBlog, setSelectedBlog] = useState(null);
   const [currentPage, setCurrentPage] = useState("home");
   const [news, setNews] = useState([]);
   const [newsLoading, setNewsLoading] = useState(false);
@@ -1595,16 +1595,11 @@ const [selectedBlog, setSelectedBlog] = useState(null);
 
   const adsAllowedOnPage = ADS_ALLOWED_PAGES.has(currentPage);
 
-useEffect(() => {
-  navigateTo(window.location.pathname, setCurrentPage, setSelectedParty, setSelectedBlog);
-
-  const onPopState = () => {
-    navigateTo(window.location.pathname, setCurrentPage, setSelectedParty, setSelectedBlog);
-  };
-
-  window.addEventListener("popstate", onPopState);
-  return () => window.removeEventListener("popstate", onPopState);
-}, []);
+  useEffect(() => {
+    const gaScript = document.createElement("script");
+    gaScript.async = true;
+    gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-R51QVD3221";
+    document.head.appendChild(gaScript);
 
     const gaConfig = document.createElement("script");
     gaConfig.innerHTML = `
