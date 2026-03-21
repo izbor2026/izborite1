@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Block internal or temporary paths if any
+Disallow: /admin
+Disallow: /api
+Disallow: /private
+
+# Sitemap location
+Sitemap: https://www.izborite.info/sitemap.xml
