@@ -1353,7 +1353,7 @@ export default function ElectionPlatformComparator() {
     };
 
     const ensureProperty = (property, content) => {
-      let meta = document.querySelector(\`meta[property="\${property}"]\`);
+      let meta = document.querySelector(`meta[property="\${property}"]`);
       if (!meta) {
         meta = document.createElement("meta");
         meta.setAttribute("property", property);
