@@ -1343,7 +1343,7 @@ export default function ElectionPlatformComparator() {
     document.title = "Тест: За коя партия да гласувам? | Сравнение на партии в България";
 
     const ensureMeta = (name, content) => {
-      let meta = document.querySelector(\`meta[name="\${name}"]\`);
+      let meta = document.querySelector(`meta[name="${name}"]`);
       if (!meta) {
         meta = document.createElement("meta");
         meta.setAttribute("name", name);
