@@ -1,20 +1,9 @@
 {
-  "routes": [
-    {
-      "src": "/sitemap.xml",
-      "dest": "/sitemap.xml"
-    },
-    {
-      "src": "/robots.txt",
-      "dest": "/robots.txt"
-    },
-    {
-      "src": "/ads.txt",
-      "dest": "/ads.txt"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
+  "rewrites": [
+    { "source": "/blog", "destination": "/" },
+    { "source": "/blog/:slug", "destination": "/" },
+    { "source": "/partii", "destination": "/" },
+    { "source": "/partii/:slug", "destination": "/" },
+    { "source": "/kak-raboti-testa", "destination": "/" }
   ]
 }
