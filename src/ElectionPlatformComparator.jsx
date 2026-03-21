@@ -1662,7 +1662,7 @@ export default function ElectionPlatformComparator() {
           <p className="text-muted-foreground">Когато партия изпрати официално попълнен въпросник или предостави изрично структурирани отговори, тази информация се отбелязва отделно и се използва с приоритет при изчисляването на съвпадението в теста.</p>
           <p className="text-muted-foreground">При формации, за които няма достатъчно официална и проверима информация, това се отбелязва изрично. Така сайтът не представя липсващи данни като сигурни факти и не създава фалшиво усещане за пълнота.</p>
         </section>
-      ) : currentPage === "how-to-vote"  ( ? (
+      ) : currentPage === "how-to-vote" ? (  (
         <section className="space-y-4 max-w-4xl"><h2 className="text-2xl font-semibold">Как да решите за коя партия да гласувате</h2><p className="text-muted-foreground">Изборът на партия е лично решение, което зависи от вашите ценности, приоритети и представи за развитието на страната.</p></section>
       ) : currentPage === "terms" ? (
         <section className="space-y-4 max-w-4xl"><h2 className="text-2xl font-semibold">Условия за ползване</h2><p className="text-muted-foreground">Този сайт предоставя информационен инструмент за сравнение на политически позиции и предизборни програми на партиите в България.</p></section>
