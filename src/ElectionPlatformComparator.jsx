@@ -1,4 +1,3 @@
-
 import { useMemo, useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -599,6 +598,43 @@ const questions = [
   },
 ];
 
+const adPackages = [
+  {
+    key: "basic",
+    name: "Basic",
+    price: "250 € / седмица",
+    description: "Банер 970×90 на видима позиция след основното съдържание.",
+  },
+  {
+    key: "premium",
+    name: "Premium",
+    price: "350 € / седмица",
+    description: "Банер + допълнително споменаване под основно съдържание като спонсор на седмицата.",
+  },
+  {
+    key: "exclusive",
+    name: "Exclusive",
+    price: "500 € / седмица",
+    description: "Единствен рекламен партньор за седмицата без други платени банери на сайта.",
+  },
+  {
+    key: "vip",
+    name: "VIP",
+    price: "по договаряне",
+    description: "Различен размер на банера, времетраене или локация.",
+  },
+];
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
+
+const ADS_ALLOWED_PAGES = new Set(["home", "compare", "map", "news", "methodology"]);
+
+function normalizeAnswer(value) {
+  return value >= 4 ? 1 : value <= 2 ? -1 : 0;
+}
+
 function getPartyAnswerForQuestion(party, question) {
   const officialValue = party.officialQuizAnswers?.[question.id];
 
@@ -621,6 +657,156 @@ function getPartyMethodLabel(party) {
   return party.officialQuizAnswers
     ? "Има официално попълнен въпросник"
     : "Резултатът е изчислен по публични данни и AI ресърч";
+}
+
+function ensureAdsenseScript() {
+  if (document.querySelector('script[data-adsense="true"]')) return;
+
+  const adsScript = document.createElement("script");
+  adsScript.async = true;
+  adsScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2974245059167035";
+  adsScript.crossOrigin = "anonymous";
+  adsScript.setAttribute("data-adsense", "true");
+  document.head.appendChild(adsScript);
+}
+
+function pushAdsIfNeeded() {
+  try {
+    const adNodes = document.querySelectorAll(".adsbygoogle");
+    adNodes.forEach((node) => {
+      if (!node.getAttribute("data-adsbygoogle-status")) {
+        window.adsbygoogle = window.adsbygoogle || [];
+        window.adsbygoogle.push({});
+      }
+    });
+  } catch {}
+}
+
+function NewsSection({ news, isLoading }) {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-2xl font-semibold">Последни новини</h2>
+        <Badge variant="outline">Supabase CMS</Badge>
+      </div>
+
+      {!supabase && (
+        <div className="rounded-2xl border p-4 text-sm text-muted-foreground bg-muted/30">
+          За да активирате новините, добавете <strong>VITE_SUPABASE_URL</strong> и <strong>VITE_SUPABASE_ANON_KEY</strong>
+          във Vercel Environment Variables.
+        </div>
+      )}
+
+      {isLoading ? (
+        <div className="rounded-2xl border p-4 text-sm text-muted-foreground">Зареждане на новини...</div>
+      ) : news.length === 0 ? (
+        <div className="rounded-2xl border p-4 text-sm text-muted-foreground">
+          Все още няма публикувани новини. Добавете първата новина в Supabase таблицата <strong>news</strong>.
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {news.map((item) => (
+            <Card key={item.id} className="rounded-2xl">
+              <CardContent className="p-4 space-y-2">
+                <div className="flex items-center justify-between gap-3 flex-wrap text-xs text-muted-foreground">
+                  <span>{item.source_name || "Източник"}</span>
+                  <span>{item.published_at ? new Date(item.published_at).toLocaleDateString("bg-BG") : ""}</span>
+                </div>
+                <div className="font-semibold leading-snug">{item.title}</div>
+                {item.summary && <p className="text-sm text-muted-foreground">{item.summary}</p>}
+                <div className="flex gap-3 flex-wrap text-sm">
+                  {item.source_url && (
+                    <a href={item.source_url} target="_blank" rel="noreferrer" className="text-primary underline underline-offset-4">
+                      Прочети източника
+                    </a>
+                  )}
+                  {item.party_name && <Badge variant="secondary">{item.party_name}</Badge>}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CompareTable({ selectedTopic, parties }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full border rounded-2xl overflow-hidden">
+        <thead className="bg-muted">
+          <tr>
+            <th className="text-left p-3">Партия</th>
+            <th className="text-left p-3">Позиция</th>
+          </tr>
+        </thead>
+        <tbody>
+          {parties.map((p) => (
+            <tr key={p.name} className="border-t align-top">
+              <td className="p-3 font-medium">
+                <div className="flex items-center gap-3">
+                  <div className={`h-9 w-9 rounded-full flex items-center justify-center text-xs font-bold ${p.logoClass}`}>
+                    {p.logoText}
+                  </div>
+                  <span>{p.name}</span>
+                  {p.infoStatus === "limited" && <Badge variant="outline">Ограничена информация</Badge>}
+                </div>
+              </td>
+              <td className="p-3">{p[selectedTopic]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function PartyCards({ search, selectedPartyName, onSelectParty, parties }) {
+  const filtered = parties.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()));
+
+  return (
+    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+      {filtered.map((party) => (
+        <button
+          key={party.name}
+          type="button"
+          onClick={() => onSelectParty?.(party)}
+          className="text-left"
+        >
+          <Card className={`rounded-2xl shadow transition hover:shadow-md ${selectedPartyName === party.name ? "ring-2 ring-primary" : ""}`}>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className={`h-12 w-12 rounded-full flex items-center justify-center text-sm font-bold ${party.logoClass}`}>
+                  {party.logoText}
+                </div>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <CardTitle>{party.name}</CardTitle>
+                    {party.officialQuizAnswers && <Badge variant="secondary">Официален въпросник</Badge>}
+                    {party.infoStatus === "limited" && <Badge variant="outline">Ограничена публична информация</Badge>}
+                  </div>
+                  <div className="text-xs text-muted-foreground">{party.short}</div>
+                  <div className="text-[11px] text-muted-foreground">{getPartyMethodLabel(party)}</div>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              <div><strong>Икономика:</strong><p>{party.economy}</p></div>
+              <div><strong>Здравеопазване:</strong><p>{party.healthcare}</p></div>
+              <div><strong>Образование:</strong><p>{party.education}</p></div>
+              <div><strong>Мнение за ЕС:</strong><p>{party.eu}</p></div>
+              <div><strong>Връзки с Русия:</strong><p>{party.russia}</p></div>
+              <div><strong>НАТО:</strong><p>{party.nato}</p></div>
+              <div><strong>Енергетика:</strong><p>{party.energy}</p></div>
+              <div><strong>Миграция:</strong><p>{party.migration}</p></div>
+              <div><strong>Данъци:</strong><p>{party.taxes}</p></div>
+            </CardContent>
+          </Card>
+        </button>
+      ))}
+    </div>
+  );
 }
 
 function PartyPositionMap({ parties, onSelectParty }) {
@@ -704,12 +890,6 @@ function PartyPositionMap({ parties, onSelectParty }) {
           <Button variant={typeFilter === "party" ? "default" : "outline"} onClick={() => setTypeFilter("party")}>Само партии</Button>
           <Button variant={typeFilter === "coalition" ? "default" : "outline"} onClick={() => setTypeFilter("coalition")}>Само коалиции</Button>
         </div>
-
-        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-          <Badge variant="outline">Видими: {visibleParties.length}</Badge>
-          <Badge variant="outline">Основни партии = по-четима карта</Badge>
-          <Badge variant="outline">Всички = пълна картина</Badge>
-        </div>
       </div>
 
       <div className="relative h-[560px] rounded-2xl border bg-muted/30 overflow-hidden">
@@ -742,129 +922,12 @@ function PartyPositionMap({ parties, onSelectParty }) {
           </button>
         ))}
       </div>
-
-      <div className="rounded-xl border p-3 bg-background text-xs text-muted-foreground">
-        Съвет: започнете с „Само основни“, а после превключете на „Покажи всички“, ако искате пълната карта.
-      </div>
-    </div>
-  );
-}
-
-function CompareTable({ selectedTopic, parties }) {
-  return (
-    <div className="overflow-x-auto">
-      <table className="w-full border rounded-2xl overflow-hidden">
-        <thead className="bg-muted">
-          <tr>
-            <th className="text-left p-3">Партия</th>
-            <th className="text-left p-3">Позиция</th>
-          </tr>
-        </thead>
-        <tbody>
-          {parties.map((p) => (
-            <tr key={p.name} className="border-t align-top">
-              <td className="p-3 font-medium">
-                <div className="flex items-center gap-3">
-                  <div className={`h-9 w-9 rounded-full flex items-center justify-center text-xs font-bold ${p.logoClass}`}>
-                    {p.logoText}
-                  </div>
-                  <span>{p.name}</span>
-                  {p.infoStatus === "limited" && <Badge variant="outline">Ограничена информация</Badge>}
-                </div>
-              </td>
-              <td className="p-3">{p[selectedTopic]}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-function PartyCards({ search, selectedPartyName, onSelectParty, parties }) {
-  const filtered = parties.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase())
-  );
-
-  return (
-    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-      {filtered.map((party) => (
-        <button
-          key={party.name}
-          type="button"
-          onClick={() => onSelectParty?.(party)}
-          className="text-left"
-        >
-          <Card className={`rounded-2xl shadow transition hover:shadow-md ${selectedPartyName === party.name ? "ring-2 ring-primary" : ""}`}>
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className={`h-12 w-12 rounded-full flex items-center justify-center text-sm font-bold ${party.logoClass}`}>
-                  {party.logoText}
-                </div>
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <CardTitle>{party.name}</CardTitle>
-                    {party.officialQuizAnswers && <Badge variant="secondary">Официален въпросник</Badge>}
-                    {party.infoStatus === "limited" && <Badge variant="outline">Ограничена публична информация</Badge>}
-                  </div>
-                  <div className="text-xs text-muted-foreground">{party.short}</div>
-                  <div className="text-[11px] text-muted-foreground">{getPartyMethodLabel(party)}</div>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm">
-              <div>
-                <strong>Икономика:</strong>
-                <p>{party.economy}</p>
-              </div>
-              <div>
-                <strong>Здравеопазване:</strong>
-                <p>{party.healthcare}</p>
-              </div>
-              <div>
-                <strong>Образование:</strong>
-                <p>{party.education}</p>
-              </div>
-              <div>
-                <strong>Мнение за ЕС:</strong>
-                <p>{party.eu}</p>
-              </div>
-              <div>
-                <strong>Връзки с Русия:</strong>
-                <p>{party.russia}</p>
-              </div>
-              <div>
-                <strong>НАТО:</strong>
-                <p>{party.nato}</p>
-              </div>
-              <div>
-                <strong>Енергетика:</strong>
-                <p>{party.energy}</p>
-              </div>
-              <div>
-                <strong>Миграция:</strong>
-                <p>{party.migration}</p>
-              </div>
-              <div>
-                <strong>Данъци:</strong>
-                <p>{party.taxes}</p>
-              </div>
-              <div className="flex flex-wrap gap-2 pt-2 text-xs text-primary underline underline-offset-4">
-                <span>Покажи контакти и детайли</span>
-                {party.officialProgramUrl && <span>Официална програма</span>}
-              </div>
-            </CardContent>
-          </Card>
-        </button>
-      ))}
     </div>
   );
 }
 
 function VotingQuiz({ parties }) {
-  const [answers, setAnswers] = useState(
-    Object.fromEntries(questions.map((q) => [q.id, 3]))
-  );
+  const [answers, setAnswers] = useState(Object.fromEntries(questions.map((q) => [q.id, 3])));
   const [result, setResult] = useState(null);
   const [selectedInsightParty, setSelectedInsightParty] = useState(null);
   const [shareMessage, setShareMessage] = useState("");
@@ -900,8 +963,6 @@ function VotingQuiz({ parties }) {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
   };
 
-  const normalizeAnswer = (value) => (value >= 4 ? 1 : value <= 2 ? -1 : 0);
-
   const getAnswerLabel = (value) => {
     const normalized = normalizeAnswer(value);
     if (normalized === 1) return "Да";
@@ -913,10 +974,7 @@ function VotingQuiz({ parties }) {
     const normalizedAnswer = normalizeAnswer(answer);
     const normalizedIdeal = normalizeAnswer(ideal);
 
-    if (normalizedAnswer === 0 || normalizedIdeal === 0) {
-      return 1;
-    }
-
+    if (normalizedAnswer === 0 || normalizedIdeal === 0) return 1;
     return normalizedAnswer === normalizedIdeal ? 2 : 0;
   };
 
@@ -933,12 +991,10 @@ function VotingQuiz({ parties }) {
       return {
         id: question.id,
         text: question.text,
-        dimension: question.dimension,
         answer,
         ideal,
         distance,
         points,
-        source: partyAnswerMeta.source,
         sourceLabel: partyAnswerMeta.sourceLabel,
         isStrongMatch: distance <= 1,
         explanation: (() => {
@@ -1052,7 +1108,7 @@ function VotingQuiz({ parties }) {
         <div className="space-y-2">
           <h2 className="text-2xl font-semibold">Тест: За коя партия съвпадат вижданията ви?</h2>
           <p className="text-sm text-muted-foreground">
-            Отговорете на всеки въпрос с една от трите опции: „Да“, „Не“ или „Не се интересувам“. По подразбиране е избрано „Не се интересувам“, за да пропуснете въпрос ако темата не е важна за вас.
+            Отговорете на всеки въпрос с една от трите опции: „Да“, „Не“ или „Не се интересувам“.
           </p>
         </div>
 
@@ -1076,24 +1132,9 @@ function VotingQuiz({ parties }) {
             <div className="font-medium">{q.text}</div>
             <div className="px-2">
               <div className="flex gap-2 flex-wrap">
-                <Button
-                  variant={value === 5 ? "default" : "outline"}
-                  onClick={() => handleAnswer(q.id, 5)}
-                >
-                  Да
-                </Button>
-                <Button
-                  variant={value === 3 ? "default" : "outline"}
-                  onClick={() => handleAnswer(q.id, 3)}
-                >
-                  Не се интересувам
-                </Button>
-                <Button
-                  variant={value === 1 ? "default" : "outline"}
-                  onClick={() => handleAnswer(q.id, 1)}
-                >
-                  Не
-                </Button>
+                <Button variant={value === 5 ? "default" : "outline"} onClick={() => handleAnswer(q.id, 5)}>Да</Button>
+                <Button variant={value === 3 ? "default" : "outline"} onClick={() => handleAnswer(q.id, 3)}>Не се интересувам</Button>
+                <Button variant={value === 1 ? "default" : "outline"} onClick={() => handleAnswer(q.id, 1)}>Не</Button>
               </div>
             </div>
           </div>
@@ -1102,9 +1143,7 @@ function VotingQuiz({ parties }) {
 
       <div className="flex gap-3 flex-wrap">
         <Button onClick={calculate}>Виж резултат</Button>
-        <Button variant="secondary" onClick={shareResult} disabled={!result?.best}>
-          Сподели резултата
-        </Button>
+        <Button variant="secondary" onClick={shareResult} disabled={!result?.best}>Сподели резултата</Button>
         <Button
           variant="outline"
           onClick={() => {
@@ -1135,6 +1174,7 @@ function VotingQuiz({ parties }) {
               <div className="rounded-xl border p-3"><strong>Русия:</strong> {buildPoliticalProfile().russia}</div>
             </div>
           </div>
+
           <div className="p-6 border rounded-2xl bg-muted">
             <strong>Най-близката партия до вашите виждания:</strong>
             <div className="mt-4 flex items-center gap-3 rounded-xl border bg-background p-4">
@@ -1270,94 +1310,21 @@ function VotingQuiz({ parties }) {
   );
 }
 
-const adPackages = [
-  {
-    key: "basic",
-    name: "Basic",
-    price: "250 € / седмица",
-    description: "Банер 970×90 на най-видимата позиция в началото на сайта.",
-  },
-  {
-    key: "premium",
-    name: "Premium",
-    price: "350 € / седмица",
-    description: "Банер + допълнително споменаване под теста като спонсор на седмицата.",
-  },
-  {
-    key: "exclusive",
-    name: "Exclusive",
-    price: "500 € / седмица",
-    description: "Единствен рекламен партньор за седмицата без други платени банери на сайта.",
-  },
-    {
-    key: "vip",
-    name: "VIP",
-    price: "по договаряне",
-    description: "Различен размер на банера, времетраене или локация",
-  },
-];
-
-const siteStats = {
-  weeklyVisits: "~ 12 000",
-  monthlyVisits: "~ 40 000",
-};
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
-
-function NewsSection({ news, isLoading, compact = false }) {
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="text-2xl font-semibold">Последни новини</h2>
-        <Badge variant="outline">Supabase CMS</Badge>
-      </div>
-
-      {!supabase && (
-        <div className="rounded-2xl border p-4 text-sm text-muted-foreground bg-muted/30">
-          За да активирате новините, добавете <strong>VITE_SUPABASE_URL</strong> и <strong>VITE_SUPABASE_ANON_KEY</strong>
-          във Vercel Environment Variables.
-        </div>
-      )}
-
-      {isLoading ? (
-        <div className="rounded-2xl border p-4 text-sm text-muted-foreground">Зареждане на новини...</div>
-      ) : news.length === 0 ? (
-        <div className="rounded-2xl border p-4 text-sm text-muted-foreground">
-          Все още няма публикувани новини. Добавете първата новина в Supabase таблицата <strong>news</strong>.
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {news.map((item) => (
-            <Card key={item.id} className="rounded-2xl">
-              <CardContent className="p-4 space-y-2">
-                <div className="flex items-center justify-between gap-3 flex-wrap text-xs text-muted-foreground">
-                  <span>{item.source_name || "Източник"}</span>
-                  <span>{item.published_at ? new Date(item.published_at).toLocaleDateString("bg-BG") : ""}</span>
-                </div>
-                <div className="font-semibold leading-snug">{item.title}</div>
-                {item.summary && <p className="text-sm text-muted-foreground">{item.summary}</p>}
-                <div className="flex gap-3 flex-wrap text-sm">
-                  {item.source_url && (
-                    <a href={item.source_url} target="_blank" rel="noreferrer" className="text-primary underline underline-offset-4">
-                      Прочети източника
-                    </a>
-                  )}
-                  {item.party_name && <Badge variant="secondary">{item.party_name}</Badge>}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
-
-      
-    </div>
-  );
-}
-
 export default function ElectionPlatformComparator() {
+  const [search, setSearch] = useState("");
+  const [topic, setTopic] = useState("economy");
+  const [selectedParty, setSelectedParty] = useState(null);
+  const [currentPage, setCurrentPage] = useState("home");
+  const [news, setNews] = useState([]);
+  const [newsLoading, setNewsLoading] = useState(false);
+
+  const sortedParties = useMemo(
+    () => [...parties].sort((a, b) => a.name.localeCompare(b.name, "bg")),
+    []
+  );
+
+  const adsAllowedOnPage = ADS_ALLOWED_PAGES.has(currentPage);
+
   useEffect(() => {
     const gaScript = document.createElement("script");
     gaScript.async = true;
@@ -1376,10 +1343,20 @@ export default function ElectionPlatformComparator() {
     document.title = "Тест: За коя партия да гласувам? | Сравнение на партии в България";
 
     const ensureMeta = (name, content) => {
-      let meta = document.querySelector(`meta[name="${name}"]`);
+      let meta = document.querySelector(\`meta[name="\${name}"]\`);
       if (!meta) {
         meta = document.createElement("meta");
         meta.setAttribute("name", name);
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute("content", content);
+    };
+
+    const ensureProperty = (property, content) => {
+      let meta = document.querySelector(\`meta[property="\${property}"]\`);
+      if (!meta) {
+        meta = document.createElement("meta");
+        meta.setAttribute("property", property);
         document.head.appendChild(meta);
       }
       meta.setAttribute("content", content);
@@ -1389,16 +1366,6 @@ export default function ElectionPlatformComparator() {
     ensureMeta("keywords", "за коя партия да гласувам тест, тест за коя партия съм, сравнение на партии България, избори България партии позиции, политически тест България");
     ensureMeta("robots", "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1");
     ensureMeta("author", "Izborite.info");
-
-    const ensureProperty = (property, content) => {
-      let meta = document.querySelector(`meta[property="${property}"]`);
-      if (!meta) {
-        meta = document.createElement("meta");
-        meta.setAttribute("property", property);
-        document.head.appendChild(meta);
-      }
-      meta.setAttribute("content", content);
-    };
 
     ensureProperty("og:title", "Тест: За коя партия да гласувам? | Сравнение на партии");
     ensureProperty("og:description", "Попълнете теста и вижте коя партия е най-близо до вашите виждания. Сравнение на политическите програми в България.");
@@ -1419,48 +1386,48 @@ export default function ElectionPlatformComparator() {
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": "Izborite.info",
-        "url": "https://www.izborite.info",
-        "description": "Тест за сравнение на политическите партии и техните програми в България.",
-        "potentialAction": {
+        name: "Izborite.info",
+        url: "https://www.izborite.info",
+        description: "Тест за сравнение на политическите партии и техните програми в България.",
+        potentialAction: {
           "@type": "SearchAction",
-          "target": "https://www.izborite.info/?q={search_term_string}",
+          target: "https://www.izborite.info/?q={search_term_string}",
           "query-input": "required name=search_term_string"
         }
       },
       {
         "@context": "https://schema.org",
         "@type": "Organization",
-        "name": "Izborite.info",
-        "url": "https://www.izborite.info",
-        "email": "contact@izborite.info"
+        name: "Izborite.info",
+        url: "https://www.izborite.info",
+        email: "contact@izborite.info"
       },
       {
         "@context": "https://schema.org",
         "@type": "FAQPage",
-        "mainEntity": [
+        mainEntity: [
           {
             "@type": "Question",
-            "name": "Как работи тестът за партиите?",
-            "acceptedAnswer": {
+            name: "Как работи тестът за партиите?",
+            acceptedAnswer: {
               "@type": "Answer",
-              "text": "Тестът сравнява вашите отговори с позициите на партиите по ключови теми като икономика, данъци, ЕС, Русия, сигурност и социална политика."
+              text: "Тестът сравнява вашите отговори с позициите на партиите по ключови теми като икономика, данъци, ЕС, Русия, сигурност и социална политика."
             }
           },
           {
             "@type": "Question",
-            "name": "На каква база са определени позициите на партиите?",
-            "acceptedAnswer": {
+            name: "На каква база са определени позициите на партиите?",
+            acceptedAnswer: {
               "@type": "Answer",
-              "text": "Позициите са изведени от публични източници, а когато партия изпрати официален въпросник, той се използва с приоритет."
+              text: "Позициите са изведени от публични източници, а когато партия изпрати официален въпросник, той се използва с приоритет."
             }
           },
           {
             "@type": "Question",
-            "name": "Сайтът подкрепя ли политическа партия?",
-            "acceptedAnswer": {
+            name: "Сайтът подкрепя ли политическа партия?",
+            acceptedAnswer: {
               "@type": "Answer",
-              "text": "Не. Сайтът е независим и има за цел да подпомага информирания избор чрез сравнение на политически програми."
+              text: "Не. Сайтът е независим и има за цел да подпомага информирания избор чрез сравнение на политически програми."
             }
           }
         ]
@@ -1471,44 +1438,18 @@ export default function ElectionPlatformComparator() {
     script.type = "application/ld+json";
     script.text = JSON.stringify(schema);
     document.head.appendChild(script);
-
-    if (!document.querySelector('script[data-adsense="true"]')) {
-      const adsScript = document.createElement("script");
-      adsScript.async = true;
-      adsScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2974245059167035";
-      adsScript.crossOrigin = "anonymous";
-      adsScript.setAttribute("data-adsense", "true");
-      document.head.appendChild(adsScript);
-    }
   }, []);
 
-  const [search, setSearch] = useState("");
-  const [topic, setTopic] = useState("economy");
-  const [selectedParty, setSelectedParty] = useState(null);
-  const [currentPage, setCurrentPage] = useState("home");
-  const [news, setNews] = useState([]);
-  const [newsLoading, setNewsLoading] = useState(false);
-
-  const sortedParties = useMemo(
-    () => [...parties].sort((a, b) => a.name.localeCompare(b.name, "bg")),
-    []
-  );
-
   useEffect(() => {
+    if (!adsAllowedOnPage) return;
+    ensureAdsenseScript();
+
     const timer = setTimeout(() => {
-      try {
-        const adNodes = document.querySelectorAll('.adsbygoogle');
-        adNodes.forEach((node) => {
-          if (!node.getAttribute('data-adsbygoogle-status')) {
-            window.adsbygoogle = window.adsbygoogle || [];
-            window.adsbygoogle.push({});
-          }
-        });
-      } catch {}
-    }, 250);
+      pushAdsIfNeeded();
+    }, 400);
 
     return () => clearTimeout(timer);
-  }, [currentPage]);
+  }, [adsAllowedOnPage, currentPage]);
 
   useEffect(() => {
     let isMounted = true;
@@ -1550,8 +1491,8 @@ export default function ElectionPlatformComparator() {
             </p>
             <div className="text-sm text-muted-foreground max-w-3xl space-y-3">
               <p>
-                <strong>Тест: За коя партия да гласувам?</strong> Отговорете на въпросите по‑долу и вижте коя
-                политическа програма е най‑близо до вашите виждания.
+                <strong>Тест: За коя партия да гласувам?</strong> Отговорете на въпросите по-долу и вижте коя
+                политическа програма е най-близо до вашите виждания.
               </p>
               <p>
                 Сайтът сравнява позициите на партиите по ключови теми като икономика, данъци, социална политика,
@@ -1559,7 +1500,7 @@ export default function ElectionPlatformComparator() {
                 а когато дадена партия е изпратила официални отговори по въпросника, те се отбелязват изрично.
               </p>
               <p>
-                Целта на проекта е да помогне на избирателите да направят по‑информиран избор чрез ясно,
+                Целта на проекта е да помогне на избирателите да направят по-информиран избор чрез ясно,
                 структурирано и неутрално сравнение на политическите програми.
               </p>
             </div>
@@ -1574,6 +1515,9 @@ export default function ElectionPlatformComparator() {
             <Button variant={currentPage === "contact" ? "default" : "outline"} onClick={() => setCurrentPage("contact")}>Контакт</Button>
             <Button variant={currentPage === "advertise" ? "default" : "outline"} onClick={() => setCurrentPage("advertise")}>Реклама</Button>
             <Button variant={currentPage === "methodology" ? "default" : "outline"} onClick={() => setCurrentPage("methodology")}>Методология</Button>
+            <Button variant={currentPage === "guide" ? "default" : "outline"} onClick={() => setCurrentPage("guide")}>Как работи тестът</Button>
+            <Button variant={currentPage === "analysis" ? "default" : "outline"} onClick={() => setCurrentPage("analysis")}>Как сравняваме партиите</Button>
+            <Button variant={currentPage === "how-to-vote" ? "default" : "outline"} onClick={() => setCurrentPage("how-to-vote")}>Как да избера партия</Button>
             <Button variant={currentPage === "terms" ? "default" : "outline"} onClick={() => setCurrentPage("terms")}>Условия</Button>
             <Button variant={currentPage === "news" ? "default" : "outline"} onClick={() => setCurrentPage("news")}>Новини</Button>
           </div>
@@ -1604,93 +1548,112 @@ export default function ElectionPlatformComparator() {
         )}
       </header>
 
-      {/* Top Banner – advertising space for rent */}
-      <div className="w-full border rounded-2xl p-8 text-center bg-amber-50 space-y-4">
-        <div className="text-lg font-semibold">Рекламно пространство</div>
-        <div className="text-sm text-muted-foreground">
-          Банер позиция на началната страница – вижда се от всички посетители преди теста.
-        </div>
-
-      
-
-        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4 text-sm">
-          {adPackages.map((pkg) => (
-            <div key={pkg.key} className="border rounded-xl p-4 bg-white">
-              <div className="font-semibold">{pkg.name}</div>
-              <div className="text-2xl font-bold mt-1">{pkg.price}</div>
-              <div className="text-muted-foreground mt-1">{pkg.description}</div>
-            </div>
-          ))}
-        </div>
-
-        <div className="text-sm">
-          Запитвания: <span className="font-semibold">contact@izborite.info</span>
-        </div>
-      </div>
-
       {currentPage === "home" ? (
-        <>
-          <section className="grid xl:grid-cols-[minmax(0,1fr)_380px] gap-8 items-start">
-            <div className="space-y-6">
-              <VotingQuiz parties={sortedParties} />
+        <section className="grid xl:grid-cols-[minmax(0,1fr)_380px] gap-8 items-start">
+          <div className="space-y-6">
+            <VotingQuiz parties={sortedParties} />
 
-              <div className="rounded-2xl border p-5 bg-muted/30 text-sm text-muted-foreground space-y-3 max-w-3xl">
-                <h3 className="font-semibold text-foreground">Как работи тестът</h3>
-                <p>
-                  Тестът сравнява вашите отговори с позициите на политическите партии по ключови
-                  теми като икономика, данъци, социална политика, Европейски съюз, Русия,
-                  сигурност, енергетика и миграция.
-                </p>
-                <p>
-                  Резултатът показва коя политическа програма е най-близка до вашите възгледи.
-                  Съвпадението се изчислява на база десет въпроса и публично достъпна
-                  информация за позициите на партиите.
-                </p>
-                <p>
-                  Когато дадена партия е предоставила официални отговори по въпросника,
-                  те се използват директно в изчислението.
-                </p>
-              </div>
+            <div className="rounded-2xl border p-5 bg-muted/30 text-sm text-muted-foreground space-y-3 max-w-3xl">
+              <h3 className="font-semibold text-foreground">Как работи тестът</h3>
+              <p>
+                Тестът сравнява вашите отговори с позициите на политическите партии по ключови
+                теми като икономика, данъци, социална политика, Европейски съюз, Русия,
+                сигурност, енергетика и миграция.
+              </p>
+              <p>
+                Резултатът показва коя политическа програма е най-близка до вашите възгледи.
+                Съвпадението се изчислява на база десет въпроса и публично достъпна
+                информация за позициите на партиите.
+              </p>
+              <p>
+                Когато дадена партия е предоставила официални отговори по въпросника,
+                те се използват директно в изчислението.
+              </p>
+            </div>
 
-              <div className="rounded-2xl border p-5 bg-background space-y-4 max-w-4xl">
-                <h3 className="font-semibold text-foreground text-xl">Често задавани въпроси</h3>
-                <div className="space-y-3 text-sm text-muted-foreground">
-                  <div>
-                    <div className="font-medium text-foreground">Как да разбера за коя партия да гласувам?</div>
-                    <p>
-                      Попълнете теста и вижте коя партия е най-близо до вашите възгледи по основни теми като данъци,
-                      ЕС, Русия, социална политика, сигурност и енергетика.
-                    </p>
-                  </div>
-                  <div>
-                    <div className="font-medium text-foreground">Тестът официален ли е?</div>
-                    <p>
-                      Не. Това е независим инструмент за сравнение. Когато партия изпрати официални отговори,
-                      това се отбелязва изрично в резултатите.
-                    </p>
-                  </div>
-                  <div>
-                    <div className="font-medium text-foreground">Как се определят позициите на партиите?</div>
-                    <p>
-                      Използват се публични програми, изявления, регистърът на ЦИК и официални въпросници,
-                      когато са налични.
-                    </p>
-                  </div>
+            <div className="rounded-2xl border p-5 bg-background space-y-4 max-w-4xl">
+              <h3 className="font-semibold text-foreground text-xl">Често задавани въпроси</h3>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <div>
+                  <div className="font-medium text-foreground">Как да разбера за коя партия да гласувам?</div>
+                  <p>
+                    Попълнете теста и вижте коя партия е най-близо до вашите възгледи по основни теми като данъци,
+                    ЕС, Русия, социална политика, сигурност и енергетика.
+                  </p>
+                </div>
+                <div>
+                  <div className="font-medium text-foreground">Тестът официален ли е?</div>
+                  <p>
+                    Не. Това е независим инструмент за сравнение. Когато партия изпрати официални отговори,
+                    това се отбелязва изрично в резултатите.
+                  </p>
+                </div>
+                <div>
+                  <div className="font-medium text-foreground">Как се определят позициите на партиите?</div>
+                  <p>
+                    Използват се публични програми, изявления, регистърът на ЦИК и официални въпросници,
+                    когато са налични.
+                  </p>
                 </div>
               </div>
             </div>
 
-            <aside className="space-y-4">
-              <NewsSection news={news.slice(0, 5)} isLoading={newsLoading} compact />
-            </aside>
-          </section>
-        </>
+            <div className="rounded-2xl border p-5 bg-background space-y-4 max-w-4xl">
+              <h3 className="font-semibold text-foreground text-xl">Какво представлява този сайт</h3>
+              <p className="text-sm text-muted-foreground">
+                Izborite.info е независим информационен проект. Той не е официален сайт на институция,
+                партия или коалиция. Основната му цел е да събере на едно място сравнима, подредена и
+                лесна за разбиране информация за позициите на политическите формации.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Сайтът не дава указания за гласуване и не агитира за конкретна партия. Показваният резултат
+                е ориентировъчен и зависи от начина, по който потребителят отговаря на въпросите, както и
+                от наличната публична информация за позициите на формациите.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Съдържанието на сайта е предназначено да бъде полезно за потребители, които искат бърз, достъпен
+                и структуриран преглед на политическите различия. За по-задълбочено ориентиране са добавени и
+                отделни обяснителни страници за методологията, начина на сравнение и ограниченията на теста.
+              </p>
+            </div>
+          </div>
+
+          <aside className="space-y-4">
+            <NewsSection news={news.slice(0, 5)} isLoading={newsLoading} />
+          </aside>
+        </section>
       ) : currentPage === "news" ? (
         <section className="space-y-6 max-w-4xl">
+          <div className="space-y-3">
+            <h2 className="text-2xl font-semibold">Новини и актуализации</h2>
+            <p className="text-muted-foreground">
+              Тази секция събира последните публикувани новини, свързани с партиите, кампанията и ключови
+              политически теми. Целта е потребителят да има достъп не само до статични профили, но и до
+              по-актуална информация, която допълва сравнението.
+            </p>
+            <p className="text-muted-foreground">
+              Новините могат да включват публични изявления, промени в официални позиции, нови документи
+              или други важни събития, които помагат за по-добро разбиране на политическата картина.
+            </p>
+          </div>
           <NewsSection news={news} isLoading={newsLoading} />
         </section>
       ) : currentPage === "compare" ? (
         <section className="space-y-6">
+          <div className="space-y-3 max-w-4xl">
+            <h2 className="text-2xl font-semibold">Сравнение на политическите партии</h2>
+            <p className="text-muted-foreground">
+              Тази страница позволява директно сравнение на позициите на партиите по конкретни теми.
+              Вместо да се преглеждат множество отделни сайтове и програми, тук информацията е структурирана
+              така, че основните разлики да се виждат по-ясно.
+            </p>
+            <p className="text-muted-foreground">
+              Съдържанието е подредено по теми като икономика, здравеопазване, образование,
+              Европейски съюз, Русия, сигурност, енергетика, миграция и данъци. Така потребителят
+              може по-лесно да сравни как различните формации подхождат към важни обществени въпроси.
+            </p>
+          </div>
+
           <div className="flex gap-4 flex-wrap">
             <Input
               placeholder="Търси партия..."
@@ -1715,7 +1678,10 @@ export default function ElectionPlatformComparator() {
 
           <div>
             <h2 className="text-2xl font-semibold">Сравнение на програмите</h2>
-            <CompareTable selectedTopic={topic} parties={sortedParties.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))} />
+            <CompareTable
+              selectedTopic={topic}
+              parties={sortedParties.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))}
+            />
           </div>
 
           <div className="space-y-4">
@@ -1750,8 +1716,8 @@ export default function ElectionPlatformComparator() {
                     <div className="space-y-3">
                       <h3 className="font-semibold">Контакти и източници</h3>
                       <div className="rounded-xl border p-4 space-y-2">
-              {selectedParty.officialQuizAnswers && <Badge variant="secondary">Използвани са официални отговори на партията за теста</Badge>}
-              {!selectedParty.officialQuizAnswers && <Badge variant="outline">Позициите за теста са изведени от публични данни и AI ресърч</Badge>}
+                        {selectedParty.officialQuizAnswers && <Badge variant="secondary">Използвани са официални отговори на партията за теста</Badge>}
+                        {!selectedParty.officialQuizAnswers && <Badge variant="outline">Позициите за теста са изведени от публични данни и AI ресърч</Badge>}
                         <div>
                           <strong>Официален регистър в ЦИК:</strong>{" "}
                           <a href={selectedParty.cikUrl} target="_blank" rel="noreferrer" className="text-primary underline underline-offset-4">
@@ -1802,20 +1768,72 @@ export default function ElectionPlatformComparator() {
           </div>
         </section>
       ) : currentPage === "map" ? (
-        <section className="space-y-4">
+        <section className="space-y-4 max-w-5xl">
+          <div className="space-y-3">
+            <h2 className="text-2xl font-semibold">Карта на партийните позиции</h2>
+            <p className="text-muted-foreground">
+              Тази визуална карта показва как различните партии и коалиции се позиционират
+              по оста „отношение към ЕС“ и по оста „отношение към Русия“. Целта не е да се даде
+              окончателна присъда за дадена формация, а да се предложи по-лесен начин за ориентиране
+              в общата политическа картина.
+            </p>
+            <p className="text-muted-foreground">
+              Подобна визуализация е полезна за потребители, които искат бързо да видят
+              кои партии са по-проевропейски, кои са по-скептични към ЕС, кои поддържат
+              по-дистанцирана линия спрямо Русия и кои са по-отворени към по-близки отношения.
+            </p>
+          </div>
+
           <PartyPositionMap parties={sortedParties} onSelectParty={setSelectedParty} />
         </section>
       ) : currentPage === "about" ? (
-        <section className="space-y-4 max-w-3xl">
+        <section className="space-y-4 max-w-4xl">
           <h2 className="text-2xl font-semibold">За сайта</h2>
-          <p>Този сайт е независим инструмент за сравнение на предизборните програми на партиите в България.</p>
-          <p>Целта е да помогне на избирателите да сравнят позиции по ключови теми като икономика, ЕС, Русия и данъци.</p>
+          <p className="text-muted-foreground">
+            Izborite.info е независим онлайн проект, създаден с цел да помогне на потребителите
+            да сравняват по-лесно политическите партии и коалиции в България.
+          </p>
+          <p className="text-muted-foreground">
+            Сайтът събира на едно място структурирана информация по ключови теми като икономика,
+            данъци, здравеопазване, образование, външна политика, отношения с ЕС, отношения с Русия,
+            сигурност, енергетика и миграция.
+          </p>
+          <p className="text-muted-foreground">
+            Основната идея е да се спести време на избирателите и да се улесни началното ориентиране
+            в политическите програми и публичните позиции на отделните формации.
+          </p>
+          <p className="text-muted-foreground">
+            Сайтът не представлява политическа партия, институция или официална изборна платформа.
+            Той не агитира за конкретна партия и не дава указания за гласуване.
+          </p>
+          <p className="text-muted-foreground">
+            Публикуваната информация има информативен характер и цели да направи публичните данни
+            по-достъпни, сравними и разбираеми за по-широка аудитория.
+          </p>
         </section>
       ) : currentPage === "privacy" ? (
-        <section className="space-y-4 max-w-3xl">
+        <section className="space-y-4 max-w-4xl">
           <h2 className="text-2xl font-semibold">Политика за поверителност</h2>
-          <p>Сайтът използва Google Analytics за статистика и Google AdSense за реклами.</p>
-          <p>Не събираме лични данни като име или имейл.</p>
+          <p className="text-muted-foreground">
+            Сайтът използва аналитични и рекламни технологии с цел измерване на посещаемостта и финансиране
+            на проекта. Възможно е да се използват Google Analytics и Google AdSense, които могат да обработват
+            технически данни като IP адрес, тип устройство, браузър, приблизителна геолокация, поведение в сайта
+            и бисквитки.
+          </p>
+          <p className="text-muted-foreground">
+            Izborite.info не изисква регистрация и не събира директно лични данни като име, телефон или имейл,
+            освен ако потребителят не ги изпрати доброволно чрез имейл кореспонденция.
+          </p>
+          <p className="text-muted-foreground">
+            Данните от аналитичните инструменти се използват за подобряване на съдържанието, разбирането на
+            интереса към отделните страници и ограничаване на технически проблеми. Рекламните услуги могат да
+            използват бисквитки за персонализиране или измерване на рекламите според наличните настройки и
+            съгласия на потребителя.
+          </p>
+          <p className="text-muted-foreground">
+            Ако имате въпроси относно обработването на данни или желаете връзка по тема, свързана с поверителността,
+            може да пишете на <span className="font-semibold text-foreground">contact@izborite.info</span>.
+          </p>
         </section>
       ) : currentPage === "methodology" ? (
         <section className="space-y-4 max-w-4xl">
@@ -1824,6 +1842,16 @@ export default function ElectionPlatformComparator() {
             Тестът сравнява вашите отговори с позициите на партиите по десет ключови въпроса. За всеки въпрос
             могат да се използват два източника: официален отговор от партията или оценка на база публични данни
             и AI ресърч, когато официален отговор не е предоставен.
+          </p>
+          <p className="text-muted-foreground">
+            Методологията на сайта цели максимална прозрачност. Когато информацията за дадена партия
+            е ограничена или непълна, това се посочва изрично, вместо да се създава впечатление,
+            че има пълна и еднакво надеждна информация за всички формации.
+          </p>
+          <p className="text-muted-foreground">
+            Сайтът не представя автоматично генерирани предположения като официални факти.
+            Когато няма официален въпросник или достатъчно публични данни, резултатите трябва
+            да се разглеждат като ориентировъчни и подлежащи на бъдещо уточняване.
           </p>
           <div className="grid md:grid-cols-2 gap-4">
             <Card className="rounded-2xl">
@@ -1860,26 +1888,210 @@ export default function ElectionPlatformComparator() {
             </p>
           </div>
         </section>
+      ) : currentPage === "guide" ? (
+        <section className="space-y-4 max-w-4xl">
+          <h2 className="text-2xl font-semibold">Как работи тестът за партиите</h2>
+
+          <p className="text-muted-foreground">
+            Тестът на Izborite.info е създаден като помощен инструмент за хора, които искат
+            бързо и ясно да сравнят собствените си виждания с публично заявените позиции
+            на политическите партии и коалиции в България.
+          </p>
+
+          <p className="text-muted-foreground">
+            Вместо потребителят сам да чете десетки програми, интервюта и партийни публикации,
+            тестът събира основните теми на едно място и показва къде има най-голямо съвпадение.
+            Така сайтът служи като отправна точка за по-информиран избор.
+          </p>
+
+          <h3 className="text-lg font-semibold">Какви теми включва тестът</h3>
+
+          <p className="text-muted-foreground">
+            Въпросите в теста са подбрани така, че да обхващат теми, които често имат значение
+            за избирателите: данъци, роля на държавата, социална политика, Европейски съюз,
+            отношения с Русия, НАТО и сигурност, миграция, енергетика и антикорупционни мерки.
+          </p>
+
+          <p className="text-muted-foreground">
+            Всеки въпрос е формулиран кратко и ясно. Отговорите са опростени в три възможности:
+            „Да“, „Не“ и „Не се интересувам“. Това прави теста лесен за попълване дори за хора,
+            които не следят активно политиката всеки ден.
+          </p>
+
+          <h3 className="text-lg font-semibold">Как се изчислява резултатът</h3>
+
+          <p className="text-muted-foreground">
+            За всеки въпрос сайтът сравнява вашия отговор с предварително определена позиция
+            на партията по същата тема. Когато има силно съвпадение, партията получава повече точки.
+            При частично съвпадение резултатът е по-нисък, а при противоположни позиции има разминаване.
+          </p>
+
+          <p className="text-muted-foreground">
+            Крайният процент не означава, че дадена партия е „най-добрата“, а само че нейните
+            позиции са по-близки до вашите отговори в рамките на конкретния набор въпроси.
+          </p>
+
+          <h3 className="text-lg font-semibold">Какви са ограниченията</h3>
+
+          <p className="text-muted-foreground">
+            Тестът не е официален инструмент на държавна институция или политическа партия.
+            Той не дава препоръка за гласуване и не може да обхване всички нюанси на политическите програми.
+            Някои партии имат по-подробни официални позиции, а за други има по-малко публична информация.
+          </p>
+
+          <p className="text-muted-foreground">
+            Затова резултатът трябва да се разглежда като ориентир, а не като окончателен съвет.
+            Най-добрият подход е тестът да се използва като начало, след което потребителят да разгледа
+            подробно профилите на партиите и официалните им документи.
+          </p>
+        </section>
+      ) : currentPage === "analysis" ? (
+        <section className="space-y-4 max-w-4xl">
+          <h2 className="text-2xl font-semibold">Как сравняваме политическите партии</h2>
+
+          <p className="text-muted-foreground">
+            Основната цел на Izborite.info е да представи на едно място сравнима,
+            структурирана и разбираема информация за политическите формации в България.
+            За да бъде това възможно, позициите на партиите се подреждат по основни теми,
+            вместо да се публикуват като несвързани откъси от различни източници.
+          </p>
+
+          <p className="text-muted-foreground">
+            Сравнението е особено полезно за потребители, които искат бързо да видят
+            как различните формации се позиционират по теми като икономика, данъци,
+            ЕС, Русия, сигурност, енергетика, миграция и социална политика.
+          </p>
+
+          <h3 className="text-lg font-semibold">Какви източници използваме</h3>
+
+          <p className="text-muted-foreground">
+            При създаването на профилите се използват публично достъпни източници,
+            когато такива са налични. Те могат да включват официални партийни програми,
+            публични изявления, интервюта, публикации в официални сайтове, регистри на ЦИК
+            и други документи, свързани с предизборните позиции на съответната формация.
+          </p>
+
+          <p className="text-muted-foreground">
+            Когато партия изпрати официално попълнен въпросник или предостави изрично
+            структурирани отговори, тази информация се отбелязва отделно и се използва
+            с приоритет при изчисляването на съвпадението в теста.
+          </p>
+
+          <h3 className="text-lg font-semibold">Как се подрежда информацията</h3>
+
+          <p className="text-muted-foreground">
+            Вместо да се възпроизвеждат дословно дълги партийни текстове, информацията
+            се обобщава в кратки тематични описания. Това позволява на потребителя
+            лесно да сравни две или повече партии по конкретен въпрос.
+          </p>
+
+          <p className="text-muted-foreground">
+            При формации, за които няма достатъчно официална и проверима информация,
+            това се отбелязва изрично. Така сайтът не представя липсващи данни като сигурни факти
+            и не създава фалшиво усещане за пълнота.
+          </p>
+
+          <h3 className="text-lg font-semibold">Защо този подход е полезен</h3>
+
+          <p className="text-muted-foreground">
+            Политическите програми често са дълги, написани в различен стил и с различна степен
+            на конкретика. Това прави директното сравнение трудно. Структурираният формат в сайта
+            позволява по-лесно ориентиране, особено за хора, които търсят кратък и полезен преглед.
+          </p>
+
+          <p className="text-muted-foreground">
+            Сайтът не заменя официалните източници, а ги допълва чрез по-ясна организация
+            и по-достъпно представяне на информацията.
+          </p>
+        </section>
+      ) : currentPage === "how-to-vote" ? (
+        <section className="space-y-4 max-w-4xl">
+          <h2 className="text-2xl font-semibold">Как да решите за коя партия да гласувате</h2>
+
+          <p className="text-muted-foreground">
+            Изборът на партия е лично решение, което зависи от вашите ценности,
+            приоритети и представи за развитието на страната. За някои хора най-важна е икономиката,
+            за други – социалната политика, борбата с корупцията, външната политика или сигурността.
+          </p>
+
+          <p className="text-muted-foreground">
+            Един от най-полезните начини да започнете е да подредите собствените си приоритети.
+            Например: по-ниски или по-високи данъци, по-силна или по-ограничена роля на държавата,
+            по-тясна интеграция в ЕС, по-строга миграционна политика, по-голяма енергийна независимост
+            или по-твърда антикорупционна линия.
+          </p>
+
+          <h3 className="text-lg font-semibold">С какво помага този сайт</h3>
+
+          <p className="text-muted-foreground">
+            Izborite.info улеснява началното сравнение, като събира на едно място основните позиции
+            на различните формации. Вместо да търсите информация в множество отделни сайтове,
+            тук може да видите подредено представяне по ключови теми и да използвате теста
+            като ориентир.
+          </p>
+
+          <p className="text-muted-foreground">
+            Това е полезно както за хора, които вече имат предварително мнение,
+            така и за такива, които все още се колебаят и искат да видят кои партии
+            са най-близо до техните собствени възгледи.
+          </p>
+
+          <h3 className="text-lg font-semibold">Какво е добре да направите преди изборите</h3>
+
+          <p className="text-muted-foreground">
+            Добра практика е не само да попълните теста, но и да разгледате страницата
+            за сравнение на партиите, профилите на отделните формации и, когато е възможно,
+            официалните им програми. Така ще имате по-пълна картина и ще знаете
+            не само с кого съвпадате, но и по кои теми.
+          </p>
+
+          <p className="text-muted-foreground">
+            Важно е също да се има предвид, че различните партии понякога използват сходни думи,
+            но влагат различно съдържание в тях. Затова сравняването на конкретни политики
+            често е по-полезно от общите лозунги.
+          </p>
+
+          <h3 className="text-lg font-semibold">Ориентир, а не препоръка</h3>
+
+          <p className="text-muted-foreground">
+            Сайтът не дава политически съвет и не агитира за конкретна партия.
+            Той е инструмент за по-лесно ориентиране в публичната информация.
+            Окончателният избор винаги трябва да бъде ваш, след собствена преценка
+            и преглед на темите, които са най-важни за вас.
+          </p>
+        </section>
       ) : currentPage === "terms" ? (
-        <section className="space-y-4 max-w-3xl">
+        <section className="space-y-4 max-w-4xl">
           <h2 className="text-2xl font-semibold">Условия за ползване</h2>
           <p className="text-muted-foreground">
             Този сайт предоставя информационен инструмент за сравнение на политически позиции и предизборни програми на партиите в България.
           </p>
           <p className="text-muted-foreground">
-            Информацията е събрана от публични източници като официални сайтове,
-            програмни документи, публични изявления и регистри на институции.
+            Информацията е събрана от публични източници като официални сайтове, програмни документи, публични
+            изявления и регистри на институции. Въпреки стремежа към точност е възможно да има непълноти, остарели
+            данни или необходимост от корекции.
           </p>
           <p className="text-muted-foreground">
-            Сайтът не представлява и не подкрепя политическа партия или
-            кандидат. Целта му е да подпомогне избирателите да направят
-            по-информиран избор.
+            Сайтът не представлява и не подкрепя политическа партия или кандидат. Той не носи отговорност за
+            индивидуални решения на потребителите, взети въз основа на публикуваното сравнение или на резултатите
+            от теста.
+          </p>
+          <p className="text-muted-foreground">
+            Външните линкове към сайтове на институции, партии, медии или други източници се предоставят за удобство.
+            Сайтът не носи отговорност за съдържанието на външни страници.
           </p>
         </section>
       ) : currentPage === "contact" ? (
-        <section className="space-y-4 max-w-3xl">
+        <section className="space-y-4 max-w-4xl">
           <h2 className="text-2xl font-semibold">Контакт</h2>
-          <p>За предложения, корекции и официални отговори от партии:</p>
+          <p className="text-muted-foreground">
+            На този адрес може да изпращате предложения за корекции, липсващи официални линкове, уточнения по
+            партийните профили, сигнали за неточности, както и официално попълнени отговори от партии и коалиции.
+          </p>
+          <p className="text-muted-foreground">
+            Възможни са и запитвания, свързани с рекламни позиции, партньорства, технически проблеми или въпроси
+            относно методологията на теста.
+          </p>
           <p className="font-semibold">contact@izborite.info</p>
         </section>
       ) : (
@@ -1887,28 +2099,30 @@ export default function ElectionPlatformComparator() {
           <h2 className="text-2xl font-semibold">Реклама в сайта</h2>
           <p className="text-muted-foreground">
             Сайтът е насочен към хора, които активно търсят информация за изборите, сравняват партии и попълват теста.
-            Това прави рекламната позиция подходяща за политически, обществени и информационни кампании.
+            Това прави рекламната позиция подходяща за обществени, информационни и тематични кампании.
           </p>
 
-          <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4 text-sm">
-            {adPackages.map((pkg) => (
-              <Card key={pkg.key} className="rounded-2xl">
-                <CardHeader>
-                  <CardTitle>{pkg.name}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="text-2xl font-bold">{pkg.price}</div>
-                  <p className="text-muted-foreground">{pkg.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <div className="rounded-2xl border p-6 bg-amber-50 space-y-4">
+            <div className="text-lg font-semibold">Рекламно пространство</div>
+            <div className="text-sm text-muted-foreground">
+              Банер позиция на началната страница – показва се в контекст на вече налично съдържание, а не преди него.
+            </div>
 
-          <div className="rounded-2xl border p-5 bg-muted/30 space-y-2">
-            
-            <div><strong>Формат:</strong> 970×90 или сходен leaderboard банер</div>
-            <div><strong>Позиция:</strong> най-горе на сайта, преди теста</div>
-            <div><strong>Контакт:</strong> contact@izborite.info</div>
+            <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4 text-sm">
+              {adPackages.map((pkg) => (
+                <div key={pkg.key} className="border rounded-xl p-4 bg-white">
+                  <div className="font-semibold">{pkg.name}</div>
+                  <div className="text-2xl font-bold mt-1">{pkg.price}</div>
+                  <div className="text-muted-foreground mt-1">{pkg.description}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="rounded-xl border p-4 bg-white text-sm space-y-2">
+              <div><strong>Формат:</strong> 970×90 или сходен leaderboard банер</div>
+              <div><strong>Позиция:</strong> след основно съдържание, не като първи екран</div>
+              <div><strong>Контакт:</strong> contact@izborite.info</div>
+            </div>
           </div>
         </section>
       )}
@@ -1921,6 +2135,9 @@ export default function ElectionPlatformComparator() {
           <button onClick={() => setCurrentPage("contact")} className="underline">Контакт</button>
           <button onClick={() => setCurrentPage("advertise")} className="underline">Реклама</button>
           <button onClick={() => setCurrentPage("methodology")} className="underline">Методология</button>
+          <button onClick={() => setCurrentPage("guide")} className="underline">Как работи тестът</button>
+          <button onClick={() => setCurrentPage("analysis")} className="underline">Как сравняваме партиите</button>
+          <button onClick={() => setCurrentPage("how-to-vote")} className="underline">Как да избера партия</button>
           <button onClick={() => setCurrentPage("terms")} className="underline">Условия</button>
           <button onClick={() => setCurrentPage("news")} className="underline">Новини</button>
         </div>
