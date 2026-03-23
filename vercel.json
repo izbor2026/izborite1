@@ -1,6 +1,9 @@
 {
   "rewrites": [
     { "source": "/", "destination": "/" },
+      { "source": "/robots.txt", "destination": "/robots.txt" },
+    { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
+
 
     { "source": "/compare", "destination": "/" },
     { "source": "/map", "destination": "/" },
