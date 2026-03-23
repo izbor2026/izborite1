@@ -1,9 +1,28 @@
 {
   "rewrites": [
+    { "source": "/", "destination": "/" },
+
+    { "source": "/compare", "destination": "/" },
+    { "source": "/map", "destination": "/" },
+
+    { "source": "/about", "destination": "/" },
+    { "source": "/privacy", "destination": "/" },
+    { "source": "/contact", "destination": "/" },
+    { "source": "/advertise", "destination": "/" },
+
+    { "source": "/methodology", "destination": "/" },
+    { "source": "/analysis", "destination": "/" },
+    { "source": "/how-to-vote", "destination": "/" },
+    { "source": "/terms", "destination": "/" },
+
+    { "source": "/news", "destination": "/" },
+
     { "source": "/blog", "destination": "/" },
     { "source": "/blog/:slug", "destination": "/" },
+
     { "source": "/partii", "destination": "/" },
     { "source": "/partii/:slug", "destination": "/" },
+
     { "source": "/kak-raboti-testa", "destination": "/" }
   ]
 }
