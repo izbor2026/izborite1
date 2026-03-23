@@ -592,11 +592,6 @@ const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supa
 
 const ADS_ALLOWED_PAGES = new Set([
   "home",
-  "compare",
-  "map",
-  "news",
-  "methodology",
-  "guide",
   "party-hub",
   "party-page",
   "blog",
@@ -605,7 +600,10 @@ const ADS_ALLOWED_PAGES = new Set([
   "analysis",
   "how-to-vote",
   "terms",
-  "privacy"
+  "privacy",
+  "guide",
+  "methodology",
+  "news"
 ]);
 
 function normalizeAnswer(value) {
@@ -661,6 +659,17 @@ function pushAdsIfNeeded() {
 
 function getPathState(pathname) {
   if (pathname === "/") return { page: "home", selectedParty: null, selectedBlog: null };
+  if (pathname === "/compare") return { page: "compare", selectedParty: null, selectedBlog: null };
+  if (pathname === "/map") return { page: "map", selectedParty: null, selectedBlog: null };
+  if (pathname === "/about") return { page: "about", selectedParty: null, selectedBlog: null };
+  if (pathname === "/privacy") return { page: "privacy", selectedParty: null, selectedBlog: null };
+  if (pathname === "/contact") return { page: "contact", selectedParty: null, selectedBlog: null };
+  if (pathname === "/advertise") return { page: "advertise", selectedParty: null, selectedBlog: null };
+  if (pathname === "/methodology") return { page: "methodology", selectedParty: null, selectedBlog: null };
+  if (pathname === "/analysis") return { page: "analysis", selectedParty: null, selectedBlog: null };
+  if (pathname === "/how-to-vote") return { page: "how-to-vote", selectedParty: null, selectedBlog: null };
+  if (pathname === "/terms") return { page: "terms", selectedParty: null, selectedBlog: null };
+  if (pathname === "/news") return { page: "news", selectedParty: null, selectedBlog: null };
   if (pathname === "/kak-raboti-testa") return { page: "guide", selectedParty: null, selectedBlog: null };
   if (pathname === "/blog") return { page: "blog", selectedParty: null, selectedBlog: null };
   if (pathname.startsWith("/blog/")) {
@@ -1112,289 +1121,21 @@ function VotingQuiz({ parties }) {
             <div className="font-medium">{q.text}</div>
             <div className="px-2">
               <div className="flex gap-2 flex-wrap">
-                <Button variant={value === 5 ? "default" : "outline"} onClick={() => handleAnswer(q.id, 5)}>Да</Button>
-                <Button variant={value === 3 ? "default" : "outline"} onClick={() => handleAnswer(q.id, 3)}>Не се интересувам</Button>
-                <Button variant={value === 1 ? "default" : "outline"} onClick={() => handleAnswer(q.id, 1)}>Не</Button>
-              </div>
-            </div>
-          </div>
-        );
-      })}
-
-      <div className="flex gap-3 flex-wrap">
-        <Button onClick={calculate}>Виж резултат</Button>
-        <Button variant="secondary" onClick={shareResult} disabled={!result?.best}>Сподели резултата</Button>
-        <Button variant="outline" onClick={() => {
-          setAnswers(Object.fromEntries(questions.map((q) => [q.id, 3])));
-          setResult(null);
-          setSelectedInsightParty(null);
-          setShareMessage("");
-        }}>Нулирай теста</Button>
-      </div>
-
-      {shareMessage && <div className="rounded-xl border bg-muted/50 p-3 text-sm text-muted-foreground">{shareMessage}</div>}
-
-      {result && (
-        <div className="space-y-4">
-          <div className="rounded-2xl border p-5 bg-background space-y-3">
-            <h3 className="text-lg font-semibold">Вашият политически профил</h3>
-            <div className="grid md:grid-cols-2 gap-3 text-sm">
-              <div className="rounded-xl border p-3"><strong>Икономика:</strong> {buildPoliticalProfile().economy}</div>
-              <div className="rounded-xl border p-3"><strong>Държава:</strong> {buildPoliticalProfile().state}</div>
-              <div className="rounded-xl border p-3"><strong>ЕС:</strong> {buildPoliticalProfile().eu}</div>
-              <div className="rounded-xl border p-3"><strong>Русия:</strong> {buildPoliticalProfile().russia}</div>
-            </div>
-          </div>
-
-          <div className="p-6 border rounded-2xl bg-muted">
-            <strong>Най-близката партия до вашите виждания:</strong>
-            <div className="mt-4 flex items-center gap-3 rounded-xl border bg-background p-4">
-              <div className={`h-12 w-12 rounded-full flex items-center justify-center text-sm font-bold ${result.best.logoClass}`}>{result.best.logoText}</div>
-              <div>
-                <div className="text-2xl font-bold">{result.best.name}</div>
-                <div className="text-sm text-muted-foreground">{result.best.percent}% съвпадение · {result.best.score} от {questions.length * 2} точки</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            {result.ranking.map((party) => (
-              <button key={party.name} type="button" onClick={() => setSelectedInsightParty(party)} className={`border rounded-2xl p-4 flex items-center justify-between gap-4 text-left transition hover:shadow-sm ${selectedInsightParty?.name === party.name ? "ring-2 ring-primary" : ""}`}>
-                <div className="flex items-center gap-3">
-                  <div className={`h-10 w-10 rounded-full flex items-center justify-center text-xs font-bold ${party.logoClass}`}>{party.logoText}</div>
-                  <div>
-                    <div className="font-semibold">{party.name}</div>
-                    <div className="text-xs text-muted-foreground">{party.score} от {questions.length * 2} точки</div>
-                    <div className="text-[11px] text-muted-foreground">{party.matchMethod}</div>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold">{party.percent}%</div>
-                  <div className="text-xs text-muted-foreground">съвпадение</div>
-                </div>
-              </button>
-            ))}
-          </div>
-
-          {selectedInsightParty && (
-            <Card className="rounded-2xl border shadow-sm">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <div className={`h-12 w-12 rounded-full flex items-center justify-center text-sm font-bold ${selectedInsightParty.logoClass}`}>{selectedInsightParty.logoText}</div>
-                  <div>
-                    <CardTitle>Защо {selectedInsightParty.name} е на тази позиция</CardTitle>
-                    <div className="text-sm text-muted-foreground">{selectedInsightParty.percent}% съвпадение · {selectedInsightParty.score} от {questions.length * 2} точки</div>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-6 text-sm">
-                <div className="space-y-2">
-                  <Badge variant={selectedInsightParty.officialQuizAnswers ? "secondary" : "outline"}>{selectedInsightParty.matchMethod}</Badge>
-                  <p className="text-muted-foreground">{selectedInsightParty.insight.summary}</p>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-3">
-                    <h3 className="font-semibold">Къде съвпадате най-много</h3>
-                    {selectedInsightParty.insight.strongestMatches.length > 0 ? selectedInsightParty.insight.strongestMatches.map((item) => (
-                      <div key={item.id} className="rounded-xl border p-3 space-y-2">
-                        <Badge variant="secondary">Силно съвпадение</Badge>
-                        <div className="font-medium">{item.text}</div>
-                        <div className="text-muted-foreground">{item.explanation}</div>
-                        <div className="text-xs text-muted-foreground">Ваш отговор: {getAnswerLabel(item.answer)} · Отговор на партията: {getAnswerLabel(item.ideal)} · {item.points} от 2 точки</div>
-                        <div className="text-[11px] text-muted-foreground">{item.sourceLabel}</div>
-                      </div>
-                    )) : <div className="rounded-xl border p-3 text-muted-foreground">Няма изразени силни съвпадения по текущите отговори.</div>}
-                  </div>
-
-                  <div className="space-y-3">
-                    <h3 className="font-semibold">Къде се различавате</h3>
-                    {selectedInsightParty.insight.biggestDifferences.length > 0 ? selectedInsightParty.insight.biggestDifferences.map((item) => (
-                      <div key={item.id} className="rounded-xl border p-3 space-y-2">
-                        <Badge variant="outline">Разминаване</Badge>
-                        <div className="font-medium">{item.text}</div>
-                        <div className="text-muted-foreground">{item.explanation}</div>
-                        <div className="text-xs text-muted-foreground">Ваш отговор: {getAnswerLabel(item.answer)} · Отговор на партията: {getAnswerLabel(item.ideal)} · {item.points} от 2 точки</div>
-                        <div className="text-[11px] text-muted-foreground">{item.sourceLabel}</div>
-                      </div>
-                    )) : <div className="rounded-xl border p-3 text-muted-foreground">Няма големи разминавания по текущите отговори.</div>}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default function ElectionPlatformComparator() {
-  const [search, setSearch] = useState("");
-  const [topic, setTopic] = useState("economy");
-  const [selectedParty, setSelectedParty] = useState(null);
-  const [selectedBlog, setSelectedBlog] = useState(null);
-  const [currentPage, setCurrentPage] = useState("home");
-  const [news, setNews] = useState([]);
-  const [newsLoading, setNewsLoading] = useState(false);
-
-  const sortedParties = useMemo(() => [...parties].sort((a, b) => a.name.localeCompare(b.name, "bg")), []);
-  const adsAllowedOnPage = ADS_ALLOWED_PAGES.has(currentPage);
-  const selectedPartyArticle = selectedParty ? PARTY_ARTICLES.find((a) => a.partyName === selectedParty.name) : null;
-
-  const openPath = (path) => navigateTo(path, setCurrentPage, setSelectedParty, setSelectedBlog, true);
-
-  useEffect(() => {
-    const syncFromPath = () => {
-      const state = getPathState(window.location.pathname);
-      setCurrentPage(state.page);
-      setSelectedParty(state.selectedParty);
-      setSelectedBlog(state.selectedBlog);
-    };
-
-    syncFromPath();
-    window.addEventListener("popstate", syncFromPath);
-    return () => window.removeEventListener("popstate", syncFromPath);
-  }, []);
-
-  useEffect(() => {
-    const gaScript = document.createElement("script");
-    gaScript.async = true;
-    gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-R51QVD3221";
-    document.head.appendChild(gaScript);
-
-    const gaConfig = document.createElement("script");
-    gaConfig.innerHTML = `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);} 
-      gtag('js', new Date());
-      gtag('config', 'G-R51QVD3221');
-    `;
-    document.head.appendChild(gaConfig);
-  }, []);
-
-  useEffect(() => {
-    const ensureMeta = (name, content) => {
-      let meta = document.querySelector(`meta[name="${name}"]`);
-      if (!meta) {
-        meta = document.createElement("meta");
-        meta.setAttribute("name", name);
-        document.head.appendChild(meta);
-      }
-      meta.setAttribute("content", content);
-    };
-
-    const ensureProperty = (property, content) => {
-      let meta = document.querySelector(`meta[property="${property}"]`);
-      if (!meta) {
-        meta = document.createElement("meta");
-        meta.setAttribute("property", property);
-        document.head.appendChild(meta);
-      }
-      meta.setAttribute("content", content);
-    };
-
-    let pageTitle = "Тест: За коя партия да гласувам? | Сравнение на партии в България";
-    let pageDescription = "Попълнете теста и вижте коя партия в България е най-близо до вашите виждания. Сравнение на партии, програми, позиции и анализи.";
-    const pageUrl = `https://www.izborite.info${window.location.pathname}`;
-
-    if (currentPage === "guide") {
-      pageTitle = "Как работи тестът за партиите | Izborite.info";
-      pageDescription = "Подробно обяснение как се изчислява тестът за партиите, какви теми включва и как да тълкувате резултатите.";
-    } else if (currentPage === "party-hub") {
-      pageTitle = "Основни партии в България | Профили и позиции";
-      pageDescription = "Подробни профили на основните партии в България по теми като икономика, ЕС, Русия, сигурност и данъци.";
-    } else if (currentPage === "party-page" && selectedPartyArticle) {
-      pageTitle = `${selectedPartyArticle.title} | Izborite.info`;
-      pageDescription = selectedPartyArticle.description;
-    } else if (currentPage === "blog") {
-      pageTitle = "Блог за избори и партии | Izborite.info";
-      pageDescription = "Статии и анализи за избори, партии, политически програми, ЕС, данъци и как да изберете партия.";
-    } else if (currentPage === "blog-post" && selectedBlog) {
-      pageTitle = `${selectedBlog.title} | Izborite.info`;
-      pageDescription = selectedBlog.excerpt;
-    }
-
-    document.title = pageTitle;
-    ensureMeta("description", pageDescription);
-    ensureMeta("keywords", "за коя партия да гласувам тест, сравнение на партии България, партии България, блог избори, политически тест България");
-    ensureMeta("robots", "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1");
-    ensureMeta("author", "Izborite.info");
-
-    ensureProperty("og:title", pageTitle);
-    ensureProperty("og:description", pageDescription);
-    ensureProperty("og:type", "website");
-    ensureProperty("og:url", pageUrl);
-    ensureProperty("og:site_name", "Izborite.info");
-    ensureProperty("og:locale", "bg_BG");
-    ensureProperty("twitter:card", "summary_large_image");
-    ensureProperty("twitter:title", pageTitle);
-    ensureProperty("twitter:description", pageDescription);
-
-    const canonical = document.querySelector("link[rel='canonical']") || document.createElement("link");
-    canonical.setAttribute("rel", "canonical");
-    canonical.setAttribute("href", pageUrl);
-    document.head.appendChild(canonical);
-  }, [currentPage, selectedPartyArticle, selectedBlog]);
-
-  useEffect(() => {
-    if (!adsAllowedOnPage) return;
-    ensureAdsenseScript();
-    const timer = setTimeout(() => pushAdsIfNeeded(), 400);
-    return () => clearTimeout(timer);
-  }, [adsAllowedOnPage, currentPage]);
-
-  useEffect(() => {
-    let isMounted = true;
-    const loadNews = async () => {
-      if (!supabase) return;
-      setNewsLoading(true);
-      const { data, error } = await supabase
-        .from("news")
-        .select("id,title,summary,source_name,source_url,published_at,party_name,is_published")
-        .eq("is_published", true)
-        .order("published_at", { ascending: false });
-      if (!isMounted) return;
-      if (!error && data) setNews(data);
-      setNewsLoading(false);
-    };
-    loadNews();
-    return () => { isMounted = false; };
-  }, []);
-
-  return (
-    <div className="max-w-7xl mx-auto p-6 space-y-10">
-      <header className="space-y-4">
-        <div className="flex items-center justify-between gap-4 flex-wrap">
-          <div className="space-y-2">
-            <h1 className="text-4xl font-bold">Сравни предизборните програми</h1>
-            <p className="text-muted-foreground max-w-2xl">Независим инструмент за сравнение на политическите платформи.</p>
-            <div className="text-sm text-muted-foreground max-w-4xl space-y-4">
-              <p><strong>Тест: За коя партия да гласувам?</strong> Отговорете на въпросите по-долу и вижте коя политическа програма е най-близо до вашите виждания. Целта на този сайт е да улесни избирателите, които искат бързо, ясно и неутрално сравнение между основните партии и коалиции в България.</p>
-              <p>Сайтът сравнява позициите на партиите по ключови теми като икономика, данъци, социална политика, ЕС, Русия, сигурност, енергетика и миграция. Вместо потребителят да търси информация в десетки различни източници, тук основните различия са подредени в по-лесен за сравнение формат.</p>
-              <p>Тестът не е официален инструмент на държавна институция и не дава указания за гласуване. Той служи като ориентир, който помага да видите кои партии са по-близо до вашите отговори по конкретни обществени въпроси. Така можете по-лесно да прецените кои формации си струва да разгледате по-подробно.</p>
-              <p>Позициите на партиите са базирани на публично достъпни програми, официални изявления, регистри и други достъпни материали. Когато има ограничена публична информация, това е обозначено изрично. Това е важно, защото целта на сайта е да бъде максимално прозрачен и да не представя предположения като официални факти.</p>
-              <p>Освен самия тест, Izborite.info включва страници с методология, подробни профили на основни партии, блог статии, обяснения как да използвате резултатите, както и секция с новини. Така сайтът не е само тест, а по-широк информационен ресурс за хора, които искат да направят по-информиран избор.</p>
-              <p>Резултатът от теста трябва да се разглежда като начална точка, а не като окончателен политически съвет. Най-полезният подход е след попълване да разгледате и профилите на партиите, техните позиции по отделни теми и официалните им документи, когато са налични.</p>
-            </div>
-          </div>
-
-          <div className="flex gap-2 flex-wrap">
             <Button variant={currentPage === "home" ? "default" : "outline"} onClick={() => openPath("/")}>Тест</Button>
-            <Button variant={currentPage === "compare" ? "default" : "outline"} onClick={() => setCurrentPage("compare")}>Сравнение на партии</Button>
-            <Button variant={currentPage === "map" ? "default" : "outline"} onClick={() => setCurrentPage("map")}>Карта ЕС и Русия</Button>
+            <Button variant={currentPage === "compare" ? "default" : "outline"} onClick={() => openPath("/compare")}>Сравнение на партии</Button>
+            <Button variant={currentPage === "map" ? "default" : "outline"} onClick={() => openPath("/map")}>Карта ЕС и Русия</Button>
             <Button variant={currentPage === "party-hub" || currentPage === "party-page" ? "default" : "outline"} onClick={() => openPath("/partii")}>Основни партии</Button>
             <Button variant={currentPage === "blog" || currentPage === "blog-post" ? "default" : "outline"} onClick={() => openPath("/blog")}>Блог</Button>
-            <Button variant={currentPage === "about" ? "default" : "outline"} onClick={() => setCurrentPage("about")}>За сайта</Button>
-            <Button variant={currentPage === "privacy" ? "default" : "outline"} onClick={() => setCurrentPage("privacy")}>Поверителност</Button>
-            <Button variant={currentPage === "contact" ? "default" : "outline"} onClick={() => setCurrentPage("contact")}>Контакт</Button>
-            <Button variant={currentPage === "advertise" ? "default" : "outline"} onClick={() => setCurrentPage("advertise")}>Реклама</Button>
-            <Button variant={currentPage === "methodology" ? "default" : "outline"} onClick={() => setCurrentPage("methodology")}>Методология</Button>
+            <Button variant={currentPage === "about" ? "default" : "outline"} onClick={() => openPath("/about")}>За сайта</Button>
+            <Button variant={currentPage === "privacy" ? "default" : "outline"} onClick={() => openPath("/privacy")}>Поверителност</Button>
+            <Button variant={currentPage === "contact" ? "default" : "outline"} onClick={() => openPath("/contact")}>Контакт</Button>
+            <Button variant={currentPage === "advertise" ? "default" : "outline"} onClick={() => openPath("/advertise")}>Реклама</Button>
+            <Button variant={currentPage === "methodology" ? "default" : "outline"} onClick={() => openPath("/methodology")}>Методология</Button>
             <Button variant={currentPage === "guide" ? "default" : "outline"} onClick={() => openPath("/kak-raboti-testa")}>Как работи тестът</Button>
-            <Button variant={currentPage === "analysis" ? "default" : "outline"} onClick={() => setCurrentPage("analysis")}>Как сравняваме партиите</Button>
-            <Button variant={currentPage === "how-to-vote" ? "default" : "outline"} onClick={() => setCurrentPage("how-to-vote")}>Как да избера партия</Button>
-            <Button variant={currentPage === "terms" ? "default" : "outline"} onClick={() => setCurrentPage("terms")}>Условия</Button>
-            <Button variant={currentPage === "news" ? "default" : "outline"} onClick={() => setCurrentPage("news")}>Новини</Button>
+            <Button variant={currentPage === "analysis" ? "default" : "outline"} onClick={() => openPath("/analysis")}>Как сравняваме партиите</Button>
+            <Button variant={currentPage === "how-to-vote" ? "default" : "outline"} onClick={() => openPath("/how-to-vote")}>Как да избера партия</Button>
+            <Button variant={currentPage === "terms" ? "default" : "outline"} onClick={() => openPath("/terms")}>Условия</Button>
+            <Button variant={currentPage === "news" ? "default" : "outline"} onClick={() => openPath("/news")}>Новини</Button>
           </div>
         </div>
 
@@ -1718,16 +1459,16 @@ export default function ElectionPlatformComparator() {
       <footer className="text-center text-xs text-muted-foreground pt-10 space-y-2">
         <div>Независим проект за сравнение на предизборни програми.</div>
         <div className="flex justify-center gap-4 flex-wrap">
-          <button onClick={() => setCurrentPage("about")} className="underline">За сайта</button>
-          <button onClick={() => setCurrentPage("privacy")} className="underline">Поверителност</button>
-          <button onClick={() => setCurrentPage("contact")} className="underline">Контакт</button>
-          <button onClick={() => setCurrentPage("advertise")} className="underline">Реклама</button>
-          <button onClick={() => setCurrentPage("methodology")} className="underline">Методология</button>
+          <button onClick={() => openPath("/about")} className="underline">За сайта</button>
+          <button onClick={() => openPath("/privacy")} className="underline">Поверителност</button>
+          <button onClick={() => openPath("/contact")} className="underline">Контакт</button>
+          <button onClick={() => openPath("/advertise")} className="underline">Реклама</button>
+          <button onClick={() => openPath("/methodology")} className="underline">Методология</button>
           <button onClick={() => openPath("/kak-raboti-testa")} className="underline">Как работи тестът</button>
-          <button onClick={() => setCurrentPage("analysis")} className="underline">Как сравняваме партиите</button>
-          <button onClick={() => setCurrentPage("how-to-vote")} className="underline">Как да избера партия</button>
-          <button onClick={() => setCurrentPage("terms")} className="underline">Условия</button>
-          <button onClick={() => setCurrentPage("news")} className="underline">Новини</button>
+          <button onClick={() => openPath("/analysis")} className="underline">Как сравняваме партиите</button>
+          <button onClick={() => openPath("/how-to-vote")} className="underline">Как да избера партия</button>
+          <button onClick={() => openPath("/terms")} className="underline">Условия</button>
+          <button onClick={() => openPath("/news")} className="underline">Новини</button>
           <button onClick={() => openPath("/partii")} className="underline">Основни партии</button>
           <button onClick={() => openPath("/blog")} className="underline">Блог</button>
         </div>
