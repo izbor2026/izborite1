@@ -22,7 +22,7 @@
 
     { "source": "/partii", "destination": "/" },
     { "source": "/partii/:slug", "destination": "/" },
-
+{ "source": "/disclaimer", "destination": "/" },
     { "source": "/kak-raboti-testa", "destination": "/" }
   ]
 }
