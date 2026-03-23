@@ -1,153 +1,120 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset 
+ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Основни страници -->
 
   <url>
     <loc>https://www.izborite.info/</loc>
-    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://www.izborite.info/kak-raboti-testa</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.izborite.info/blog</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://www.izborite.info/compare</loc>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://www.izborite.info/blog/kak-da-izberem-partiya</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.izborite.info/blog/kakvo-oznachava-lyavo-i-dyasno</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.izborite.info/blog/zashto-partiinite-programi-sa-trudni-za-sravnenie</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.izborite.info/blog/kak-da-chetem-obeshtaniya-za-danatsi</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.izborite.info/blog/zashto-es-e-vazhna-izborna-tema</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.izborite.info/blog/kak-da-mislim-za-rusiya-i-sigurnostta</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.izborite.info/blog/kakvo-znachi-antikorupcionna-partiya</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.izborite.info/blog/zashto-migraciyata-razdelya-izbiratelite</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.izborite.info/blog/kak-da-izpolzvame-politicheski-test-pravilno</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.izborite.info/blog/zashto-neutralnoto-sravnenie-e-vazhno</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.izborite.info/blog/kak-da-chetem-predizborni-lozungi</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.izborite.info/blog/zasto-dobrite-sravnitelni-saytove-imat-znachenie</loc>
-    <changefreq>monthly</changefreq>
+    <loc>https://www.izborite.info/map</loc>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://www.izborite.info/partii</loc>
-    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://www.izborite.info/partii/gerb-sds</loc>
-    <changefreq>monthly</changefreq>
+    <loc>https://www.izborite.info/blog</loc>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://www.izborite.info/news</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Информационни страници -->
+
+  <url>
+    <loc>https://www.izborite.info/about</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.izborite.info/privacy</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.izborite.info/contact</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.izborite.info/advertise</loc>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.izborite.info/methodology</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.izborite.info/analysis</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.izborite.info/how-to-vote</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.izborite.info/terms</loc>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.izborite.info/kak-raboti-testa</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.izborite.info/disclaimer</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Blog статии -->
+
+  <url>
+    <loc>https://www.izborite.info/blog/zashto-neutralnoto-sravnenie-e-vazhno</loc>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://www.izborite.info/partii/bsp-obedinena-levitsa</loc>
-    <changefreq>monthly</changefreq>
+    <loc>https://www.izborite.info/blog/kak-raboti-mashinnoto-glasuvane</loc>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://www.izborite.info/partii/pp-db</loc>
-    <changefreq>monthly</changefreq>
+    <loc>https://www.izborite.info/blog/kak-se-razpredelyat-mandatite</loc>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://www.izborite.info/partii/dps</loc>
-    <changefreq>monthly</changefreq>
+    <loc>https://www.izborite.info/blog/kakvo-pravi-narodno-sabranie</loc>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://www.izborite.info/partii/vazrazhdane</loc>
-    <changefreq>monthly</changefreq>
+    <loc>https://www.izborite.info/blog/kak-da-proverya-izbiratelnata-si-sekciya</loc>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://www.izborite.info/partii/itn</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.izborite.info/partii/sinya-bulgaria</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.izborite.info/partii/mech</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.izborite.info/partii/aps</loc>
-    <changefreq>monthly</changefreq>
+    <loc>https://www.izborite.info/blog/zashto-politicheskiyat-profil-ne-e-prisuda</loc>
     <priority>0.8</priority>
   </url>
 
