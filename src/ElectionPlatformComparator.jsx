@@ -884,6 +884,19 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
 
+const MAJOR_PARTY_NAMES = new Set([
+  "ПРОГРЕСИВНА БЪЛГАРИЯ",
+  "ГЕРБ-СДС",
+  "ПРОДЪЛЖАВАМЕ ПРОМЯНАТА – ДЕМОКРАТИЧНА БЪЛГАРИЯ",
+  "ВЪЗРАЖДАНЕ",
+  "ДВИЖЕНИЕ ЗА ПРАВА И СВОБОДИ",
+  "БСП – ОБЕДИНЕНА ЛЕВИЦА",
+  "ИМА ТАКЪВ НАРОД",
+  "ВЕЛИЧИЕ",
+  "МОРАЛ ЕДИНСТВО ЧЕСТ",
+  "СИНЯ БЪЛГАРИЯ"
+]);
+
 const ADS_ALLOWED_PAGES = new Set([
   "home",
   "party-page",
@@ -1589,6 +1602,16 @@ export default function ElectionPlatformComparator() {
     [sortedParties]
   );
 
+  const majorParties = useMemo(
+    () => sortedParties.filter((party) => MAJOR_PARTY_NAMES.has(party.name)),
+    [sortedParties]
+  );
+
+  const majorPartyArticles = useMemo(
+    () => majorParties.map((party) => PARTY_ARTICLES.find((article) => article.partyName === party.name) || buildFallbackPartyArticle(party)),
+    [majorParties]
+  );
+
   const selectedPartyArticle = selectedParty
     ? (PARTY_ARTICLES.find((article) => article.partyName === selectedParty.name) || buildFallbackPartyArticle(selectedParty))
     : null;
@@ -1818,12 +1841,12 @@ export default function ElectionPlatformComparator() {
         <section className="space-y-6 max-w-5xl">
           <div className="text-xs text-muted-foreground">Начало / Основни партии</div>
           <h2 className="text-2xl font-semibold">Основни партии в България</h2>
-          <div className="text-sm text-muted-foreground">Общо профили: {allPartyArticles.length}</div>
-          <p className="text-muted-foreground max-w-4xl">Тази секция събира по-подробни профили на основни партии и коалиции, които участват в българския политически дебат. Целта е читателят да получи по-цялостен преглед на техните приоритети, общ профил и ориентировъчни позиции по важни теми.</p>
+          <div className="text-sm text-muted-foreground">Показани профили: {majorPartyArticles.length} от най-значимите партии и коалиции</div>
+          <p className="text-muted-foreground max-w-4xl">Тази секция показва десетте основни партии и коалиции, за които най-често има обществен интерес и които най-често присъстват в социологическите сравнения и предизборния дебат. Те са подредени по приоритет, така че най-следените формации да са най-отпред.</p>
           <p className="text-muted-foreground max-w-4xl">Профилите са създадени така, че да помогнат на потребителите да разберат не само къде стои една партия по отделни въпроси, но и как изглежда общият ѝ политически стил. Това е полезно особено за хора, които искат повече контекст след попълване на теста.</p>
           <div className="grid md:grid-cols-2 gap-4">
-            {allPartyArticles.map((article) => {
-              const party = sortedParties.find((p) => p.name === article.partyName);
+            {majorPartyArticles.map((article) => {
+              const party = majorParties.find((p) => p.name === article.partyName);
               if (!party) return null;
               return (
                 <Card key={article.slug} className="rounded-2xl">
@@ -1834,7 +1857,7 @@ export default function ElectionPlatformComparator() {
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold">{party.name}</h3>
-                        <div className="text-xs text-muted-foreground">{party.type === "coalition" ? "Коалиция" : "Партия"}</div>
+                        <div className="text-xs text-muted-foreground">{party.type === "coalition" ? "Коалиция" : "Партия"} · приоритет #{party.priority ?? "-"}</div>
                       </div>
                     </div>
                     <p className="text-sm text-muted-foreground">{article.description}</p>
