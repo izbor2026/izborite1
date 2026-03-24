@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 
-const parties = [
+const RAW_PARTIES = [
   {
     name: "ГЕРБ-СДС",
     short: "ГЕРБ-СДС",
@@ -513,6 +513,155 @@ const parties = [
   }
 ];
 
+const PARTY_OVERRIDES = {
+  "ПРОГРЕСИВНА БЪЛГАРИЯ": {
+    priority: 1,
+    officialWebsite: "https://progresivnabulgaria.com/",
+    officialProgramUrl: "https://progresivnabulgaria.com/programa",
+    infoStatus: "full",
+    profile: { taxes: "medium", eu: "pro", russia: "neutral", state: "high", nato: "neutral", migration: "moderate", energy: "pro", governance: "high" },
+    eu: "Подкрепя членството в ЕС и активна роля на България в европейските институции, но с по-силен акцент върху националния интерес и държавния капацитет.",
+    russia: "По-балансиран и по-малко конфронтационен тон по темата Русия в сравнение с твърдо антируски формации.",
+    nato: "Не отхвърля евроатлантическата рамка, но поставя по-силен акцент върху националния интерес и самостоятелната държавна позиция.",
+    energy: "Подкрепя евтина и надеждна енергия за домакинствата и бизнеса, както и по-голяма роля на държавата в стратегическите решения.",
+    migration: "По-умерен и държавно ориентиран подход към сигурността и миграцията.",
+    taxes: "По-скоро умерен към по-социален модел, отколкото нискоданъчен дясноцентристки подход."
+  },
+  "ГЕРБ-СДС": {
+    priority: 2,
+    officialProgramUrl: "https://gerb.bg/",
+    profile: { taxes: "low", eu: "pro", russia: "far", state: "medium", nato: "pro", migration: "strict", energy: "pro", governance: "medium" }
+  },
+  "ПРОДЪЛЖАВАМЕ ПРОМЯНАТА – ДЕМОКРАТИЧНА БЪЛГАРИЯ": {
+    priority: 3,
+    officialProgramUrl: "https://ppdb.bg/programa-detajl/",
+    profile: { taxes: "medium", eu: "pro", russia: "far", state: "medium", nato: "pro", migration: "moderate", energy: "pro", governance: "high" }
+  },
+  "ВЪЗРАЖДАНЕ": {
+    priority: 4,
+    officialWebsite: "https://vazrazhdane.bg/",
+    officialProgramUrl: "https://vazrazhdane.bg/%D1%86%D0%B5%D0%BB%D0%B8-%D0%B8-%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%B0/",
+    profile: { taxes: "medium", eu: "skeptic", russia: "close", state: "high", nato: "skeptic", migration: "strict", energy: "pro", governance: "medium" }
+  },
+  "ДВИЖЕНИЕ ЗА ПРАВА И СВОБОДИ": {
+    priority: 5,
+    officialWebsite: "https://www.dps.bg/",
+    officialProgramUrl: "https://www.dps.bg/izbori-2026/izborna-programa-2026.html",
+    profile: { taxes: "low", eu: "pro", russia: "neutral", state: "medium", nato: "pro", migration: "moderate", energy: "pro", governance: "medium" }
+  },
+  "БСП – ОБЕДИНЕНА ЛЕВИЦА": {
+    priority: 6,
+    officialProgramUrl: "https://bsp.bg/news/view/26563-bsp__obedinena_levitsa_s_programa_za_razvitie_ot_0_tochki_i_yasna_zayavka__vreme_e_za_resheniya_.html",
+    profile: { taxes: "high", eu: "neutral", russia: "neutral", state: "high", nato: "neutral", migration: "moderate", energy: "pro", governance: "medium" }
+  },
+  "ИМА ТАКЪВ НАРОД": {
+    priority: 7,
+    officialWebsite: "https://itn.bg/",
+    profile: { taxes: "medium", eu: "pro", russia: "neutral", state: "medium", nato: "pro", migration: "strict", energy: "pro", governance: "medium" }
+  },
+  "ВЕЛИЧИЕ": {
+    priority: 8,
+    profile: { taxes: "medium", eu: "skeptic", russia: "close", state: "high", nato: "skeptic", migration: "strict", energy: "pro", governance: "medium" }
+  },
+  "МОРАЛ ЕДИНСТВО ЧЕСТ": {
+    priority: 9,
+    officialWebsite: "https://mech.bg/",
+    infoStatus: "full",
+    economy: "Антисистемен и силно критичен към статуквото профил, с по-скоро държавно и популистки ориентирани решения, отколкото класически десен икономически модел.",
+    healthcare: "Поставя акцент върху критика към управлението на системата и по-строг контрол върху публичните разходи.",
+    education: "Подчертава нуждата от дисциплина, по-ясни стандарти и по-силен политически контрол върху публичните системи.",
+    eu: "По-скоро критичен и антисистемен тон към статуквото в ЕС, без ясно изразена линия за излизане от европейската рамка.",
+    russia: "По-скоро балансиран и прагматичен тон по темата Русия.",
+    nato: "По-умерен и скептичен към безусловна външнополитическа зависимост профил.",
+    energy: "Подкрепя по-силен национален контрол и самостоятелност в стратегическите сектори.",
+    migration: "Склонност към по-строга линия по сигурността и миграцията.",
+    taxes: "Няма ясно разгърната класическа данъчна програма, но профилът не е насочен към либертариански нискоданъчен модел.",
+    profile: { taxes: "medium", eu: "neutral", russia: "neutral", state: "high", nato: "neutral", migration: "strict", energy: "pro", governance: "medium" }
+  },
+  "СИНЯ БЪЛГАРИЯ": {
+    priority: 10,
+    officialProgramUrl: "https://sinyabulgaria.bg/programa/",
+    profile: { taxes: "low", eu: "pro", russia: "far", state: "low", nato: "pro", migration: "strict", energy: "pro", governance: "high" }
+  },
+  "НАЦИОНАЛНО ДВИЖЕНИЕ НЕПОКОРНА БЪЛГАРИЯ": {
+    priority: 11,
+    profile: { taxes: "medium", eu: "neutral", russia: "neutral", state: "high", nato: "neutral", migration: "moderate", energy: "pro", governance: "medium" }
+  },
+  "АЛИАНС ЗА ПРАВА И СВОБОДИ": {
+    priority: 12,
+    profile: { taxes: "medium", eu: "neutral", russia: "neutral", state: "medium", nato: "neutral", migration: "moderate", energy: "neutral", governance: "medium" }
+  },
+  "Партия на ЗЕЛЕНИТЕ": {
+    priority: 13,
+    infoStatus: "full",
+    economy: "Зелен и по-социално чувствителен профил с акцент върху устойчиво развитие, екологични стандарти и по-внимателно отношение към природните ресурси.",
+    healthcare: "По-скоро подкрепя публични политики, насочени към качество на средата и превенция.",
+    education: "Подкрепя гражданско образование, екологична култура и устойчиви обществени политики.",
+    eu: "Проевропейска ориентация, характерна за зелените и екологични партии в Европа.",
+    russia: "Няма ясно изразен самостоятелен силен публичен профил по темата Русия, но не стои в евроскептичния лагер.",
+    nato: "По-скоро умерена и проевропейска, без силно изразен антинатовски профил.",
+    energy: "Предпочитание към устойчиви и екологично съобразени решения, по-предпазливо към силна зависимост от тежки енергийни модели.",
+    migration: "По-умерен и хуманен профил в рамките на европейския подход.",
+    taxes: "По-скоро умерен модел с готовност за публични инвестиции в устойчиви политики.",
+    profile: { taxes: "medium", eu: "pro", russia: "neutral", state: "medium", nato: "pro", migration: "open", energy: "low", governance: "high" }
+  },
+  "ПРЯКА ДЕМОКРАЦИЯ": {
+    priority: 14,
+    infoStatus: "full",
+    economy: "Профил, в който централна тема е прякото участие на гражданите, а не толкова класическо ляво-дясно икономическо позициониране.",
+    healthcare: "По-скоро поддържа идеята за повече граждански контрол и отчетност в публичните системи.",
+    education: "Акцент върху гражданско участие и механизми за по-пряка политическа легитимност.",
+    eu: "По-скоро неутрален към умерен профил, без ярко изразен евроскептицизъм в последните публични участия.",
+    russia: "Няма устойчив силен публичен профил по темата Русия.",
+    nato: "По-скоро умерен профил без силно ярка идентичност по темата.",
+    energy: "Ограничена програмна конкретика по енергетика.",
+    migration: "Ограничена конкретика, по-скоро умерен профил.",
+    taxes: "Няма ясно изразена радикална данъчна позиция в наличната публична информация.",
+    profile: { taxes: "medium", eu: "neutral", russia: "neutral", state: "medium", nato: "neutral", migration: "moderate", energy: "neutral", governance: "high" }
+  },
+  "ТРЕТИ МАРТ": {
+    priority: 15,
+    infoStatus: "full",
+    economy: "Национално ориентиран и суверенистки профил с акцент върху държавния интерес и по-критичен поглед към външната зависимост.",
+    healthcare: "По-скоро държавно и социално чувствително позициониране, без ярко развита секторна програма.",
+    education: "Подчертан акцент върху националната идентичност и историческата символика.",
+    eu: "По-скоро евроскептичен към по-предпазлив профил, свързан със суверенистки теми.",
+    russia: "По-мек и по-балансиран тон към Русия в сравнение с твърдо антируски формации.",
+    nato: "По-предпазлив и по-суверенистки профил по темата сигурност.",
+    energy: "Подкрепа за национален контрол и енергийна самостоятелност.",
+    migration: "По-строг подход към сигурността и границите.",
+    taxes: "Няма силно изразен радикален данъчен профил; по-важен е суверенисткият и държавен акцент.",
+    profile: { taxes: "medium", eu: "skeptic", russia: "close", state: "medium", nato: "skeptic", migration: "strict", energy: "pro", governance: "medium" }
+  },
+  "АНТИКОРУПЦИОНЕН БЛОК": {
+    priority: 16,
+    infoStatus: "full",
+    economy: "Реформаторски профил с акцент върху честни правила, ограничаване на злоупотребите и по-прозрачна бизнес среда.",
+    healthcare: "По-скоро фокус върху управление, отчетност и намаляване на системните злоупотреби.",
+    education: "Подкрепя институционална реформа, прозрачност и обществена отчетност.",
+    eu: "По-скоро проевропейска ориентация, характерна за антикорупционни и реформаторски формати.",
+    russia: "По-дистанциран тон спрямо Русия в рамките на проевропейски профил.",
+    nato: "Подкрепа за предвидима евроатлантическа рамка.",
+    energy: "По-скоро акцент върху прозрачност и контрол, отколкото върху идеологически крайности в сектора.",
+    migration: "Умерен към прагматичен подход.",
+    taxes: "По-скоро умерен данъчен профил с фокус върху събираемост, прозрачност и контрол.",
+    profile: { taxes: "medium", eu: "pro", russia: "far", state: "medium", nato: "pro", migration: "moderate", energy: "neutral", governance: "high" }
+  }
+};
+
+const parties = RAW_PARTIES.map((party) => ({
+  ...party,
+  ...(PARTY_OVERRIDES[party.name] || {}),
+  profile: {
+    nato: "neutral",
+    migration: "moderate",
+    energy: "neutral",
+    governance: "medium",
+    ...(party.profile || {}),
+    ...((PARTY_OVERRIDES[party.name] && PARTY_OVERRIDES[party.name].profile) || {}),
+  },
+}));
+
 const topics = [
   { key: "economy", label: "Икономика" },
   { key: "healthcare", label: "Здравеопазване" },
@@ -625,69 +774,75 @@ const adPackages = [
   },
 ];
 
-const PARTY_ARTICLES = [
+const PARTY_ARTICLES = [$1,
   {
-    slug: "progresivna-bulgaria",
-    partyName: "ПРОГРЕСИВНА БЪЛГАРИЯ",
-    priority: 1,
-    title: "Прогресивна България – история, позиции и роля",
-    description: "Подробен профил на коалицията Прогресивна България с включена информация за ролята на Румен Радев и основните политически приоритети.",
-    officialSite: "https://progresivnabulgaria.bg",
-    programLink: null,
+    slug: "gerb-sds",
+    partyName: "ГЕРБ-СДС",
+    priority: 2,
+    title: "ГЕРБ-СДС – история, програма и политически профил",
+    description: "Подробен профил на ГЕРБ-СДС с акцент върху програмните приоритети, управленския профил и позициите по ключови теми.",
+    officialSite: "https://gerb.bg/",
+    programLink: "https://gerb.bg/",
     history: [
-      "Коалицията „Прогресивна България“ е създадена през 2026 г. като нов политически формат в център-лявото пространство.",
-      "Проектът се свързва с политическа подкрепа и влияние от бившия президент Румен Радев, който участва в създаването на нова политическа платформа след края на президентския си мандат.",
-      "Формацията обединява по-малки партии и обществени фигури с цел участие в парламентарните избори и налагане на нов управленски модел."
+      "ГЕРБ е основана през 2006 г., а коалиционният формат ГЕРБ-СДС се утвърждава като дясноцентристка и проевропейска изборна конфигурация.",
+      "Формацията има дълъг управленски опит и е сред най-разпознаваемите политически сили в страната през последните години."
     ],
     content: [
-      "Коалицията поставя акцент върху социална политика, икономическа стабилност и по-силна роля на държавата в ключови сектори.",
-      "В публичните позиции се наблюдава ориентация към балансирана външна политика в рамките на европейските институции.",
-      "Формацията цели да привлече избиратели, които търсят по-социално ориентиран модел на управление.",
-      "Ролята на Румен Радев е свързана с публичната подкрепа за нов политически проект и участие в създаването на политическа платформа след президентството.",
-      "В програмните намерения се подчертава нуждата от борба с корупцията и реформа в публичните институции.",
-      "Основният електорален профил включва избиратели, които търсят алтернатива на традиционните партии."
+      "Програмните приоритети са стабилност, сигурност, модернизация и интеграция в ЕС и еврозоната.",
+      "Платформата поставя акцент върху инфраструктура, бизнес среда, образование, здравеопазване и по-строг контрол по сигурността и границите.",
+      "Профилът е по-близо до умерено дясноцентристки модел с предвидима данъчна среда и проевропейска ориентация."
     ]
   },
   {
-    slug: "velichie",
-    partyName: "ВЕЛИЧИЕ",
-    title: "Величие – история и политически профил",
-    description: "История, позиции и участие в избори на партия Величие.",
-    officialSite: null,
-    programLink: null,
+    slug: "pp-db",
+    partyName: "ПРОДЪЛЖАВАМЕ ПРОМЯНАТА – ДЕМОКРАТИЧНА БЪЛГАРИЯ",
+    priority: 3,
+    title: "ПП-ДБ – програма, приоритети и политически профил",
+    description: "Подробен профил на ПП-ДБ с акцент върху програмата, съдебната реформа, европейската интеграция и антикорупционните мерки.",
+    officialSite: "https://www.ppdb.bg/",
+    programLink: "https://ppdb.bg/programa-detajl/",
     history: [
-      "Партия „Величие“ е сравнително нов политически проект, появил се в българската политика през последните години.",
-      "Формацията придобива популярност чрез публични кампании и участие в национални избори.",
-      "В определени периоди партията успява да постигне парламентарно представителство след участие в избори."
+      "Коалицията ПП-ДБ съчетава реформаторския и проевропейски профил на две водещи политически сили, които работят в общ формат в последните изборни цикли.",
+      "Тя се позиционира като модернизационна и антикорупционна коалиция с акцент върху институционалната реформа."
     ],
     content: [
-      "Партията се позиционира с критичен тон към традиционните политически сили.",
-      "В публичните изяви се акцентира върху национален интерес и институционална реформа.",
-      "Основният електорат включва избиратели, недоволни от съществуващия политически модел.",
-      "Формацията използва силно медийно присъствие като инструмент за мобилизация на подкрепа.",
-      "Приоритетите включват реформа в държавните институции и икономическа стабилност.",
-      "Партията участва активно в предизборни кампании и публични дебати."
+      "Програмата поставя акцент върху съдебна реформа, върховенство на правото, модернизация на икономиката и по-добро управление на публичните ресурси.",
+      "Формацията е силно проевропейска и подкрепя интеграцията на България в ЕС и еврозоната.",
+      "По ключови теми профилът е по-близо до проевропейски, реформаторски и институционално ориентиран модел."
     ]
   },
   {
-    slug: "saprotiva",
-    partyName: "СЪПРОТИВА",
-    title: "Съпротива – профил и приоритети",
-    description: "Политически профил и участие на партия Съпротива.",
-    officialSite: null,
-    programLink: null,
+    slug: "dps",
+    partyName: "ДВИЖЕНИЕ ЗА ПРАВА И СВОБОДИ",
+    title: "ДПС – програма 2026 и политически профил",
+    description: "Подробен профил на ДПС с акцент върху Програма 2026, държавност, просперитет и сигурност.",
+    officialSite: "https://www.dps.bg/",
+    programLink: "https://www.dps.bg/izbori-2026/izborna-programa-2026.html",
     history: [
-      "Партия „Съпротива“ е регистрирана като политическа формация с акцент върху гражданско участие.",
-      "Формацията участва в изборни процеси като част от по-малките партии.",
-      "Основният профил е свързан с критика към установения политически модел."
+      "ДПС е основана в началото на прехода и е една от най-дълго съществуващите политически сили в съвременна България.",
+      "Формацията традиционно се позиционира като прагматична, проевропейска и ориентирана към стабилност и регионално развитие."
     ],
     content: [
-      "Приоритетите включват борба с корупцията и институционална реформа.",
-      "Формацията се стреми да представя алтернативни политически решения.",
-      "Електоратът включва граждани, търсещи промяна в политическата система.",
-      "Позициите са по-скоро умерени по икономически въпроси.",
-      "Външнополитическият профил остава сравнително неутрален.",
-      "Формацията участва в национални избори с ограничен, но стабилен профил."
+      "Програма 2026 на ДПС е представена под мотото „Държавност, просперитет, сигурност за хората“.",
+      "В нея се поставя акцент върху икономическото развитие, сигурността, институционалната стабилност и подобряване на качеството на живот.",
+      "По ключови теми профилът е по-умерен, проевропейски и прагматичен."
+    ]
+  },
+  {
+    slug: "sinya-bulgaria",
+    partyName: "СИНЯ БЪЛГАРИЯ",
+    title: "Синя България – програма и десен профил",
+    description: "Подробен профил на Синя България с акцент върху официалната програма и дясно-консервативната ориентация.",
+    officialSite: "https://sinyabulgaria.bg/",
+    programLink: "https://sinyabulgaria.bg/programa/",
+    history: [
+      "Синя България е коалиционен проект в дясното пространство, който се опитва да събере консервативно и проевропейско ориентирани избиратели.",
+      "Политическият ѝ образ е свързан с акцент върху свобода, ограничена роля на държавата и ясно дистанциране от леви модели."
+    ],
+    content: [
+      "Официалната програма описва Синя България като консервативен десен политически съюз.",
+      "Тя подкрепя ниски и предвидими данъци, ограничена роля на държавата в икономиката, силна евроатлантическа ориентация и по-строг контрол по въпросите на сигурността.",
+      "По ключови въпроси формацията е сред най-ясно дясноориентираните и проевропейски коалиции."
     ]
   }
 ];
@@ -1351,7 +1506,15 @@ export default function ElectionPlatformComparator() {
   const [news, setNews] = useState([]);
   const [newsLoading, setNewsLoading] = useState(false);
 
-  const sortedParties = useMemo(() => [...parties].sort((a, b) => a.name.localeCompare(b.name, "bg")), []);
+  const sortedParties = useMemo(
+    () => [...parties].sort((a, b) => {
+      const pa = a.priority ?? 999;
+      const pb = b.priority ?? 999;
+      if (pa !== pb) return pa - pb;
+      return a.name.localeCompare(b.name, "bg");
+    }),
+    []
+  );
   const selectedPartyArticle = selectedParty ? PARTY_ARTICLES.find((article) => article.partyName === selectedParty.name) : null;
   const adsAllowedOnPage = ADS_ALLOWED_PAGES.has(currentPage);
   const openPath = (path) => navigateTo(path, setCurrentPage, setSelectedParty, setSelectedBlog, true);
@@ -1602,8 +1765,8 @@ export default function ElectionPlatformComparator() {
               <p className="text-muted-foreground">{selectedPartyArticle.description}</p>
               {(selectedPartyArticle.officialSite || selectedPartyArticle.programLink) && (
                 <div className="flex gap-4 flex-wrap text-sm">
-                  {selectedPartyArticle.officialSite && <a href={selectedPartyArticle.officialSite} target="_blank" rel="noreferrer" className="text-primary underline underline-offset-4">Официален сайт</a>}
-                  {selectedPartyArticle.programLink && <a href={selectedPartyArticle.programLink} target="_blank" rel="noreferrer" className="text-primary underline underline-offset-4">Предизборна програма</a>}
+                  {(selectedPartyArticle.officialSite || selectedParty?.officialWebsite) && <a href={selectedPartyArticle.officialSite || selectedParty?.officialWebsite} target="_blank" rel="noreferrer" className="text-primary underline underline-offset-4">Официален сайт</a>}
+                  {(selectedPartyArticle.programLink || selectedParty?.officialProgramUrl) && <a href={selectedPartyArticle.programLink || selectedParty?.officialProgramUrl} target="_blank" rel="noreferrer" className="text-primary underline underline-offset-4">Предизборна програма</a>}
                 </div>
               )}
 
