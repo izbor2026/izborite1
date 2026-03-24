@@ -629,6 +629,7 @@ const PARTY_ARTICLES = [
   {
     slug: "progresivna-bulgaria",
     partyName: "ПРОГРЕСИВНА БЪЛГАРИЯ",
+    priority: 1,
     title: "Прогресивна България – история, позиции и роля",
     description: "Подробен профил на коалицията Прогресивна България с включена информация за ролята на Румен Радев и основните политически приоритети.",
     officialSite: "https://progresivnabulgaria.bg",
