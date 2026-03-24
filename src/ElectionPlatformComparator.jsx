@@ -747,7 +747,32 @@ const questions = [
   },
 ];
 
-const adPackages = [$1];
+const adPackages = [
+  {
+    key: "basic",
+    name: "Basic",
+    price: "250 € / седмица",
+    description: "Банер 970×90 на видима позиция след основното съдържание.",
+  },
+  {
+    key: "premium",
+    name: "Premium",
+    price: "350 € / седмица",
+    description: "Банер + допълнително споменаване под основно съдържание като спонсор на седмицата.",
+  },
+  {
+    key: "exclusive",
+    name: "Exclusive",
+    price: "500 € / седмица",
+    description: "Единствен рекламен партньор за седмицата без други платени банери на сайта.",
+  },
+  {
+    key: "vip",
+    name: "VIP",
+    price: "по договаряне",
+    description: "Различен размер на банера, времетраене или локация.",
+  },
+];
 
 const BLOG_POSTS = [
   {
@@ -917,6 +942,38 @@ function pushAdsIfNeeded() {
   } catch {}
 }
 
+function slugify(input) {
+  return String(input || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-zA-Z0-9а-яА-Я]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function buildFallbackPartyArticle(party) {
+  if (!party) return null;
+
+  return {
+    slug: slugify(party.name),
+    partyName: party.name,
+    title: `${party.name} – профил, позиции и участие`,
+    description: `Обобщен профил на ${party.name} с информация за приоритети, позиции по ключови теми и общ политически образ.`,
+    officialSite: party.officialWebsite || null,
+    programLink: party.officialProgramUrl || null,
+    history: [
+      `${party.name} е регистрирана политическа формация за парламентарните избори през 2026 г. и присъства в официалните регистри на ЦИК.`,
+      `Публичната информация за формацията е обобщена на база налични източници, като при ограничени данни това е отбелязано изрично.`
+    ],
+    content: [
+      `Икономически профил: ${party.economy}`,
+      `Позиция по ЕС: ${party.eu}`,
+      `Позиция по Русия и сигурността: ${party.russia}${party.nato ? ` ${party.nato}` : ""}`,
+      `Енергетика, миграция и данъци: ${party.energy} ${party.migration} ${party.taxes}`
+    ]
+  };
+}
+
 function getPathState(pathname) {
   if (pathname === "/") return { page: "home", selectedParty: null, selectedBlog: null };
   if (pathname === "/compare") return { page: "compare", selectedParty: null, selectedBlog: null };
@@ -941,7 +998,10 @@ function getPathState(pathname) {
   if (pathname.startsWith("/partii/")) {
     const slug = pathname.replace("/partii/", "");
     const article = PARTY_ARTICLES.find((p) => p.slug === slug);
-    return { page: "party-page", selectedParty: parties.find((p) => p.name === article?.partyName) || null, selectedBlog: null };
+    const party = article
+      ? parties.find((p) => p.name === article.partyName) || null
+      : parties.find((p) => slugify(p.name) === slug) || null;
+    return { page: "party-page", selectedParty: party, selectedBlog: null };
   }
   return { page: "home", selectedParty: null, selectedBlog: null };
 }
@@ -1523,7 +1583,9 @@ export default function ElectionPlatformComparator() {
     }),
     []
   );
-  const selectedPartyArticle = selectedParty ? PARTY_ARTICLES.find((article) => article.partyName === selectedParty.name) : null;
+  const selectedPartyArticle = selectedParty
+    ? (PARTY_ARTICLES.find((article) => article.partyName === selectedParty.name) || buildFallbackPartyArticle(selectedParty))
+    : null;
   const adsAllowedOnPage = ADS_ALLOWED_PAGES.has(currentPage);
   const openPath = (path) => navigateTo(path, setCurrentPage, setSelectedParty, setSelectedBlog, true);
 
@@ -1753,15 +1815,26 @@ export default function ElectionPlatformComparator() {
           <p className="text-muted-foreground max-w-4xl">Тази секция събира по-подробни профили на основни партии и коалиции, които участват в българския политически дебат. Целта е читателят да получи по-цялостен преглед на техните приоритети, общ профил и ориентировъчни позиции по важни теми.</p>
           <p className="text-muted-foreground max-w-4xl">Профилите са създадени така, че да помогнат на потребителите да разберат не само къде стои една партия по отделни въпроси, но и как изглежда общият ѝ политически стил. Това е полезно особено за хора, които искат повече контекст след попълване на теста.</p>
           <div className="grid md:grid-cols-2 gap-4">
-            {PARTY_ARTICLES.map((article) => (
-              <Card key={article.slug} className="rounded-2xl">
-                <CardContent className="p-5 space-y-3">
-                  <h3 className="text-lg font-semibold">{article.title}</h3>
-                  <p className="text-sm text-muted-foreground">{article.description}</p>
-                  <Button onClick={() => openPath(`/partii/${article.slug}`)}>Прочети</Button>
-                </CardContent>
-              </Card>
-            ))}
+            {sortedParties.map((party) => {
+              const article = PARTY_ARTICLES.find((a) => a.partyName === party.name) || buildFallbackPartyArticle(party);
+              return (
+                <Card key={article.slug} className="rounded-2xl">
+                  <CardContent className="p-5 space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className={`h-10 w-10 rounded-full flex items-center justify-center text-xs font-bold ${party.logoClass}`}>
+                        {party.logoText}
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold">{party.name}</h3>
+                        <div className="text-xs text-muted-foreground">{party.type === "coalition" ? "Коалиция" : "Партия"}</div>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{article.description}</p>
+                    <Button onClick={() => openPath(`/partii/${article.slug}`)}>Прочети</Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </section>
       ) : currentPage === "party-page" ? (
