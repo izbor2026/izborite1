@@ -619,18 +619,15 @@ const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supa
 
 const ADS_ALLOWED_PAGES = new Set([
   "home",
-  "party-hub",
   "party-page",
   "blog",
   "blog-post",
   "about",
   "analysis",
   "how-to-vote",
-  "terms",
   "privacy",
   "guide",
   "methodology",
-  "news",
   "disclaimer"
 ]);
 
@@ -1375,18 +1372,71 @@ export default function ElectionPlatformComparator() {
         <section className="grid xl:grid-cols-[minmax(0,1fr)_380px] gap-8 items-start">
           <div className="space-y-6">
             <VotingQuiz parties={sortedParties} />
+
             <div className="rounded-2xl border p-5 bg-muted/30 text-sm text-muted-foreground space-y-4 max-w-4xl">
               <h3 className="font-semibold text-foreground">Как работи тестът</h3>
-              <p>Тестът сравнява вашите отговори с позициите на политическите партии по ключови теми като икономика, данъци, социална политика, Европейски съюз, Русия, сигурност, енергетика и миграция.</p>
-              <p>Когато изберете отговор, системата го съпоставя с предварително дефиниран профил на всяка партия. При силно съвпадение формацията получава повече точки, а при противоположни позиции се отчита разминаване.</p>
+              <p>Тестът сравнява вашите отговори с позициите на политическите партии по ключови теми като икономика, данъци, социална политика, Европейски съюз, Русия, сигурност, енергетика и миграция. Вместо да четете десетки различни програми, интервюта и постове, тук виждате по-ясно в кои посоки вашите възгледи се доближават до дадена формация.</p>
+              <p>Когато изберете отговор, системата го съпоставя с предварително дефиниран профил на всяка партия. При силно съвпадение формацията получава повече точки, а при противоположни позиции се отчита разминаване. Резултатът не е политически съвет, а ориентир, който ви помага да структурирате собственото си мислене.</p>
+              <p>Политическите тестове са най-полезни, когато се използват като първа стъпка. След резултата е добре да разгледате подробните профили на партиите, аналитичните страници и блог статиите, за да видите защо една формация се подрежда по-близо до вас и по кои теми имате най-голямо съвпадение.</p>
+              <p>Въпросите в теста обхващат теми, които често разделят избирателите: данъци, роля на държавата, ЕС, Русия, миграция, сигурност и енергетика. Това прави резултата по-полезен от абстрактни идеологически етикети и показва реални политически различия.</p>
+            </div>
+
+            <div className="rounded-2xl border p-5 bg-background space-y-4 max-w-4xl">
+              <h3 className="font-semibold text-foreground text-xl">Как да четете резултата</h3>
+              <p className="text-sm text-muted-foreground">Процентът съвпадение показва близост между вашите отговори и обобщения профил на партията по конкретен набор от въпроси. Това не означава, че една партия е автоматично „вашата“ партия, а че по текущите въпроси и по начина, по който сте отговорили, тя стои по-близо до вас от останалите.</p>
+              <p className="text-sm text-muted-foreground">Възможно е да имате високо съвпадение с партия, към която не изпитвате доверие по други причини, или по-ниско съвпадение с формация, която все пак да ви е важна заради една ключова тема. Именно затова резултатът трябва да се използва за ориентиране, а не като окончателна присъда.</p>
+              <p className="text-sm text-muted-foreground">Най-полезният подход е да разгледате къде съвпадате най-много и къде се различавате. Това ви дава по-добра представа какво точно стои зад крайния процент.</p>
+            </div>
+
+            <div className="rounded-2xl border p-5 bg-background space-y-4 max-w-4xl">
+              <h3 className="font-semibold text-foreground text-xl">Често задавани въпроси</h3>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <div>
+                  <div className="font-medium text-foreground">Тестът официален ли е?</div>
+                  <p>Не. Това е независим инструмент за сравнение и ориентиране. Когато партия предостави официални отговори, това се отбелязва отделно.</p>
+                </div>
+                <div>
+                  <div className="font-medium text-foreground">Как се определят позициите на партиите?</div>
+                  <p>Използват се публични програми, изявления, регистърът на ЦИК и други достъпни източници. При ограничена информация това се обозначава изрично.</p>
+                </div>
+                <div>
+                  <div className="font-medium text-foreground">Трябва ли да чета и друго освен теста?</div>
+                  <p>Да. Добра практика е след теста да разгледате страниците за методология, анализ, профили на партии и блог материали. Това ще ви даде по-пълна картина.</p>
+                </div>
+              </div>
             </div>
           </div>
-          <aside className="space-y-4"><NewsSection news={news.slice(0, 5)} isLoading={newsLoading} /></aside>
+          <aside className="space-y-4">
+            <div className="rounded-2xl border p-4 bg-background text-sm text-muted-foreground space-y-3">
+              <h3 className="font-semibold text-foreground">Последни новини</h3>
+              <p>Новините допълват теста с по-актуална информация за партии, кампании, публични изявления и политически теми. Те са полезни, защото показват не само дългосрочните профили на формациите, но и по-скорошните им действия и позиции.</p>
+            </div>
+            <NewsSection news={news.slice(0, 5)} isLoading={newsLoading} />
+          </aside>
         </section>
       ) : currentPage === "news" ? (
-        <section className="space-y-6 max-w-4xl"><NewsSection news={news} isLoading={newsLoading} /></section>
+        <section className="space-y-6 max-w-4xl">
+          <div className="text-xs text-muted-foreground">Начало / Новини</div>
+          <h2 className="text-2xl font-semibold">Политически новини и актуализации</h2>
+          <p className="text-muted-foreground">Тази секция събира актуални публикации, свързани с изборите, политическите партии и темите, които влияят върху обществения дебат. Целта е потребителят да има достъп не само до статични профили, но и до по-динамична картина на политическата среда.</p>
+          <p className="text-muted-foreground">Новините са полезни като допълнение към теста и профилите на партиите, защото показват какво се случва в момента, кои теми се изострят и какви са последните публични позиции на политическите участници.</p>
+          <NewsSection news={news} isLoading={newsLoading} />
+        </section>
       ) : currentPage === "compare" ? (
         <section className="space-y-6">
+          <div className="space-y-3 max-w-4xl">
+            <div className="text-xs text-muted-foreground">Начало / Сравнение на партии</div>
+            <h2 className="text-2xl font-semibold">Сравнение на партии по теми</h2>
+            <p className="text-muted-foreground">Тази страница ви позволява да сравните партиите по конкретна тема, вместо да разглеждате дълги програми една по една. Това е полезно за хора, които искат по-бързо да видят къде се различават формациите по икономика, здравеопазване, образование, ЕС, Русия, енергетика, миграция и данъци.</p>
+            <p className="text-muted-foreground">Сравнението не замества официалните програми, а служи като подреден ориентир. Ако една тема е особено важна за вас, можете първо да я изберете от менюто и да видите как различните партии я представят в публичното пространство.</p>
+          </div>
+          <div className="flex gap-4 flex-wrap">
+            <Input placeholder="Търси партия..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-sm" />
+            <Select onValueChange={setTopic} defaultValue="economy">
+              <SelectTrigger className="w-56"><SelectValue placeholder="Избери тема" /></SelectTrigger>
+              <SelectContent>{topics.map((t) => <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>)}</SelectContent>
+            </Select>
+          </div>
           <div>
             <h2 className="text-2xl font-semibold">Сравнение на програмите</h2>
             <CompareTable selectedTopic={topic} parties={sortedParties.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))} />
@@ -1408,12 +1458,21 @@ export default function ElectionPlatformComparator() {
           </div>
         </section>
       ) : currentPage === "map" ? (
-        <section className="space-y-4 max-w-5xl"><PartyPositionMap parties={sortedParties} onSelectParty={setSelectedParty} /></section>
+        <section className="space-y-4 max-w-5xl">
+          <div className="space-y-3 max-w-4xl">
+            <div className="text-xs text-muted-foreground">Начало / Карта ЕС и Русия</div>
+            <h2 className="text-2xl font-semibold">Карта на позициите по ЕС и Русия</h2>
+            <p className="text-muted-foreground">Тази визуална карта показва как различните партии и коалиции се разполагат по оста „отношение към ЕС“ и по оста „отношение към Русия“. Целта не е да се даде окончателна присъда за една формация, а да се предложи по-лесен начин за ориентиране в общата политическа картина.</p>
+            <p className="text-muted-foreground">Подобна визуализация е полезна за хора, които искат бързо да видят кои партии са по-проевропейски, кои са по-скептични към по-дълбоката интеграция и как различните формации се позиционират спрямо Русия като политическа и геополитическа тема.</p>
+          </div>
+          <PartyPositionMap parties={sortedParties} onSelectParty={setSelectedParty} />
+        </section>
       ) : currentPage === "party-hub" ? (
         <section className="space-y-6 max-w-5xl">
           <div className="text-xs text-muted-foreground">Начало / Основни партии</div>
           <h2 className="text-2xl font-semibold">Основни партии в България</h2>
           <p className="text-muted-foreground max-w-4xl">Тази секция събира по-подробни профили на основни партии и коалиции, които участват в българския политически дебат. Целта е читателят да получи по-цялостен преглед на техните приоритети, общ профил и ориентировъчни позиции по важни теми.</p>
+          <p className="text-muted-foreground max-w-4xl">Профилите са създадени така, че да помогнат на потребителите да разберат не само къде стои една партия по отделни въпроси, но и как изглежда общият ѝ политически стил. Това е полезно особено за хора, които искат повече контекст след попълване на теста.</p>
           <div className="grid md:grid-cols-2 gap-4">
             {PARTY_ARTICLES.map((article) => (
               <Card key={article.slug} className="rounded-2xl">
@@ -1441,6 +1500,7 @@ export default function ElectionPlatformComparator() {
           <div className="text-xs text-muted-foreground">Начало / Блог</div>
           <h2 className="text-2xl font-semibold">Блог</h2>
           <p className="text-muted-foreground max-w-4xl">Блог секцията съдържа обяснителни текстове по теми, които често объркват избирателите – как се четат партийни програми, какво означава ляво и дясно, как да използвате политически тест, защо ЕС, Русия, сигурността и данъчната политика имат толкова голяма тежест в политическия избор.</p>
+          <p className="text-muted-foreground max-w-4xl">Тук идеята е не просто да има нови текстове, а да се изгради полезна библиотека от кратки и разбираеми обяснения за политически понятия, процеси и теми, които имат значение преди избори.</p>
           <div className="grid md:grid-cols-2 gap-4">
             {BLOG_POSTS.map((post) => (
               <Card key={post.slug} className="rounded-2xl">
