@@ -1583,6 +1583,12 @@ export default function ElectionPlatformComparator() {
     }),
     []
   );
+
+  const allPartyArticles = useMemo(
+    () => sortedParties.map((party) => PARTY_ARTICLES.find((article) => article.partyName === party.name) || buildFallbackPartyArticle(party)),
+    [sortedParties]
+  );
+
   const selectedPartyArticle = selectedParty
     ? (PARTY_ARTICLES.find((article) => article.partyName === selectedParty.name) || buildFallbackPartyArticle(selectedParty))
     : null;
@@ -1812,11 +1818,13 @@ export default function ElectionPlatformComparator() {
         <section className="space-y-6 max-w-5xl">
           <div className="text-xs text-muted-foreground">Начало / Основни партии</div>
           <h2 className="text-2xl font-semibold">Основни партии в България</h2>
+          <div className="text-sm text-muted-foreground">Общо профили: {allPartyArticles.length}</div>
           <p className="text-muted-foreground max-w-4xl">Тази секция събира по-подробни профили на основни партии и коалиции, които участват в българския политически дебат. Целта е читателят да получи по-цялостен преглед на техните приоритети, общ профил и ориентировъчни позиции по важни теми.</p>
           <p className="text-muted-foreground max-w-4xl">Профилите са създадени така, че да помогнат на потребителите да разберат не само къде стои една партия по отделни въпроси, но и как изглежда общият ѝ политически стил. Това е полезно особено за хора, които искат повече контекст след попълване на теста.</p>
           <div className="grid md:grid-cols-2 gap-4">
-            {sortedParties.map((party) => {
-              const article = PARTY_ARTICLES.find((a) => a.partyName === party.name) || buildFallbackPartyArticle(party);
+            {allPartyArticles.map((article) => {
+              const party = sortedParties.find((p) => p.name === article.partyName);
+              if (!party) return null;
               return (
                 <Card key={article.slug} className="rounded-2xl">
                   <CardContent className="p-5 space-y-3">
