@@ -1447,11 +1447,47 @@ export default function ElectionPlatformComparator() {
             {selectedParty && (
               <Card className="rounded-2xl border shadow-sm">
                 <CardHeader><CardTitle>{selectedParty.name}</CardTitle></CardHeader>
-                <CardContent className="space-y-4 text-sm">
-                  <div><strong>Икономика:</strong> {selectedParty.economy}</div>
-                  <div><strong>Здравеопазване:</strong> {selectedParty.healthcare}</div>
-                  <div><strong>Образование:</strong> {selectedParty.education}</div>
-                  {selectedPartyArticle && <Button variant="outline" onClick={() => openPath(`/partii/${selectedPartyArticle.slug}`)}>Отвори подробен профил</Button>}
+                <CardContent className="space-y-6 text-sm">
+                  <section className="space-y-2">
+                    <h3 className="text-lg font-semibold">История на партията</h3>
+                    <p className="text-muted-foreground">Този раздел описва основаването на партията, нейните ключови лидери през годините и важните моменти в развитието ѝ. Историческият контекст помага на избирателите да разберат как се е формирала текущата политическа идентичност и кои идеи са били устойчиви във времето.</p>
+                  </section>
+
+                  <section className="space-y-2">
+                    <h3 className="text-lg font-semibold">Основни приоритети</h3>
+                    <p className="text-muted-foreground">Основните приоритети включват стратегическите цели на партията – икономическо развитие, социална политика, образование, здравеопазване и сигурност. Този раздел представя кои политики са в центъра на програмата и как партията планира да ги реализира.</p>
+                  </section>
+
+                  <section className="space-y-2">
+                    <h3 className="text-lg font-semibold">Позиции по ключови теми</h3>
+                    <div className="space-y-1 text-muted-foreground">
+                      <div><strong>Икономика:</strong> {selectedParty.economy}</div>
+                      <div><strong>Здравеопазване:</strong> {selectedParty.healthcare}</div>
+                      <div><strong>Образование:</strong> {selectedParty.education}</div>
+                      <div><strong>Енергетика:</strong> {selectedParty.energy}</div>
+                      <div><strong>Сигурност:</strong> {selectedParty.security}</div>
+                    </div>
+                  </section>
+
+                  <section className="space-y-2">
+                    <h3 className="text-lg font-semibold">Избиратели и профил</h3>
+                    <p className="text-muted-foreground">Типичният профил на избирателите включва социални групи, професионални категории и възрастови сегменти, които традиционно подкрепят партията. Това помага да се разбере към кои обществени групи са насочени политиките и комуникацията.</p>
+                  </section>
+
+                  <section className="space-y-2">
+                    <h3 className="text-lg font-semibold">Участия в избори</h3>
+                    <p className="text-muted-foreground">Тук се описват предишни участия в парламентарни, президентски или местни избори, както и постигнатите резултати. Историята на изборните резултати дава представа за стабилността и подкрепата на партията във времето.</p>
+                  </section>
+
+                  <section className="space-y-2">
+                    <h3 className="text-lg font-semibold">Роля в парламента</h3>
+                    <p className="text-muted-foreground">Ако партията е участвала в парламент или управление, тук се описва нейната роля – дали е била част от управляваща коалиция, опозиция или е подкрепяла конкретни политики и законодателни инициативи.</p>
+                  </section>
+
+                  <section className="space-y-2">
+                    <h3 className="text-lg font-semibold">Обобщение</h3>
+                    <p className="text-muted-foreground">Обобщението представя кратка характеристика на партията, нейната политическа насоченост и ключови различия спрямо други формации. Това е полезно за потребители, които искат бърз ориентир преди да разгледат подробните програми.</p>
+                  </section>
                 </CardContent>
               </Card>
             )}
