@@ -884,7 +884,7 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
 
-const MAJOR_PARTY_NAMES = new Set([
+const MAJOR_PARTY_ORDER = [
   "ПРОГРЕСИВНА БЪЛГАРИЯ",
   "ГЕРБ-СДС",
   "ПРОДЪЛЖАВАМЕ ПРОМЯНАТА – ДЕМОКРАТИЧНА БЪЛГАРИЯ",
@@ -895,7 +895,7 @@ const MAJOR_PARTY_NAMES = new Set([
   "ВЕЛИЧИЕ",
   "МОРАЛ ЕДИНСТВО ЧЕСТ",
   "СИНЯ БЪЛГАРИЯ"
-]);
+];
 
 const ADS_ALLOWED_PAGES = new Set([
   "home",
@@ -1603,7 +1603,9 @@ export default function ElectionPlatformComparator() {
   );
 
   const majorParties = useMemo(
-    () => sortedParties.filter((party) => MAJOR_PARTY_NAMES.has(party.name)),
+    () => MAJOR_PARTY_ORDER
+      .map((name) => sortedParties.find((party) => party.name === name))
+      .filter(Boolean),
     [sortedParties]
   );
 
@@ -1842,6 +1844,7 @@ export default function ElectionPlatformComparator() {
           <div className="text-xs text-muted-foreground">Начало / Основни партии</div>
           <h2 className="text-2xl font-semibold">Основни партии в България</h2>
           <div className="text-sm text-muted-foreground">Показани профили: {majorPartyArticles.length} от най-значимите партии и коалиции</div>
+          <div className="text-xs text-muted-foreground">{majorParties.map((party) => party.name).join(" • ")}</div>
           <p className="text-muted-foreground max-w-4xl">Тази секция показва десетте основни партии и коалиции, за които най-често има обществен интерес и които най-често присъстват в социологическите сравнения и предизборния дебат. Те са подредени по приоритет, така че най-следените формации да са най-отпред.</p>
           <p className="text-muted-foreground max-w-4xl">Профилите са създадени така, че да помогнат на потребителите да разберат не само къде стои една партия по отделни въпроси, но и как изглежда общият ѝ политически стил. Това е полезно особено за хора, които искат повече контекст след попълване на теста.</p>
           <div className="grid md:grid-cols-2 gap-4">
